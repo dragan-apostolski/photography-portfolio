@@ -1,0 +1,7 @@
+node_modules
+.data
+.nuxt
+.vscode
+.project-requirements.md
+.windsurfrules
+README.md

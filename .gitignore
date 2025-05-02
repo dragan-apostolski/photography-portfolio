@@ -23,4 +23,6 @@ logs
 .env.*
 !.env.example
 
+# other
 project-requirements.md
+.windsurfrules
