@@ -11,7 +11,8 @@
     "lint": "eslint . --ext .ts,.js,.vue",
     "lint:fix": "eslint . --ext .ts,.js,.vue --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "process-images": "tsx scripts/processImages.ts"
   },
   "dependencies": {
     "@nuxt/content": "^3.5.1",
@@ -35,6 +36,8 @@
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "sharp": "^0.33.5",
+    "tsx": "^4.19.4"
   }
 }

@@ -1,6 +1,5 @@
-@import 'tailwindcss'; /* bring in Tailwind’s core layers */
+@import 'tailwindcss';
 
-/* 1. Your custom design tokens as a Tailwind @theme block */
 @theme {
   /* Primary text colors */
   --color-primary: #000000;
@@ -27,7 +26,6 @@
   --font-heading: 'Rajdhani', sans-serif;
 }
 
-/* 2. (Optional) Your global overrides or additional imports */
 body {
   scroll-behavior: smooth;
   color: var(--color-primary);
