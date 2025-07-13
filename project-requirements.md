@@ -35,7 +35,7 @@ Copyright, link to socials, link to other websites (dev portfolio at apostolski-
 
 ### Gallery page
 
-On top of the page there is a list of categories (tags \- use Tag component) which represent different photo categories: landscape, travel, portrait, experimental, urban, events, etc. Each photo can have multiple tags, so it will show up under multiple tag selections.  
+On top of the page there is a list of categories (tags - use Tag component) which represent different photo categories: landscape, travel, portrait, experimental, urban, events, etc. Each photo can have multiple tags, so it will show up under multiple tag selections.  
 Then follows the photo grid (masonry) which displays a selection of my best photos, all wrapped by the PhotoPreview component. On hover, the PhotoPreview displays a title, and a description. Clicking the PhotoPreview opens the photo in detail view (PhotoDetail component).  
 As you scroll down more photos start loading (lazy loading).
 
@@ -83,11 +83,6 @@ Upon entering the page there are three products, represented by cards (use Photo
 - Use Rajdhani font for headings (weights 600–700), body text (weights 400–500), captions and small labels (weight 400)
 - Font colors automatically swap between black/white based on the selected mode; ensure smooth 300ms transition on color changes.
 
-### Line Height & Letter Spacing:
-
-- Headings: 1.2 line-height, -0.02em letter-spacing
-- Body: 1.5 line-height, 0em letter-spacing
-
 ### Light & Dark Mode Switch:
 
 Font colors automatically swap between black/white based on the selected mode; ensure smooth 300ms transition on color changes.
@@ -99,6 +94,7 @@ Font colors automatically swap between black/white based on the selected mode; e
 - Fixed at top with transparent background that fades to solid upon scroll (\>50px).
 - Logo/text on left, menu items centered (Home, Gallery, Prints, Services, About).
 - Hamburger menu animates into a right-sliding drawer on mobile.
+- On mobile, when the menu opens it takes up the full height and width of the screen. It displays the same menu items in a vertical column.
 
 ### Carousel
 
@@ -130,6 +126,7 @@ Font colors automatically swap between black/white based on the selected mode; e
 - Base: uppercase text, letter-spacing 0.1em, weight 500, small padding (px-4 py-2), rounded-lg corners, border 2px solid tertiary accent.
 - Idle: transparent background.
 - Hover: background \= tertiary accent, text \= black/white (mode-dependent), slight upward translate (–2px).
+- Clickable, with a pointer cursor
 
 ### Tag
 

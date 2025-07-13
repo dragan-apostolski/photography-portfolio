@@ -5,31 +5,24 @@ import type { Photo } from '~/types/photo'
 const photos = ref<Photo[]>([
   {
     title: 'Coastal serenity',
-    src: '/photos/originals/landscape/Zadar.jpg',
+    src: '/photos/landscape/Zadar.webp',
     alt: 'Serene coastal landscape with stunning sunset colors',
     description: 'The beauty of the Adriatic Sea',
     buttonTitle: 'Explore the Adriatic Sea',
   },
   {
     title: 'Sigiriya',
-    src: '/photos/originals/landscape/Sigiriya.jpg',
+    src: '/photos/landscape/Sigiriya.webp',
     alt: 'Majestic mountain peaks with dramatic clouds',
     description: 'The land of diversity',
     buttonTitle: 'Explore the diversity of Sri Lanka',
   },
   {
     title: 'Goli Vrh',
-    src: '/photos/originals/landscape/GoliVrh.jpg',
+    src: '/photos/landscape/GoliVrh.webp',
     alt: 'Explore the gorgeous Slovenian mountains',
     description: 'The pristine Julian Alps of Slovenia',
     buttonTitle: 'Explore the Julian Alps',
-  },
-  {
-    title: 'Soča',
-    src: '/photos/originals/landscape/soca.jpg',
-    alt: 'The turquoise waters of the Soča River',
-    description: 'Turquoise wonderwater',
-    buttonTitle: 'Explore the beauty of the Soča river',
   },
 ])
 

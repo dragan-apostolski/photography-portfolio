@@ -12,5 +12,7 @@ useSeoMeta({
 <template>
   <main>
     <HeroSection />
+    <ShortAboutMe />
+    <GalleryPreview />
   </main>
 </template>

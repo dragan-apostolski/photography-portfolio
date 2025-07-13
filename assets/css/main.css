@@ -26,13 +26,23 @@
   --font-heading: 'Rajdhani', sans-serif;
 }
 
-body {
-  scroll-behavior: smooth;
-  color: var(--color-primary);
-  background-color: var(--background-color-primary);
-}
+@layer base {
+  html {
+    color-scheme: light;
+  }
 
-.dark body {
-  color: var(--color-primary-dark);
-  background-color: var(--background-color-primary-dark);
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    scroll-behavior: smooth;
+    color: var(--color-primary);
+    background-color: var(--background-color-primary);
+  }
+
+  .dark body {
+    color: var(--color-primary-dark);
+    background-color: var(--background-color-primary-dark);
+  }
 }

@@ -16,7 +16,7 @@ const responsiveClasses =
 <template>
   <button
     :type="props.type"
-    class="cursor-pointer rounded-lg border-2 border-accent bg-transparent font-medium tracking-widest text-primary uppercase transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-accent hover:text-primary dark:text-primary-dark dark:hover:text-primary"
+    class="cursor-pointer rounded-lg border-2 border-accent bg-transparent font-medium tracking-widest uppercase transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:bg-accent hover:text-primary dark:hover:text-primary"
     :class="responsiveClasses + ' ' + customClasses"
   >
     <slot />

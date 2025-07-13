@@ -31,11 +31,17 @@ interface ProcessedImage {
 const config = {
   inputDir: path.resolve(__dirname, '../original-photos'),
   outputDir: path.resolve(__dirname, '../public/photos'),
-  maxWidth: 2048,
-  maxHeight: 2048,
-  quality: 85,
+  maxWidth: 3840,
+  maxHeight: 2560,
+  quality: 92,
   format: 'webp' as const,
   generateManifest: true,
+  resizeKernel: 'lanczos3' as const,
+  webpOptions: {
+    effort: 6,
+    smartSubsample: true,
+    nearLossless: false,
+  },
 }
 
 /**
@@ -49,25 +55,71 @@ const processImage = async (
     maxHeight: number
     quality: number
     format: 'webp' | 'jpg' | 'avif'
+    resizeKernel?: keyof sharp.KernelEnum
+    webpOptions?: {
+      effort?: number
+      smartSubsample?: boolean
+      nearLossless?: boolean
+    }
   }
 ): Promise<{ width: number; height: number; size: number }> => {
-  const { maxWidth, maxHeight, quality, format } = options
+  const {
+    maxWidth,
+    maxHeight,
+    quality,
+    format,
+    resizeKernel = 'lanczos3',
+    webpOptions = {},
+  } = options
 
   try {
-    let sharpInstance = sharp(inputPath).resize({
-      width: maxWidth,
-      height: maxHeight,
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
+    // Get the original metadata for validating the image
+    const _originalMetadata = await sharp(inputPath).metadata()
+
+    // Create an optimized sharp pipeline
+    let sharpInstance = sharp(inputPath)
+      // First apply some slight sharpening to preserve details during resize
+      .sharpen({
+        sigma: 1.2, // Moderate sharpening
+        m1: 0.3, // Controls the sharpening strength
+        m2: 0.5, // Controls the sharpening strength
+        x1: 6, // Sharpening radius threshold
+        y2: 8, // Sharpening radius threshold
+        y3: 8, // Sharpening radius threshold
+      })
+      // Then resize with high-quality settings
+      .resize({
+        width: maxWidth,
+        height: maxHeight,
+        fit: 'inside',
+        withoutEnlargement: true,
+        kernel: resizeKernel, // Using the specified kernel for better resizing
+      })
 
     // Apply format-specific processing
     if (format === 'webp') {
-      sharpInstance = sharpInstance.webp({ quality })
+      sharpInstance = sharpInstance.webp({
+        quality,
+        effort: webpOptions.effort || 6, // Higher effort (0-6) for better compression
+        smartSubsample:
+          webpOptions.smartSubsample !== undefined ? webpOptions.smartSubsample : true,
+        nearLossless: webpOptions.nearLossless || false, // Optional near-lossless mode
+        alphaQuality: quality, // Match alpha channel quality with main quality
+      })
     } else if (format === 'jpg') {
-      sharpInstance = sharpInstance.jpeg({ quality, mozjpeg: true })
+      sharpInstance = sharpInstance.jpeg({
+        quality,
+        mozjpeg: true, // Mozilla's optimized JPEG encoder
+        trellisQuantisation: true, // Additional optimization
+        overshootDeringing: true, // Reduces ringing artifacts
+        optimizeScans: true, // Progressive optimization
+      })
     } else if (format === 'avif') {
-      sharpInstance = sharpInstance.avif({ quality })
+      sharpInstance = sharpInstance.avif({
+        quality,
+        effort: 9, // Higher effort (0-9) for better AVIF compression
+        chromaSubsampling: '4:4:4', // Best color reproduction
+      })
     }
 
     await sharpInstance.toFile(outputPath)
@@ -185,6 +237,8 @@ const processImagesInDirectory = async (
           maxHeight: config.maxHeight,
           quality: config.quality,
           format: config.format,
+          resizeKernel: config.resizeKernel,
+          webpOptions: config.webpOptions,
         })
 
         // Calculate compression ratio
