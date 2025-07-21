@@ -11,7 +11,7 @@ const message = ref('This page is currently under construction. Coming soon!')
 <template>
   <div class="container mx-auto px-4 py-12">
     <h1 class="mb-8 text-4xl font-bold">Prints</h1>
-    
+
     <!-- Under Construction Section -->
     <div class="flex min-h-[50vh] flex-col items-center justify-center">
       <div class="mb-8 text-8xl">

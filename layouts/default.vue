@@ -1,7 +1,3 @@
-<script setup lang="ts">
-// The default layout includes the SiteNavbar, content area, and SiteFooter
-</script>
-
 <template>
   <div class="flex min-h-screen flex-col">
     <SiteNavbar />

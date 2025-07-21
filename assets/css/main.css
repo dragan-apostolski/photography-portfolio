@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Primary text colors */
   --color-primary: #000000;
@@ -38,11 +40,9 @@
   body {
     scroll-behavior: smooth;
     color: var(--color-primary);
-    background-color: var(--background-color-primary);
   }
 
   .dark body {
     color: var(--color-primary-dark);
-    background-color: var(--background-color-primary-dark);
   }
 }

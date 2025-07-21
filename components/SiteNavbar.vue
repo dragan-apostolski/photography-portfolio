@@ -53,7 +53,7 @@
         </nuxt-link>
       </div>
       <div class="flex items-center space-x-3">
-        <!-- Dark Mode Toggle -->
+        <!-- Color Mode Toggle -->
         <button
           aria-label="Toggle dark mode"
           class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
