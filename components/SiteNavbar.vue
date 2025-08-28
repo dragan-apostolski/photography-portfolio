@@ -188,6 +188,7 @@ const isDark = computed(() => colorMode.value === 'dark')
 const menuItems = [
   { name: 'Home', path: '/' },
   { name: 'Gallery', path: '/gallery' },
+  { name: 'Projects', path: '/projects' },
   { name: 'Prints', path: '/prints' },
   { name: 'Services', path: '/services' },
   { name: 'About', path: '/about' },

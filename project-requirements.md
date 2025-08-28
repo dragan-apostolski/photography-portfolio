@@ -39,6 +39,17 @@ On top of the page there is a list of categories (tags - use Tag component) whic
 Then follows the photo grid (masonry) which displays a selection of my best photos, all wrapped by the PhotoPreview component. On hover, the PhotoPreview displays a title, and a description. Clicking the PhotoPreview opens the photo in detail view (PhotoDetail component).  
 As you scroll down more photos start loading (lazy loading).
 
+### Projects page
+
+Project page lists projects in a grid. Each project is wrapped by the PhotoPreview component. On hover, the PhotoPreview displays a title, and a description. Clicking a project card opens the project in detail view (a separate page). Additionally, each card shows the proejcts's tags. On top of the page, the user can select a tag to filter the projects, in the same way it can be done for the gallery page.
+
+### Project details
+
+Each project is consisted of one cover photo (spanning the full width and height of the page), and a an array of other photos, which are shown as the user scrolls down the page. On the bottom of the cover photo, there is a small icon indicating that the user should scroll down to explore the project. Once the user starts scrolling, a description shows up. The description is consisted of a project name, client (if its a client project) or model (if its a photo-sesseion), and a short description.
+After scrolling through the description the photos start loading and the user can scroll through them. Each photo is shown in its full width and height.
+
+On the bottom there are links to other projects.
+
 ### About page
 
 This page contains detailed info about me such as bio, projects, photographic style, and a couple of more photos of me.
@@ -100,7 +111,6 @@ Font colors automatically swap between black/white based on the selected mode; e
 
 - Full-width hero slider
 - Auto-rotates every 6s with cross-fade; pause on hover.
--
 
 ### PhotoPreview
 
@@ -154,9 +164,11 @@ Font colors automatically swap between black/white based on the selected mode; e
 ### Project
 
 - Title
+- Client (optional)
+- Model (optional)
 - Description
 - Location
-- Tag
+- Tags (possible tags are: Client, Portrait, Travel, Hobby, Landscape)
 - Date
 - Photos
 

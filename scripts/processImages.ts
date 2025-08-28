@@ -31,10 +31,12 @@ interface ProcessedImage {
 const config = {
   inputDir: path.resolve(__dirname, '../original-photos'),
   outputDir: path.resolve(__dirname, '../public/photos'),
-  maxWidth: 3840,
-  maxHeight: 2560,
-  quality: 92,
-  format: 'webp' as const,
+  projectsInputDir: path.resolve(__dirname, '../original-photos/projects'),
+  projectsOutputDir: path.resolve(__dirname, '../public/projects'),
+  maxWidth: 2560,
+  maxHeight: 1920,
+  quality: 85,
+  format: 'avif' as const,
   generateManifest: true,
   resizeKernel: 'lanczos3' as const,
   webpOptions: {
@@ -267,33 +269,201 @@ const processImagesInDirectory = async (
 }
 
 /**
- * Process all images in the directory
+ * Process projects specifically
+ */
+const processProjects = async () => {
+  try {
+    console.log('Processing project images...')
+    console.log(`Projects input directory: ${config.projectsInputDir}`)
+    console.log(`Projects output directory: ${config.projectsOutputDir}`)
+
+    // Ensure projects output directory exists
+    await fs.mkdir(config.projectsOutputDir, { recursive: true })
+
+    // Get all project directories
+    const projectDirs = await fs.readdir(config.projectsInputDir)
+    const allResults: ProcessedImage[] = []
+
+    for (const projectDir of projectDirs) {
+      const projectInputPath = path.join(config.projectsInputDir, projectDir)
+      const projectOutputPath = path.join(config.projectsOutputDir, projectDir)
+
+      const stats = await fs.stat(projectInputPath)
+      if (stats.isDirectory()) {
+        console.log(`\n--- Processing project: ${projectDir} ---`)
+
+        // Process images in this project directory
+        const projectResults = await processImagesInDirectory(
+          config.projectsInputDir,
+          config.projectsOutputDir,
+          projectDir
+        )
+
+        allResults.push(...projectResults)
+
+        // Generate project-specific manifest
+        const projectManifestPath = path.join(projectOutputPath, 'manifest.json')
+        await fs.writeFile(projectManifestPath, JSON.stringify(projectResults, null, 2), 'utf-8')
+        console.log(`Project manifest written to ${projectManifestPath}`)
+        console.log(`Processed ${projectResults.length} images for project: ${projectDir}`)
+      }
+    }
+
+    // Generate global projects manifest
+    const globalManifestPath = path.join(config.projectsOutputDir, 'all-projects-manifest.json')
+    await fs.writeFile(globalManifestPath, JSON.stringify(allResults, null, 2), 'utf-8')
+    console.log(`\nGlobal projects manifest written to ${globalManifestPath}`)
+    console.log(`Successfully processed ${allResults.length} total project images`)
+
+    return allResults
+  } catch (error) {
+    console.error('Error processing project images:', error)
+    throw error
+  }
+}
+
+/**
+ * Process regular gallery images
+ */
+const processGalleryImages = async () => {
+  try {
+    console.log('Processing gallery images...')
+    console.log(`Input directory: ${config.inputDir}`)
+    console.log(`Output directory: ${config.outputDir}`)
+
+    // Process images recursively, but exclude the projects directory
+    const items = await fs.readdir(config.inputDir)
+    const allResults: ProcessedImage[] = []
+
+    for (const item of items) {
+      if (item === 'projects') {
+        console.log('Skipping projects directory in gallery processing')
+        continue
+      }
+
+      const itemPath = path.join(config.inputDir, item)
+      const stats = await fs.stat(itemPath)
+
+      if (stats.isDirectory()) {
+        console.log(`\n--- Processing gallery category: ${item} ---`)
+        const categoryResults = await processImagesInDirectory(
+          config.inputDir,
+          config.outputDir,
+          item
+        )
+        allResults.push(...categoryResults)
+      }
+    }
+
+    // Generate gallery manifest
+    if (config.generateManifest && allResults.length > 0) {
+      const manifestPath = path.join(config.outputDir, 'manifest.json')
+      await fs.writeFile(manifestPath, JSON.stringify(allResults, null, 2), 'utf-8')
+      console.log(`Gallery manifest written to ${manifestPath}`)
+    }
+
+    console.log(`Successfully processed ${allResults.length} gallery images`)
+    return allResults
+  } catch (error) {
+    console.error('Error processing gallery images:', error)
+    throw error
+  }
+}
+
+/**
+ * Process all images - both gallery and projects
  */
 const processImages = async () => {
   try {
-    console.log('Starting image processing...')
-    console.log(`Input directory: ${config.inputDir}`)
-    console.log(`Output directory: ${config.outputDir}`)
+    console.log('=== Starting image processing ===')
     console.log(
       `Format: ${config.format}, Quality: ${config.quality}, Max dimensions: ${config.maxWidth}x${config.maxHeight}`
     )
 
-    // Process images recursively
-    const results = await processImagesInDirectory(config.inputDir, config.outputDir)
+    // Process gallery images (excluding projects)
+    const galleryResults = await processGalleryImages()
 
-    // Generate manifest if requested
-    if (config.generateManifest) {
-      const manifestPath = path.join(config.outputDir, 'manifest.json')
-      await fs.writeFile(manifestPath, JSON.stringify(results, null, 2), 'utf-8')
-      console.log(`Image manifest written to ${manifestPath}`)
-    }
+    console.log('\n' + '='.repeat(50))
 
-    console.log(`Successfully processed ${results.length} images`)
+    // Process project images
+    const projectResults = await processProjects()
+
+    console.log('\n' + '='.repeat(50))
+    console.log('=== Processing Summary ===')
+    console.log(`Gallery images processed: ${galleryResults.length}`)
+    console.log(`Project images processed: ${projectResults.length}`)
+    console.log(`Total images processed: ${galleryResults.length + projectResults.length}`)
   } catch (error) {
     console.error('Error processing images:', error)
     process.exit(1)
   }
 }
 
+/**
+ * Process a specific project directory
+ */
+const processSpecificProject = async (projectName: string) => {
+  try {
+    console.log(`=== Processing specific project: ${projectName} ===`)
+    console.log(
+      `Format: ${config.format}, Quality: ${config.quality}, Max dimensions: ${config.maxWidth}x${config.maxHeight}`
+    )
+
+    const projectInputPath = path.join(config.projectsInputDir, projectName)
+    const projectOutputPath = path.join(config.projectsOutputDir, projectName)
+
+    // Check if project directory exists
+    try {
+      const stats = await fs.stat(projectInputPath)
+      if (!stats.isDirectory()) {
+        console.error(`Error: ${projectName} is not a directory`)
+        process.exit(1)
+      }
+    } catch {
+      console.error(`Error: Project directory '${projectName}' not found at ${projectInputPath}`)
+      process.exit(1)
+    }
+
+    // Ensure projects output directory exists
+    await fs.mkdir(config.projectsOutputDir, { recursive: true })
+
+    console.log(`Processing project: ${projectName}`)
+    console.log(`Input path: ${projectInputPath}`)
+    console.log(`Output path: ${projectOutputPath}`)
+
+    // Process images in this specific project directory
+    const projectResults = await processImagesInDirectory(
+      config.projectsInputDir,
+      config.projectsOutputDir,
+      projectName
+    )
+
+    // Generate project-specific manifest
+    const projectManifestPath = path.join(projectOutputPath, 'manifest.json')
+    await fs.writeFile(projectManifestPath, JSON.stringify(projectResults, null, 2), 'utf-8')
+
+    console.log('\n' + '='.repeat(50))
+    console.log('=== Processing Summary ===')
+    console.log(`Project: ${projectName}`)
+    console.log(`Images processed: ${projectResults.length}`)
+    console.log(`Manifest written to: ${projectManifestPath}`)
+
+    return projectResults
+  } catch (error) {
+    console.error(`Error processing project '${projectName}':`, error)
+    process.exit(1)
+  }
+}
+
+// Parse command line arguments
+const args = process.argv.slice(2)
+const projectName = args[0]
+
 // Run the script
-processImages()
+if (projectName) {
+  console.log(`Processing specific project: ${projectName}`)
+  processSpecificProject(projectName)
+} else {
+  console.log('Processing all projects and gallery images')
+  processImages()
+}

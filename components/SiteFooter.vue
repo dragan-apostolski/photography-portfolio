@@ -16,7 +16,7 @@
         <div class="flex items-center gap-6">
           <!-- Instagram -->
           <a
-            href="https://instagram.com/apostolski-dragan"
+            href="https://instagram.com/apostolski_dragan"
             target="_blank"
             rel="noopener noreferrer"
             class="text-primary transition-colors duration-300 hover:text-accent dark:text-primary-dark"

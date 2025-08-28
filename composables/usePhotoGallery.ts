@@ -16,7 +16,7 @@ export interface Photo {
   width?: number
   height?: number
   aspectRatio?: 'square' | 'vertical' | 'horizontal'
-  tag: string[] // Changed to array to support multiple tags
+  tag: string[]
 }
 
 export const usePhotoGallery = () => {

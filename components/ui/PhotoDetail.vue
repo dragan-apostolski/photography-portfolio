@@ -3,7 +3,6 @@ interface CameraSettings {
   shutterSpeed?: string
   aperture?: string
   iso?: string
-  [key: string]: any
 }
 
 interface Photo {
