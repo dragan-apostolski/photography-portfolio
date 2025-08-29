@@ -2,9 +2,9 @@
 title: 'Alter Ego'
 description: 'Creative portrait series exploring the concept of alter ego and dual identity through artistic photography'
 location: 'Ljubljana, Slovenia'
-tag: ['portrait', 'creative', 'artistic', 'conceptual']
+tag: ['events', 'client']
 date: '2024-02-15'
-coverPhoto: '/projects/Alter Ego/AlterEgo-Dragan-01.webp'
+coverPhoto: '/projects/Alter Ego/AlterEgo-Dragan-01.avif'
 featured: true
 photos:
   [

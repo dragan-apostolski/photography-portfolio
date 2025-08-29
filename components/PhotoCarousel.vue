@@ -92,7 +92,7 @@ watch(currentIndex, () => {
             :src="photo.src"
             :alt="photo.alt"
             class="h-full w-full object-cover"
-            format="webp"
+            format="avif"
             loading="eager"
             placeholder
           />

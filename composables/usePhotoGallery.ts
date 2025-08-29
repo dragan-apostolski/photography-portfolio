@@ -24,7 +24,7 @@ export const usePhotoGallery = () => {
   const photos = ref<Photo[]>([
     {
       id: 'landscape-golivrh',
-      src: '/photos/landscape/GoliVrh.webp',
+      src: '/photos/landscape/GoliVrh.avif',
       title: 'Goli Vrh',
       aspectRatio: 'horizontal',
       description: 'Morning view of the mountains in Triglav National Park',
@@ -33,7 +33,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-losinj',
-      src: '/photos/landscape/Losinj.webp',
+      src: '/photos/landscape/Losinj.avif',
       title: 'Lošinj Island',
       aspectRatio: 'horizontal',
       description: 'Sunset view of the Adriatic Sea',
@@ -42,7 +42,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-macha-land',
-      src: '/photos/landscape/MachaPuchareLand.webp',
+      src: '/photos/landscape/MachaPuchareLand.avif',
       title: 'Machapuchare',
       aspectRatio: 'horizontal',
       description: 'The sacred mountain in the Annapurna range',
@@ -51,7 +51,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-macha-port',
-      src: '/photos/landscape/MachapucharePort.webp',
+      src: '/photos/landscape/MachapucharePort.avif',
       title: 'Machapuchare Portrait',
       aspectRatio: 'vertical',
       description: 'Close-up view of the Fishtail mountain',
@@ -60,7 +60,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-prisojnik',
-      src: '/photos/landscape/Prisojnik.webp',
+      src: '/photos/landscape/Prisojnik.avif',
       title: 'Prisojnik',
       aspectRatio: 'horizontal',
       description: 'Early morning light on Prisojnik mountain',
@@ -69,7 +69,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-providenca',
-      src: '/photos/landscape/Providenca.webp',
+      src: '/photos/landscape/Providenca.avif',
       title: 'Providenca',
       aspectRatio: 'horizontal',
       description: 'Church on a hill at sunset',
@@ -78,7 +78,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-sigiriya',
-      src: '/photos/landscape/Sigiriya.webp',
+      src: '/photos/landscape/Sigiriya.avif',
       title: 'Sigiriya Rock',
       aspectRatio: 'horizontal',
       description: 'Ancient rock fortress in central Sri Lanka',
@@ -87,7 +87,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-zadar',
-      src: '/photos/landscape/Zadar.webp',
+      src: '/photos/landscape/Zadar.avif',
       title: 'Zadar Sunset',
       aspectRatio: 'horizontal',
       description: 'Sunset view of Zadar city',
@@ -96,7 +96,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'landscape-soca',
-      src: '/photos/landscape/soca.webp',
+      src: '/photos/landscape/soca.avif',
       title: 'Soča River',
       aspectRatio: 'horizontal',
       description: 'The emerald beauty of Soča river',
@@ -105,7 +105,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'portrait-eka',
-      src: '/photos/portraits/Eka.webp',
+      src: '/photos/portraits/Eka.avif',
       title: 'Eka',
       aspectRatio: 'vertical',
       description: 'Portrait session in the city',
@@ -114,7 +114,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'portrait-eka2',
-      src: '/photos/portraits/Eka2.webp',
+      src: '/photos/portraits/Eka2.avif',
       title: 'Eka in Nature',
       aspectRatio: 'vertical',
       description: 'Portrait session in nature',
@@ -123,7 +123,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'portrait-ivana',
-      src: '/photos/portraits/IvanaLines.webp',
+      src: '/photos/portraits/IvanaLines.avif',
       title: 'Ivana',
       aspectRatio: 'vertical',
       description: 'Light and shadow play',
@@ -132,7 +132,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'portrait-lina',
-      src: '/photos/portraits/Lina.webp',
+      src: '/photos/portraits/Lina.avif',
       title: 'Lina',
       aspectRatio: 'vertical',
       description: 'Autumn portrait session',
@@ -141,7 +141,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-blue-mosque',
-      src: '/photos/travel/BlueMosque.webp',
+      src: '/photos/travel/BlueMosque.avif',
       title: 'Blue Mosque',
       aspectRatio: 'vertical',
       description: 'Inside the Sultan Ahmed Mosque',
@@ -150,7 +150,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-deda-prodaje',
-      src: '/photos/travel/DedaProdaje.webp',
+      src: '/photos/travel/DedaProdaje.avif',
       title: 'Market Vendor',
       aspectRatio: 'vertical',
       description: 'Old man selling goods at a local market',
@@ -159,7 +159,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-grannies',
-      src: '/photos/travel/Grannies.webp',
+      src: '/photos/travel/Grannies.avif',
       title: 'Grannies',
       aspectRatio: 'vertical',
       description: 'Elderly women chatting on a bench',
@@ -168,7 +168,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-himalaya-girl',
-      src: '/photos/travel/HimalayaGirl.webp',
+      src: '/photos/travel/HimalayaGirl.avif',
       title: 'Himalayan Girl',
       aspectRatio: 'vertical',
       description: 'Local girl in the Himalayan mountains',
@@ -177,7 +177,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-kiddos',
-      src: '/photos/travel/Kiddos.webp',
+      src: '/photos/travel/Kiddos.avif',
       title: 'Kiddos',
       aspectRatio: 'vertical',
       description: 'Children playing in a village',
@@ -186,7 +186,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-monkey-temple',
-      src: '/photos/travel/MonkeyTemple.webp',
+      src: '/photos/travel/MonkeyTemple.avif',
       title: 'Monkey Temple',
       aspectRatio: 'vertical',
       description: 'Swayambhunath temple with monkeys',
@@ -195,7 +195,7 @@ export const usePhotoGallery = () => {
     },
     {
       id: 'travel-walking-market',
-      src: '/photos/travel/WalkingMarket.webp',
+      src: '/photos/travel/WalkingMarket.avif',
       title: 'Walking Market',
       aspectRatio: 'vertical',
       description: 'People walking through a busy market',

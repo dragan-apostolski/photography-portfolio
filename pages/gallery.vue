@@ -69,11 +69,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Photo } from '~/composables/usePhotoGallery'
 // Import UI components
 import PhotoPreview from '~/components/ui/PhotoPreview.vue'
 import PhotoDetail from '~/components/ui/PhotoDetail.vue'
 import Tag from '~/components/ui/Tag.vue'
+import type { Photo } from '~/composables/usePhotoGallery'
 
 // Page meta
 useHead({

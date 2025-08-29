@@ -36,7 +36,7 @@ const config = {
   maxWidth: 2560,
   maxHeight: 1920,
   quality: 85,
-  format: 'avif' as const,
+  format: 'avif' as 'webp' | 'jpg' | 'avif',
   generateManifest: true,
   resizeKernel: 'lanczos3' as const,
   webpOptions: {
@@ -455,14 +455,147 @@ const processSpecificProject = async (projectName: string) => {
   }
 }
 
+/**
+ * Process any specific folder within original-photos
+ */
+const processSpecificFolder = async (folderPath: string) => {
+  try {
+    console.log(`=== Processing specific folder: ${folderPath} ===`)
+    console.log(
+      `Format: ${config.format}, Quality: ${config.quality}, Max dimensions: ${config.maxWidth}x${config.maxHeight}`
+    )
+
+    // Determine if this is a project folder or a regular gallery folder
+    const isProjectFolder = folderPath.startsWith('projects/')
+
+    // Set the appropriate base input and output directories
+    const baseInputDir = isProjectFolder
+      ? config.projectsInputDir.replace('/projects', '')
+      : config.inputDir
+    const baseOutputDir = isProjectFolder
+      ? config.projectsOutputDir.replace('/projects', '')
+      : config.outputDir
+
+    // Get the relative folder path (without 'projects/' prefix if it's a project)
+    const relativePath = isProjectFolder ? folderPath.replace('projects/', '') : folderPath
+
+    const fullInputPath = path.join(baseInputDir, folderPath)
+    const fullOutputPath = path.join(baseOutputDir, folderPath)
+
+    // Check if folder exists
+    try {
+      const stats = await fs.stat(fullInputPath)
+      if (!stats.isDirectory()) {
+        console.error(`Error: ${folderPath} is not a directory`)
+        process.exit(1)
+      }
+    } catch {
+      console.error(`Error: Folder '${folderPath}' not found at ${fullInputPath}`)
+      process.exit(1)
+    }
+
+    // Ensure output directory exists
+    await fs.mkdir(fullOutputPath, { recursive: true })
+
+    console.log(`Processing folder: ${folderPath}`)
+    console.log(`Input path: ${fullInputPath}`)
+    console.log(`Output path: ${fullOutputPath}`)
+
+    // Process images in this specific folder
+    // If it's a project folder, use project directories as base
+    // If it's a regular gallery folder, use regular directories as base
+    const inputDir = isProjectFolder ? config.projectsInputDir : config.inputDir
+    const outputDir = isProjectFolder ? config.projectsOutputDir : config.outputDir
+    const directoryPath = isProjectFolder ? relativePath : folderPath
+
+    const results = await processImagesInDirectory(inputDir, outputDir, directoryPath)
+
+    // Generate folder-specific manifest
+    const manifestPath = path.join(fullOutputPath, 'manifest.json')
+    await fs.writeFile(manifestPath, JSON.stringify(results, null, 2), 'utf-8')
+
+    console.log('\n' + '='.repeat(50))
+    console.log('=== Processing Summary ===')
+    console.log(`Folder: ${folderPath}`)
+    console.log(`Images processed: ${results.length}`)
+    console.log(`Manifest written to: ${manifestPath}`)
+
+    return results
+  } catch (error) {
+    console.error(`Error processing folder '${folderPath}':`, error)
+    process.exit(1)
+  }
+}
+
 // Parse command line arguments
 const args = process.argv.slice(2)
-const projectName = args[0]
+
+// Helper function to parse arguments with format --key=value
+const parseArgs = () => {
+  const parsedArgs: Record<string, string> = {}
+  let targetFolder: string | undefined
+
+  args.forEach((arg) => {
+    if (arg.startsWith('--')) {
+      const [key, value] = arg.substring(2).split('=')
+      if (key && value !== undefined) {
+        parsedArgs[key] = value
+      }
+    } else {
+      // If not a --key=value format, assume it's the target folder
+      targetFolder = arg
+    }
+  })
+
+  return { parsedArgs, targetFolder }
+}
+
+// Parse arguments
+const { parsedArgs, targetFolder: folderPath } = parseArgs()
+
+// Set format and quality if provided
+if (parsedArgs.format && ['webp', 'jpg', 'avif'].includes(parsedArgs.format)) {
+  config.format = parsedArgs.format as 'webp' | 'jpg' | 'avif'
+}
+
+if (parsedArgs.quality) {
+  const qualityValue = parseInt(parsedArgs.quality, 10)
+  if (!isNaN(qualityValue) && qualityValue >= 1 && qualityValue <= 100) {
+    config.quality = qualityValue
+  }
+}
+
+// Helper function to check if a directory exists
+const directoryExists = async (dirPath: string): Promise<boolean> => {
+  try {
+    const stats = await fs.stat(dirPath)
+    return stats.isDirectory()
+  } catch {
+    return false
+  }
+}
 
 // Run the script
-if (projectName) {
-  console.log(`Processing specific project: ${projectName}`)
-  processSpecificProject(projectName)
+if (folderPath) {
+  // First try to determine if it's a project by checking if the directory exists
+  const isProjectDir = async (): Promise<boolean> => {
+    // Check if it's a direct project name (legacy format without 'projects/' prefix)
+    if (!folderPath.includes('/')) {
+      return await directoryExists(path.join(config.projectsInputDir, folderPath))
+    }
+    return false
+  }
+
+  isProjectDir().then((isProject) => {
+    console.log(`Format: ${config.format}, Quality: ${config.quality}`)
+    if (isProject) {
+      console.log(`Processing specific project: ${folderPath}`)
+      processSpecificProject(folderPath)
+    } else {
+      console.log(`Processing specific folder: ${folderPath}`)
+      processSpecificFolder(folderPath)
+    }
+  })
 } else {
   console.log('Processing all projects and gallery images')
   processImages()
