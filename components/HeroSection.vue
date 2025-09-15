@@ -1,32 +1,27 @@
 <script setup lang="ts">
 import type { Photo } from '~/types/photo'
 
-// Manually define the photo data for now to debug the component connection
-const photos = ref<Photo[]>([
-  {
-    title: 'Coastal serenity',
-    src: '/photos/landscape/Zadar.avif',
-    alt: 'Serene coastal landscape with stunning sunset colors',
-    description: 'The beauty of the Adriatic Sea',
-    buttonTitle: 'Explore the Adriatic Sea',
-  },
-  {
-    title: 'Sigiriya',
-    src: '/photos/landscape/Sigiriya.avif',
-    alt: 'Majestic mountain peaks with dramatic clouds',
-    description: 'The land of diversity',
-    buttonTitle: 'Explore the diversity of Sri Lanka',
-  },
-  {
-    title: 'Goli Vrh',
-    src: '/photos/landscape/GoliVrh.avif',
-    alt: 'Explore the gorgeous Slovenian mountains',
-    description: 'The pristine Julian Alps of Slovenia',
-    buttonTitle: 'Explore the Julian Alps',
-  },
-])
+interface ContentItem {
+  meta?: {
+    photos?: Photo[]
+  }
+}
 
-// TODO After debugging, we'll switch back to content-based approach
+// Fetch photo data from content file using useAsyncData for proper SSR handling
+const { data: carouselData } = await useAsyncData('carousel', async () => {
+  const all = await queryCollection('content').all()
+
+  // Find the carousel file by checking different possible paths
+  return (
+    all.find((item) => item.path === '/carousel') ||
+    all.find((item) => item.title === 'Hero Carousel Photos') ||
+    null
+  )
+})
+
+const photos = computed<Photo[]>(() => {
+  return (carouselData.value as ContentItem)?.meta?.photos || []
+})
 </script>
 
 <template>

@@ -229,5 +229,3 @@ Later on we will add projects, prints, and services.
 ### Organisation of the public/photos folder
 
 The public/photos folder will contain all the photos that will be displayed on the website. It should be well structured and future proof.
-One proposal for structuring the folder is to store all the content photos in the following format: /public/photos/gallery/year/month/[project]/[photo].jpg.
-For other photos, such as the ones that will be placed in the about page, we can put them under /public/photos/about/[photo].jpg

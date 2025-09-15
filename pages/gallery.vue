@@ -73,7 +73,13 @@
 import PhotoPreview from '~/components/ui/PhotoPreview.vue'
 import PhotoDetail from '~/components/ui/PhotoDetail.vue'
 import Tag from '~/components/ui/Tag.vue'
-import type { Photo } from '~/composables/usePhotoGallery'
+import type { Photo } from '~/types/photo'
+
+interface ContentItem {
+  meta?: {
+    photos?: Photo[]
+  }
+}
 
 // Page meta
 useHead({
@@ -87,8 +93,38 @@ useHead({
   ],
 })
 
-// Get photos from the gallery composable
-const { availableTags, getAllPhotos, getPhotosByTag } = usePhotoGallery()
+// Fetch photo data from content file using useAsyncData for proper SSR handling
+const { data: galleryData } = await useAsyncData('gallery', async () => {
+  const all = await queryCollection('content').all()
+
+  // Find the gallery file by checking different possible paths
+  return (
+    all.find((item) => item.path === '/gallery') ||
+    all.find((item) => item.title === 'Photo Gallery Collection') ||
+    null
+  )
+})
+
+const photos = computed<Photo[]>(() => {
+  return (galleryData.value as ContentItem)?.meta?.photos || []
+})
+
+// Available tags for filtering
+const availableTags = computed(() => {
+  const tagSet = new Set<string>()
+  photos.value.forEach((photo) => {
+    photo.tag.forEach((tag) => tagSet.add(tag))
+  })
+  return Array.from(tagSet).sort()
+})
+
+// Get all photos
+const getAllPhotos = () => photos.value
+
+// Filter photos by tag
+const getPhotosByTag = (tag: string) => {
+  return photos.value.filter((photo) => photo.tag.includes(tag))
+}
 
 // Track the current tag filter
 const selectedTag = ref('')

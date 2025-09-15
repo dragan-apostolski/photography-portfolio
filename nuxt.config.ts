@@ -14,6 +14,12 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
+  // Image configuration - IPX dynamic transformation
+  image: {
+    quality: 80,
+    format: ['webp', 'avif', 'jpg'],
+  },
+
   // Color mode configuration
   colorMode: {
     preference: 'system',

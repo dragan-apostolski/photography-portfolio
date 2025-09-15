@@ -44,7 +44,7 @@ export const useProjects = () => {
       title: projectData.title || '',
       description: projectData.description || '',
       location: meta.location,
-      tag: meta.tag || [],
+      tag: meta.tags || meta.tag || [],
       date: meta.date || '',
       coverPhoto: meta.coverPhoto || '',
       featured: meta.featured || false,
@@ -70,25 +70,20 @@ export const useProjects = () => {
   }
 
   /**
-   * Load project photos from manifest files
+   * Load project photos from .md frontmatter
    */
   const loadProjectPhotos = async (projectSlug: string): Promise<ProjectPhoto[]> => {
     try {
-      // Get the actual directory name from the project data
       const project = await getProjectBySlug(projectSlug)
-      if (!project) {
-        console.warn(`No project found for slug: ${projectSlug}`)
+      if (!project?.coverPhoto || !project?.photos) {
+        console.warn(`No project or photos found for slug: ${projectSlug}`)
         return []
       }
 
-      // Extract directory name from the coverPhoto path
-      // coverPhoto format: '/projects/Directory Name/filename.webp'
-      if (!project.coverPhoto) {
-        console.warn(`No coverPhoto found for project: ${projectSlug}`)
-        return []
-      }
+      // Extract directory name from coverPhoto path
+      // Expected format: /photos/projects/DirectoryName/filename.avif
       const pathParts = project.coverPhoto.split('/')
-      const directoryName = pathParts[2]
+      const directoryName = pathParts[3] // /photos/projects/DirectoryName/filename.avif
 
       if (!directoryName) {
         console.warn(
@@ -97,43 +92,24 @@ export const useProjects = () => {
         return []
       }
 
-      // Properly encode each path segment for the manifest URL
-      const encodedDirectoryName = directoryName
-        .split('/')
-        .map((segment) => encodeURIComponent(segment))
-        .join('/')
-      const manifestUrl = `/projects/${encodedDirectoryName}/manifest.json`
-
-      const response = await $fetch<
-        Array<{
-          outputFile?: string
-          width?: number
-          height?: number
-          [key: string]: unknown
-        }>
-      >(manifestUrl)
-
-      if (!response || !Array.isArray(response)) {
-        console.warn(`No manifest found for project: ${projectSlug} at ${manifestUrl}`)
-        return []
-      }
-
-      // Transform manifest data to ProjectPhoto format
-      return response.map((item, index) => {
-        const fileName = (item.outputFile as string)?.split('/').pop() || `image-${index}`
+      // Transform photos array from frontmatter to Photo format
+      // Note: Don't encode paths here - let NuxtImg handle encoding internally
+      const photos = project.photos.map((fileName: string, index: number) => {
         const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, '')
-        const width = (item.width as number) || 0
-        const height = (item.height as number) || 0
+        const imagePath = `/photos/projects/${directoryName}/${fileName}`
 
         return {
           id: `${projectSlug}-${fileNameWithoutExt}`,
-          src: `/projects/${directoryName}/${fileName}`,
-          title: `${directoryName} - ${index + 1}`,
-          width,
-          height,
-          aspectRatio: width > height ? 'horizontal' : height > width ? 'vertical' : 'square',
-        } as ProjectPhoto
+          src: imagePath,
+          title: fileNameWithoutExt.replace(/-/g, ' '),
+          description: `Photo ${index + 1} from ${project.title}`,
+          location: project.location,
+          timestamp: project.date,
+          tag: project.tag || [],
+        } as Photo
       })
+
+      return photos
     } catch (error) {
       console.error(`Error loading photos for project ${projectSlug}:`, error)
       return []

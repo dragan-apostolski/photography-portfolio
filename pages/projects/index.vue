@@ -57,6 +57,8 @@
                 :alt="project.title"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
+                format="webp"
+                sizes="100vw md:50vw, lg:33vw"
               />
               <div
                 v-else
@@ -118,6 +120,7 @@ const { getAllProjects, getProjectTags } = useProjects()
 
 // Data fetching
 const { data: projects, pending, error } = await useAsyncData('projects', getAllProjects)
+console.log('Projects data:', projects.value)
 const { data: availableTags } = await useAsyncData('project-tags', getProjectTags, {
   default: () => [],
 })

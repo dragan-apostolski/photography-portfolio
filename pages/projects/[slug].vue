@@ -28,7 +28,10 @@
             :src="coverPhoto.src"
             :alt="coverPhoto.title || project.title"
             class="h-full w-full object-cover"
-            loading="eager"
+            format="webp"
+            quality="100"
+            placeholder
+            loading="lazy"
           />
 
           <!-- Cover Photo Overlay -->
@@ -103,6 +106,7 @@
                 :alt="(item.photo as any).title || `${project.title} - Photo ${index + 1}`"
                 class="max-h-[90vh] max-w-full rounded-2xl object-contain"
                 loading="lazy"
+                sizes="100vw xl:80vw"
               />
             </div>
           </template>
@@ -124,6 +128,8 @@
                   :alt="photo.title || `${project.title} - Photo ${index + 1}`"
                   class="w-full object-contain"
                   loading="lazy"
+                  format="avif"
+                  sizes="(max-width: 768px) 100vw, 768px"
                 />
 
                 <!-- Photo Metadata (if available) -->
@@ -167,6 +173,8 @@
                     :alt="relatedProject.title"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
+                    format="avif"
+                    sizes="(max-width: 640px) 100vw, 320px"
                   />
                 </div>
                 <h3 class="text-xl font-semibold transition-colors group-hover:text-accent">

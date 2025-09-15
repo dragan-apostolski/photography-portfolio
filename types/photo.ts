@@ -1,7 +1,22 @@
+interface CameraSettings {
+  shutterSpeed?: string
+  aperture?: string
+  iso?: string
+  [key: string]: string | undefined
+}
+
 export interface Photo {
-  title: string
+  id: string
   src: string
-  alt: string
-  description: string
-  buttonTitle: string
+  title?: string
+  description?: string
+  location?: string
+  timestamp?: string
+  cameraSettings?: CameraSettings
+  width?: number
+  height?: number
+  aspectRatio?: 'square' | 'vertical' | 'horizontal'
+  tag: string[]
+  alt?: string
+  buttonTitle?: string
 }

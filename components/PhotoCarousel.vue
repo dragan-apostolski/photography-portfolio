@@ -43,16 +43,22 @@ const stopAutoplay = () => {
 
 // Navigation methods
 const goTo = (index: number) => {
-  currentIndex.value = index
-  startAutoplay() // Reset the timer when manually changing slides
+  if (props.photos && props.photos.length > 0) {
+    currentIndex.value = index
+    startAutoplay() // Reset the timer when manually changing slides
+  }
 }
 
 const next = () => {
-  currentIndex.value = (currentIndex.value + 1) % props.photos.length
+  if (props.photos && props.photos.length > 0) {
+    currentIndex.value = (currentIndex.value + 1) % props.photos.length
+  }
 }
 
 const prev = () => {
-  currentIndex.value = (currentIndex.value - 1 + props.photos.length) % props.photos.length
+  if (props.photos && props.photos.length > 0) {
+    currentIndex.value = (currentIndex.value - 1 + props.photos.length) % props.photos.length
+  }
 }
 
 // Watch for changes and apply transitions
@@ -66,19 +72,21 @@ watch(currentIndex, () => {
   <div class="relative h-full w-full overflow-hidden">
     <!-- Description and CTA overlay -->
     <div
+      v-if="props.photos && props.photos.length > 0"
       class="absolute top-1/2 left-1/2 z-30 -translate-x-1/2 -translate-y-1/2 space-y-4 text-center lg:left-32 lg:translate-x-0 lg:text-left"
     >
       <h2 class="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
-        {{ props.photos[currentIndex].description }}
+        {{ props.photos[currentIndex]?.description }}
       </h2>
       <Button custom-classes="text-white">
-        {{ props.photos[currentIndex].buttonTitle }}
+        {{ props.photos[currentIndex]?.buttonTitle }}
       </Button>
     </div>
 
     <!-- Images Container with smooth sliding transition -->
     <div class="bg-background-primary dark:bg-background-primary-dark relative h-full w-full">
       <div
+        v-if="props.photos && props.photos.length > 0"
         class="relative h-full w-full transition-transform duration-700 ease-in-out"
         :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
       >
@@ -92,9 +100,9 @@ watch(currentIndex, () => {
             :src="photo.src"
             :alt="photo.alt"
             class="h-full w-full object-cover"
-            format="avif"
-            loading="eager"
+            quality="80"
             placeholder
+            loading="lazy"
           />
         </div>
       </div>
@@ -107,8 +115,8 @@ watch(currentIndex, () => {
       >
         <CarouselNavButton
           v-for="(photo, index) in props.photos"
-          :key="photo.title"
-          :label="photo.title"
+          :key="photo.title || photo.id || index"
+          :label="photo.title || `Photo ${index + 1}`"
           :active="index === currentIndex"
           @click="goTo(index)"
           @mouseenter="stopAutoplay"

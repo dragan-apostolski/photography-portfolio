@@ -12,10 +12,17 @@ useSeoMeta({
     <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
       <!-- Profile Image Section -->
       <div class="overflow-hidden rounded-lg shadow-lg">
-        <div class="relative aspect-square bg-secondary-200 dark:bg-secondary-800">
-          <div class="absolute inset-0 flex items-center justify-center">
-            <p class="text-center font-medium">Photographer Portrait</p>
-          </div>
+        <div class="relative aspect-square">
+          <NuxtImg
+            src="/photos/projects/TheRedStairs/DSC00114.jpg"
+            alt="Portrait photo"
+            class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
+            format="avif"
+            sizes="400px md:350px lg:400px xl:450px"
+            quality="80"
+            placeholder
+            loading="lazy"
+          />
         </div>
       </div>
 

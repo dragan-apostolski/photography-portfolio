@@ -1,30 +1,53 @@
 ---
 title: 'Eko Kamp Rinčica'
-description: 'Commercial landscape photography showcasing the natural beauty and sustainability of Eco Camp Rinčica'
-location: 'Rinčica, Slovenia'
-tag: ['client', 'accommodation', 'landscape']
-date: '2024-03-10'
-coverPhoto: '/projects/Eko Kamp Rinčica/DSC02315.avif'
-featured: true
+description: 'Commercial photography for an eco-camping resort showcasing natural beauty and sustainable tourism in the pristine wilderness of Rinčica.'
+location: 'Eko Kamp Rinčica, Slovenia'
+date: '2024-08-15'
+tags: ['hospitality', 'client', 'nature']
+coverPhoto: '/photos/projects/Eko Kamp Rinčica/DSC02315.jpg'
+photoCount: 12
 photos:
-  ['DSC02308', 'DSC02123', 'DSC02129', 'DSC02151', 'DSC02163', 'DSC02119', 'DSC02315', 'DSC02320']
+  - DSC02119.jpg
+  - DSC02123.jpg
+  - DSC02129.jpg
+  - DSC02151.jpg
+  - DSC02163.jpg
+  - DSC02308.jpg
+  - DSC02315.jpg
+  - DSC02320.jpg
+  - DSC02333.jpg
+  - DSC02337.jpg
+  - DSC02342.jpg
+  - DSC02347.jpg
 ---
 
 # Eko Kamp Rinčica
 
-A commercial photography project capturing the stunning landscapes and sustainable facilities of Eko Kamp Rinčica. This series showcases the harmony between natural beauty and eco-friendly tourism, highlighting the camp's unique position within pristine Slovenian wilderness.
+A comprehensive commercial photography project capturing the essence of sustainable tourism at Eko Kamp Rinčica. This eco-friendly camping resort nestled in the pristine wilderness offers visitors an authentic connection with nature while maintaining environmental responsibility.
 
-## Creative Vision
+The photography showcases the resort's facilities, natural surroundings, and the unique experience of staying in harmony with the untouched landscape of Rinčica.
 
-The project aims to convey the essence of sustainable travel and connection with nature. Each photograph captures the camp's integration with its natural surroundings while emphasizing the comfort and accessibility of the eco-friendly accommodations and facilities.
+## Project Details
 
-## Technical Approach
+- **Location**: Rinčica, North Macedonia
+- **Type**: Commercial Photography
+- **Focus**: Eco-tourism, Sustainable Travel, Nature
+- **Photo Count**: 12
+  photos:
+  - DSC02119.jpg
+  - DSC02123.jpg
+  - DSC02129.jpg
+  - DSC02151.jpg
+  - DSC02163.jpg
+  - DSC02308.jpg
+  - DSC02315.jpg
+  - DSC02320.jpg
+  - DSC02333.jpg
+  - DSC02337.jpg
+  - DSC02342.jpg
+  - DSC02347.jpg
+- **Equipment**: Sony Alpha series
 
-Shot primarily during golden hours to maximize natural lighting and landscape beauty, the series focuses on:
+## Gallery
 
-- **Environmental context** showing the camp's position within the wider landscape
-- **Natural details** highlighting flora, water features, and terrain characteristics
-- **Architectural integration** demonstrating how structures complement rather than impose on the environment
-- **Lifestyle elements** depicting the experience of staying at an eco-camp
-
-This commercial photography collection serves both as documentation of Eko Kamp Rinčica's offerings and as a promotional tool that emphasizes their commitment to environmental stewardship and sustainable tourism practices.
+The collection includes wide landscape shots of the camping area, detailed facility photography, and atmospheric captures that convey the peaceful, sustainable ethos of the resort.

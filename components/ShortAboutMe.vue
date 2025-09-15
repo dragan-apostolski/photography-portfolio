@@ -38,13 +38,11 @@ const navigateToAbout = () => {
             class="relative h-96 w-80 overflow-hidden rounded-2xl shadow-lg lg:h-[500px] lg:w-[400px]"
           >
             <NuxtImg
-              src="/photos/portraits/self.avif"
+              src="/photos/projects/TheRedStairs/DSC00114.jpg"
               alt="Portrait photo"
-              width="500"
-              height="600"
               class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
-              format="avif"
-              placeholder
+              format="jpg"
+              sizes="80vw md:400px"
             />
             <div
               class="absolute inset-0 rounded-2xl ring-1 ring-secondary-300 dark:ring-secondary-700"

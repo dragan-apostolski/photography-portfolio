@@ -2,50 +2,41 @@
 import PhotoPreview from './ui/PhotoPreview.vue'
 import Button from './ui/Button.vue'
 
+interface GalleryPhoto {
+  src: string
+  title: string
+  description: string
+  tag: string
+}
+
+interface ContentItem {
+  meta?: {
+    photos?: GalleryPhoto[]
+  }
+}
+
 const router = useRouter()
 
 const navigateToGallery = () => {
   router.push('/gallery')
 }
 
-const previewPhotos = [
-  {
-    src: '/photos/landscape/Prisojnik.avif',
-    title: 'Mountain Majesty',
-    description: 'Dramatic mountain peaks of Prisojnik in the Julian Alps',
-    tag: 'landscape',
-  },
-  {
-    src: '/photos/travel/BlueMosque.avif',
-    title: 'Blue Mosque',
-    description: 'Iconic Islamic architecture in Istanbul',
-    tag: 'travel',
-  },
-  {
-    src: '/photos/portraits/Eka.avif',
-    title: 'Natural Light Portrait',
-    description: 'Portrait session capturing genuine expressions',
-    tag: 'portrait',
-  },
-  {
-    src: '/photos/landscape/Sigiriya.avif',
-    title: 'Ancient Fortress',
-    description: 'The majestic Sigiriya rock formation in Sri Lanka',
-    tag: 'landscape',
-  },
-  {
-    src: '/photos/travel/HimalayaGirl.avif',
-    title: 'Himalayan Life',
-    description: 'Authentic moments from the Himalayan mountains',
-    tag: 'travel',
-  },
-  {
-    src: '/photos/portraits/Lina.avif',
-    title: 'Expressive Portrait',
-    description: 'Capturing personality and emotion through portraiture',
-    tag: 'portrait',
-  },
-]
+// Fetch photo data from content file using useAsyncData for proper SSR handling
+const { data: galleryPreviewData } = await useAsyncData('galleryPreview', async () => {
+  const all = await queryCollection('content').all()
+
+  // Find the galleryPreview file by checking different possible paths
+  return (
+    all.find((item) => item.path === '/galleryPreview') ||
+    all.find((item) => item.path === '/gallery-preview') ||
+    all.find((item) => item.title === 'Gallery Preview Photos') ||
+    null
+  )
+})
+
+const previewPhotos = computed<GalleryPhoto[]>(() => {
+  return (galleryPreviewData.value as ContentItem)?.meta?.photos || []
+})
 </script>
 
 <template>

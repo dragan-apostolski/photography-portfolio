@@ -27,15 +27,25 @@ interface ProcessedImage {
   metadata?: ImageMetadata
 }
 
+// Responsive image variants configuration
+interface ImageVariant {
+  width: number
+  height?: number
+  quality: number
+  formats: ('avif' | 'webp' | 'jpg')[]
+  suffix: string
+}
+
 // Configuration
+// Original photos from Lightroom: JPEG format, longest side 2500px, quality 50%
 const config = {
   inputDir: path.resolve(__dirname, '../original-photos'),
   outputDir: path.resolve(__dirname, '../public/photos'),
   projectsInputDir: path.resolve(__dirname, '../original-photos/projects'),
   projectsOutputDir: path.resolve(__dirname, '../public/projects'),
-  maxWidth: 2560,
-  maxHeight: 1920,
-  quality: 85,
+  maxWidth: 2500, // Match Lightroom export longest side
+  maxHeight: 2500, // Allow for both landscape and portrait
+  quality: 80, // Higher quality for final output
   format: 'avif' as 'webp' | 'jpg' | 'avif',
   generateManifest: true,
   resizeKernel: 'lanczos3' as const,
@@ -44,6 +54,89 @@ const config = {
     smartSubsample: true,
     nearLossless: false,
   },
+  // Responsive variants for NuxtImg optimization
+  // Primary format: AVIF with WebP and JPEG fallbacks
+  variants: {
+    gallery: [
+      {
+        width: 2500,
+        quality: 80,
+        formats: ['avif', 'webp', 'jpg'],
+        suffix: 'gallery',
+      },
+      {
+        width: 1200,
+        quality: 80,
+        formats: ['avif', 'webp', 'jpg'],
+        suffix: 'gallery-md',
+      },
+      {
+        width: 600,
+        quality: 80,
+        formats: ['avif', 'webp', 'jpg'],
+        suffix: 'gallery-sm',
+      },
+    ] as ImageVariant[],
+    thumbnail: [
+      { width: 400, quality: 75, formats: ['avif', 'webp', 'jpg'], suffix: 'thumb' },
+    ] as ImageVariant[],
+  },
+}
+
+/**
+ * Process image variants for responsive loading
+ */
+const processImageVariants = async (
+  inputPath: string,
+  outputDir: string,
+  fileName: string,
+  variants: ImageVariant[]
+): Promise<ProcessedImage[]> => {
+  const results: ProcessedImage[] = []
+  const originalStats = await fs.stat(inputPath)
+
+  for (const variant of variants) {
+    for (const format of variant.formats) {
+      const outputFileName = `${fileName}-${variant.suffix}.${format}`
+      const outputPath = path.join(outputDir, outputFileName)
+
+      // Skip if already exists
+      try {
+        await fs.access(outputPath)
+        console.log(`Skipping ${outputFileName} - already exists`)
+        continue
+      } catch {
+        // File doesn't exist, proceed
+      }
+
+      const processedData = await processImage(inputPath, outputPath, {
+        maxWidth: variant.width,
+        maxHeight: variant.height || Math.round(variant.width * 0.75),
+        quality: variant.quality,
+        format,
+        resizeKernel: config.resizeKernel,
+        webpOptions: config.webpOptions,
+      })
+
+      const compressionRatio = originalStats.size / processedData.size
+
+      results.push({
+        originalFile: path.basename(inputPath),
+        outputFile: outputFileName,
+        originalSize: originalStats.size,
+        processedSize: processedData.size,
+        width: processedData.width,
+        height: processedData.height,
+        compressionRatio,
+      })
+
+      console.log(
+        `Generated: ${outputFileName} (${processedData.width}x${processedData.height}, ${(processedData.size / 1024 / 1024).toFixed(2)}MB)`
+      )
+    }
+  }
+
+  return results
 }
 
 /**
@@ -233,34 +326,18 @@ const processImagesInDirectory = async (
           `Processing ${path.join(relativePath, item)} (${metadata.width}x${metadata.height}, ${(originalSize / 1024 / 1024).toFixed(2)}MB)`
         )
 
-        // Process the image
-        const processedData = await processImage(inputItemPath, outputPath, {
-          maxWidth: config.maxWidth,
-          maxHeight: config.maxHeight,
-          quality: config.quality,
-          format: config.format,
-          resizeKernel: config.resizeKernel,
-          webpOptions: config.webpOptions,
-        })
-
-        // Calculate compression ratio
-        const compressionRatio = originalSize / processedData.size
-
-        // Store result
-        results.push({
-          originalFile: path.join(relativePath, item),
-          outputFile: path.join(relativePath, outputFileName),
-          originalSize,
-          processedSize: processedData.size,
-          width: processedData.width,
-          height: processedData.height,
-          compressionRatio,
-          metadata,
-        })
-
-        console.log(
-          `Processed: ${outputFileName} (${processedData.width}x${processedData.height}, ${(processedData.size / 1024 / 1024).toFixed(2)}MB, compression ratio: ${compressionRatio.toFixed(2)}x)`
+        // Process image variants for responsive loading
+        const variantResults = await processImageVariants(
+          inputItemPath,
+          currentOutputDir,
+          fileNameWithoutExt,
+          config.variants.gallery
         )
+
+        results.push(...variantResults)
+
+        // Log processing summary
+        console.log(`Generated ${variantResults.length} variants for ${item}`)
       }
     }
   }
