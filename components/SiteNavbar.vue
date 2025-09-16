@@ -1,162 +1,101 @@
 <template>
   <nav
-    class="fixed top-0 right-0 left-0 z-50 bg-transparent backdrop-blur-xl transition-all duration-300"
+    class="fixed top-0 right-0 left-0 z-50 bg-transparent backdrop-blur-3xl transition-all duration-300"
     :class="{
       'bg-primary/80 shadow-md backdrop-blur-sm dark:bg-primary-dark/80': scrolled,
     }"
   >
-    <!-- Desktop Navigation -->
-    <div class="container mx-auto hidden h-16 items-center justify-between px-4 md:flex">
-      <!-- Logo/Brand -->
-      <div class="flex-shrink-0">
-        <nuxt-link to="/" class="text-xl font-bold uppercase transition-colors duration-300">
-          Apostolski
-        </nuxt-link>
-      </div>
-
-      <!-- Navigation Links -->
-      <div class="flex flex-1 items-center justify-center px-4">
-        <ul class="flex space-x-8">
-          <li v-for="item in menuItems" :key="item.path">
-            <nuxt-link
-              :to="item.path"
-              class="relative font-medium transition-colors duration-300 hover:text-accent"
-              :class="{ 'text-accent': isActiveRoute(item.path) }"
-            >
-              {{ item.name }}
-            </nuxt-link>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Dark Mode Toggle -->
-      <button
-        aria-label="Toggle dark mode"
-        class="flex cursor-pointer items-center justify-center rounded-full p-2 transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
-        @click="toggleColorMode"
-      >
-        <span v-if="isDark" class="flex items-center justify-center text-xl">
-          <Icon name="ph:sun" />
-        </span>
-        <span v-else class="flex items-center justify-center text-xl">
-          <Icon name="ph:moon" />
-        </span>
-      </button>
-    </div>
-
-    <!-- Mobile Navigation -->
-    <div class="container mx-auto flex h-16 items-center justify-between px-4 md:hidden">
-      <!-- Brand Name -->
-      <div class="flex-shrink-0">
-        <nuxt-link to="/" class="text-lg font-bold uppercase transition-colors duration-300">
-          Apostolski
-        </nuxt-link>
-      </div>
-      <div class="flex items-center space-x-3">
-        <!-- Color Mode Toggle -->
-        <button
-          aria-label="Toggle dark mode"
-          class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
-          @click="toggleColorMode"
-        >
-          <span v-if="isDark" class="flex items-center justify-center text-xl">
-            <Icon name="ph:sun" />
-          </span>
-          <span v-else class="flex items-center justify-center text-xl">
-            <Icon name="ph:moon" />
-          </span>
-        </button>
-        <!-- Menu Toggle Button -->
-        <button
-          aria-label="Toggle menu"
-          class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:text-accent"
-          @click="toggleMenu"
-        >
-          <div class="relative h-5 w-6">
-            <span
-              class="absolute block h-[2px] w-6 rounded-full transition-all duration-300"
-              :class="{
-                'bg-accent': !isMenuOpen,
-                'top-2 rotate-45 bg-accent': isMenuOpen,
-              }"
-              :style="{ top: '0px' }"
-            />
-            <span
-              class="absolute block h-[2px] w-6 rounded-full transition-all duration-300"
-              :class="{
-                'bg-accent': !isMenuOpen,
-                'opacity-0': isMenuOpen,
-              }"
-              :style="{ top: '8px' }"
-            />
-            <span
-              class="absolute block h-[2px] w-6 rounded-full transition-all duration-300"
-              :class="{
-                'bg-accent': !isMenuOpen,
-                'top-2 -rotate-45 bg-accent': isMenuOpen,
-              }"
-              :style="{ top: '16px' }"
-            />
-          </div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Menu (Fullscreen) -->
+    <!-- Unified Navigation Container -->
     <div
-      v-if="isMenuOpen"
-      class="fixed inset-0 z-40 flex flex-col transition-all duration-300 ease-in-out"
+      class="container mx-auto flex flex-col overflow-hidden transition-all duration-300 md:h-16 md:flex-row md:items-center md:justify-between md:px-4"
       :class="{
-        'translate-y-0 opacity-100': isMenuOpen,
-        '-translate-y-full opacity-0': !isMenuOpen,
-        'bg-primary': !isDark,
-        'bg-primary-dark': isDark,
+        'h-16': !isMenuOpen,
+        'h-screen': isMenuOpen,
       }"
     >
-      <!-- Top navigation bar with brand -->
-      <div class="flex items-center justify-between px-4 pt-6">
-        <h2 class="text-2xl font-bold tracking-wider uppercase">Apostolski</h2>
+      <!-- Header Bar (always visible) -->
+      <div class="flex h-16 flex-shrink-0 items-center justify-between px-4 md:w-full md:px-0">
+        <!-- Brand/Logo (shared) -->
+        <div class="flex-shrink-0">
+          <nuxt-link
+            to="/"
+            class="text-lg font-bold uppercase transition-colors duration-300 md:text-xl"
+          >
+            Apostolski
+          </nuxt-link>
+        </div>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden flex-1 items-center justify-center px-4 md:flex">
+          <ul class="flex space-x-8">
+            <li v-for="item in menuItems" :key="`desktop-${item.path}`">
+              <nuxt-link
+                :to="item.path"
+                class="relative font-medium transition-colors duration-300 hover:text-accent lg:text-lg"
+                :class="{ 'text-accent': isActiveRoute(item.path) }"
+              >
+                {{ item.name }}
+              </nuxt-link>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Side Controls -->
         <div class="flex items-center space-x-3">
-          <!-- Dark Mode Toggle -->
+          <!-- Color Mode Toggle (shared) -->
           <button
             aria-label="Toggle dark mode"
-            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
+            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:cursor-pointer hover:bg-accent hover:text-primary md:h-auto md:w-auto md:p-2 dark:hover:text-primary-dark"
             @click="toggleColorMode"
           >
-            <span v-if="isDark" class="flex items-center justify-center text-xl">
-              <Icon name="ph:sun" />
-            </span>
-            <span v-else class="flex items-center justify-center text-xl">
-              <Icon name="ph:moon" />
+            <span class="flex items-center justify-center text-xl">
+              <Icon :name="colorMode.value === 'dark' ? 'ph:moon' : 'ph:sun'" />
             </span>
           </button>
-          <!-- Menu Toggle Button -->
+
+          <!-- Mobile Menu Toggle (mobile only) -->
           <button
             aria-label="Toggle menu"
-            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
-            @click="closeMenu"
+            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:text-accent md:hidden"
+            @click="toggleMenu"
           >
-            <div class="relative h-5 w-5">
+            <div class="relative h-5 w-6">
               <span
-                class="absolute top-2 block h-[2px] w-5 rotate-45 rounded-full bg-accent transition-all duration-300"
+                class="absolute block h-[2px] w-6 rounded-full bg-accent transition-all duration-300"
+                :class="{
+                  'top-0 rotate-0': !isMenuOpen,
+                  'top-2 rotate-45': isMenuOpen,
+                }"
               />
               <span
-                class="absolute block h-[2px] w-5 rounded-full opacity-0 transition-all duration-300"
-                :style="{ top: '8px' }"
+                class="absolute top-2 block h-[2px] w-6 rounded-full bg-accent transition-all duration-300"
+                :class="{
+                  'opacity-100': !isMenuOpen,
+                  'opacity-0': isMenuOpen,
+                }"
               />
               <span
-                class="absolute top-2 block h-[2px] w-5 -rotate-45 rounded-full bg-accent transition-all duration-300"
-                :style="{ top: '16px' }"
+                class="absolute block h-[2px] w-6 rounded-full bg-accent transition-all duration-300"
+                :class="{
+                  'top-4 rotate-0': !isMenuOpen,
+                  'top-2 -rotate-45': isMenuOpen,
+                }"
               />
             </div>
           </button>
         </div>
       </div>
 
-      <!-- Menu Items in center -->
-      <div class="flex flex-1 flex-col items-center justify-center">
+      <!-- Mobile Menu Items (mobile only, slides down from header) -->
+      <div
+        class="flex flex-1 flex-col items-center justify-center px-4 transition-all duration-300 md:hidden"
+        :class="{
+          'translate-y-0 opacity-100': isMenuOpen,
+          'pointer-events-none -translate-y-4 opacity-0': !isMenuOpen,
+        }"
+      >
         <ul class="flex flex-col space-y-6 text-center">
-          <li v-for="item in menuItems" :key="item.path">
+          <li v-for="item in menuItems" :key="`mobile-${item.path}`">
             <nuxt-link
               :to="item.path"
               class="text-xl font-medium tracking-wide transition-all duration-300 hover:translate-y-[-2px] hover:text-accent"
@@ -168,9 +107,6 @@
           </li>
         </ul>
       </div>
-
-      <!-- Bottom Spacing -->
-      <div class="pb-12" />
     </div>
   </nav>
 </template>
@@ -182,7 +118,6 @@ const colorMode = useColorMode()
 // Reactive state
 const scrolled = ref(false)
 const isMenuOpen = ref(false)
-const isDark = computed(() => colorMode.value === 'dark')
 
 // Menu items
 const menuItems = [

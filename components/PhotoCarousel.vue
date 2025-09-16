@@ -100,9 +100,10 @@ watch(currentIndex, () => {
             :src="photo.src"
             :alt="photo.alt"
             class="h-full w-full object-cover"
-            quality="80"
-            placeholder
+            quality="100"
+            format="webp"
             loading="lazy"
+            placeholder
           />
         </div>
       </div>

@@ -17,7 +17,7 @@ useSeoMeta({
             src="/photos/projects/TheRedStairs/DSC00114.jpg"
             alt="Portrait photo"
             class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
-            format="avif"
+            format="webp"
             sizes="400px md:350px lg:400px xl:450px"
             quality="80"
             placeholder

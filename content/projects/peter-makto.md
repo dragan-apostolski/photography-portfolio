@@ -1,10 +1,10 @@
 ---
 title: 'Peter Makto'
 description: 'Professional portrait photography session capturing authentic personality and professional presence through refined lighting and composition.'
-location: 'Ljubljana, Slovenia'
+location: 'Trakošćan, Croatia'
 date: '2024-05-15'
 tags: ['portrait', 'professional', 'client']
-coverPhoto: '/photos/projects/PeterMakto/DSC04892.jpg'
+coverPhoto: '/photos/projects/Peter Makto/DSC04892.jpg'
 photoCount: 7
 photos:
   - DSC04867.jpg

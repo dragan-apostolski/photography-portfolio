@@ -120,7 +120,6 @@ const { getAllProjects, getProjectTags } = useProjects()
 
 // Data fetching
 const { data: projects, pending, error } = await useAsyncData('projects', getAllProjects)
-console.log('Projects data:', projects.value)
 const { data: availableTags } = await useAsyncData('project-tags', getProjectTags, {
   default: () => [],
 })

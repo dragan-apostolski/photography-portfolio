@@ -117,7 +117,7 @@ const formattedCameraSettings = computed(() => {
         class="max-h-[75vh] max-w-full rounded object-contain"
         loading="lazy"
         format="webp"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 2500px"
+        sizes="md:100vw, lg:90vw"
       />
 
       <!-- Caption area -->

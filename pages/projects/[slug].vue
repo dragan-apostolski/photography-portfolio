@@ -29,9 +29,10 @@
             :alt="coverPhoto.title || project.title"
             class="h-full w-full object-cover"
             format="webp"
-            quality="100"
-            placeholder
+            quality="80"
             loading="lazy"
+            placeholder
+            sizes="100vw sm:400px md:800px lg:100vw"
           />
 
           <!-- Cover Photo Overlay -->
@@ -128,7 +129,7 @@
                   :alt="photo.title || `${project.title} - Photo ${index + 1}`"
                   class="w-full object-contain"
                   loading="lazy"
-                  format="avif"
+                  format="webp"
                   sizes="(max-width: 768px) 100vw, 768px"
                 />
 
@@ -173,8 +174,8 @@
                     :alt="relatedProject.title"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
-                    format="avif"
-                    sizes="(max-width: 640px) 100vw, 320px"
+                    format="webp"
+                    sizes="sm:100vw, md:320px"
                   />
                 </div>
                 <h3 class="text-xl font-semibold transition-colors group-hover:text-accent">
