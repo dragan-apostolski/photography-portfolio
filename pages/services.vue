@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Button from '~/components/ui/Button.vue'
+
 useSeoMeta({
   title: 'Services | Photography Portfolio',
   description: 'Photography services including accommodations, portraits, and events.',
@@ -35,7 +37,7 @@ const services = ref<Service[]>([
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-12">
+  <div class="container mx-auto px-4 py-12 pt-24">
     <h1 class="mb-8 text-4xl font-bold">Services</h1>
 
     <p class="mb-12 max-w-3xl text-lg">
@@ -63,11 +65,7 @@ const services = ref<Service[]>([
           <h3 class="mb-3 text-2xl font-semibold">{{ service.title }}</h3>
           <p>{{ service.description }}</p>
 
-          <button
-            class="mt-6 border-2 border-accent bg-transparent px-4 py-2 font-medium tracking-wider uppercase transition-all duration-300 hover:bg-accent hover:text-primary dark:text-primary-dark dark:hover:text-primary-dark"
-          >
-            Learn More
-          </button>
+          <Button custom-classes="mt-6">Learn More</Button>
         </div>
       </div>
     </div>
@@ -79,11 +77,7 @@ const services = ref<Service[]>([
         Let's discuss how I can help you with your photography needs. Get in touch to discuss rates,
         availability, and custom packages.
       </p>
-      <button
-        class="border-2 border-accent bg-transparent px-6 py-3 font-medium tracking-wider uppercase transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
-      >
-        Contact Me
-      </button>
+      <Button>Contact Me</Button>
     </div>
   </div>
 </template>
