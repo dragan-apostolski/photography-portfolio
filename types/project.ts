@@ -15,7 +15,7 @@ export interface Project {
   title: string
   description: string
   location?: string
-  tag: string[]
+  tags: string[]
   date: string
   coverPhoto: string
   featured?: boolean

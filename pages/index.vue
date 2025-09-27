@@ -1,11 +1,7 @@
 <script setup lang="ts">
-const { data: home } = await useAsyncData('home', () =>
-  queryCollection('content').path('/').first()
-)
-
 useSeoMeta({
-  title: home.value?.title,
-  description: home.value?.description,
+  title: 'Dragan Apostolski Photography',
+  description: 'Professional photography portfolio showcasing creative vision and technical expertise.',
 })
 </script>
 

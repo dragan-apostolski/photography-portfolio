@@ -10,28 +10,31 @@ interface Service {
   id: number
   title: string
   description: string
-  imageUrl?: string
+  imageUrl: string
 }
 
 // Services offered
 const services = ref<Service[]>([
   {
     id: 1,
-    title: 'Accommodations',
+    title: 'Hospitality',
     description:
       "Creating content for camps, resorts, airbnb's and other accommodations in nature. Showcase your property with stunning photographs that highlight its unique features and surroundings.",
+    imageUrl: '/photos/projects/Eko Kamp Rinčica/DSC02308.jpg',
   },
   {
     id: 2,
     title: 'Portraits',
     description:
       'Professional portrait photography for individuals and groups. Capture your personality and create memories that will last a lifetime.',
+    imageUrl: '/photos/projects/The Red Stairs/DSC00085.jpg',
   },
   {
     id: 3,
     title: 'Events',
     description:
       "Comprehensive event photography covering conferences, celebrations, corporate events, and more. Don't miss a moment of your special occasion.",
+    imageUrl: '/photos/projects/Electronic Brunch/DSC09448.jpg',
   },
 ])
 </script>
@@ -53,11 +56,17 @@ const services = ref<Service[]>([
         :key="service.id"
         class="overflow-hidden rounded-lg bg-secondary-100 shadow-md transition-all duration-300 hover:shadow-xl dark:bg-secondary-900"
       >
-        <!-- Image Placeholder -->
-        <div class="relative aspect-video bg-secondary-200 dark:bg-secondary-800">
-          <div class="absolute inset-0 flex items-center justify-center">
-            <p class="text-center font-medium">{{ service.title }} Image</p>
-          </div>
+        <!-- Service Image -->
+        <div class="relative aspect-video overflow-hidden">
+          <NuxtImg
+            :src="service.imageUrl"
+            :alt="`${service.title} photography service`"
+            class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            :class="{ 'object-top': service.title === 'Portraits' }"
+            loading="lazy"
+            format="webp"
+            sizes="sm:100vw md:50vw lg:33vw"
+          />
         </div>
 
         <!-- Content -->

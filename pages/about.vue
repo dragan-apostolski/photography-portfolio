@@ -1,4 +1,7 @@
 <script setup lang="ts">
+
+import Button from '~/components/ui/Button.vue'
+
 useSeoMeta({
   title: 'About Me | Photography Portfolio',
   description: 'Learn more about me as a landscape, travel, and portrait photographer.',
@@ -6,24 +9,22 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-12">
+  <div class="container mx-auto px-4 py-12 pt-24">
     <h1 class="mb-8 text-4xl font-bold">About Me</h1>
 
     <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
       <!-- Profile Image Section -->
-      <div class="overflow-hidden rounded-lg shadow-lg">
-        <div class="relative aspect-square">
-          <NuxtImg
-            src="/photos/projects/TheRedStairs/DSC00114.jpg"
-            alt="Portrait photo"
-            class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
-            format="webp"
-            sizes="400px md:350px lg:400px xl:450px"
-            quality="80"
-            placeholder
-            loading="lazy"
-          />
-        </div>
+      <div class="overflow-hidden rounded-lg">
+        <NuxtImg
+          src="/photos/projects/The Red Stairs/DSC00114.jpg"
+          alt="Portrait photo"
+          class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
+          format="webp"
+          sizes="400px md:350px lg:400px xl:450px"
+          quality="80"
+          placeholder
+          loading="lazy"
+        />
       </div>
 
       <!-- Bio Section -->
@@ -98,11 +99,8 @@ useSeoMeta({
         If you'd like to work with me or have any questions about my work, please don't hesitate to
         reach out. I'm always looking for new projects and collaborations.
       </p>
-      <button
-        class="border-2 border-accent bg-transparent px-6 py-3 font-medium tracking-wider uppercase transition-all duration-300 hover:bg-accent hover:text-primary dark:hover:text-primary-dark"
-      >
-        Contact Me
-      </button>
+      <Button custom-classes="mt-6">Contact me</Button>
+
     </div>
   </div>
 </template>

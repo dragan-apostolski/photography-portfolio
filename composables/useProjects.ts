@@ -17,7 +17,7 @@ export const useProjects = () => {
         title: projectData.title || '',
         description: projectData.description || '',
         location: meta.location,
-        tag: meta.tag || [],
+        tags: meta.tags || meta.tag || [],
         date: meta.date || '',
         coverPhoto: meta.coverPhoto || '',
         featured: meta.featured || false,
@@ -44,7 +44,7 @@ export const useProjects = () => {
       title: projectData.title || '',
       description: projectData.description || '',
       location: meta.location,
-      tag: meta.tags || meta.tag || [],
+      tags: meta.tags || meta.tag || [],
       date: meta.date || '',
       coverPhoto: meta.coverPhoto || '',
       featured: meta.featured || false,
@@ -66,7 +66,7 @@ export const useProjects = () => {
    */
   const getProjectsByTag = async (tag: string): Promise<Project[]> => {
     const projects = await getAllProjects()
-    return projects.filter((project) => project.tag.includes(tag))
+    return projects.filter((project) => project.tags.includes(tag))
   }
 
   /**
@@ -105,8 +105,8 @@ export const useProjects = () => {
           description: `Photo ${index + 1} from ${project.title}`,
           location: project.location,
           timestamp: project.date,
-          tag: project.tag || [],
-        } as Photo
+          tag: project.tags || [],
+        } as ProjectPhoto
       })
 
       return photos
@@ -139,7 +139,7 @@ export const useProjects = () => {
     const tagSet = new Set<string>()
 
     projects.forEach((project) => {
-      project.tag.forEach((tag) => tagSet.add(tag))
+      project.tags.forEach((tag) => tagSet.add(tag))
     })
 
     return Array.from(tagSet).sort()

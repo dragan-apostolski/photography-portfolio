@@ -66,9 +66,9 @@
               </div>
 
               <!-- Tags -->
-              <div v-if="project.tag?.length" class="mt-4 flex flex-wrap gap-2">
+              <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
                 <span
-                  v-for="tag in project.tag"
+                  v-for="tag in project.tags"
                   :key="tag"
                   class="rounded-full bg-secondary-200 px-3 py-1 text-sm capitalize opacity-90 dark:bg-secondary-800"
                 >
@@ -100,7 +100,7 @@
             <!-- Photo Item -->
             <div
               v-if="item.type === 'photo'"
-              class="relative flex h-full w-full items-center justify-center bg-primary px-4 md:px-8 dark:bg-primary-dark"
+              class="relative flex h-full w-full items-center justify-center bg-primary px-4 pt-12 md:px-8 dark:bg-primary-dark"
             >
               <NuxtImg
                 :src="(item.photo as any).src"
@@ -238,7 +238,7 @@ const relatedProjects = computed((): Project[] => {
   if (!project.value || !allProjects.value) return []
 
   return allProjects.value
-    .filter((p) => p.slug !== slug && p.tag.some((tag) => project.value!.tag.includes(tag)))
+    .filter((p) => p.slug !== slug && p.tags?.some((tag) => project.value!.tags?.includes(tag)))
     .slice(0, 2)
 })
 

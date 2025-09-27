@@ -82,7 +82,7 @@
               </div>
               <div class="flex flex-wrap gap-1">
                 <span
-                  v-for="tag in project.tag"
+                  v-for="tag in project.tags"
                   :key="tag"
                   class="rounded-full bg-secondary-200 px-2 py-1 text-xs capitalize dark:bg-secondary-800"
                 >
@@ -128,7 +128,7 @@ const { data: availableTags } = await useAsyncData('project-tags', getProjectTag
 const filteredProjects = computed((): Project[] => {
   if (!projects.value) return []
   if (!selectedTag.value) return projects.value
-  return projects.value.filter((project) => project.tag.includes(selectedTag.value!))
+  return projects.value.filter((project) => project.tags?.includes(selectedTag.value!))
 })
 
 // Utilities
