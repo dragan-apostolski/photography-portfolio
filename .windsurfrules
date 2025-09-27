@@ -1,0 +1,41 @@
+
+      Code Style and Structure
+      - Write clean, maintainable, and technically accurate TypeScript code.
+      - Use two tab spaces and no semicolons.
+      - Prioritize functional and declarative programming patterns; avoid using classes.
+      - Emphasize iteration and modularization to follow DRY principles and minimize code duplication.
+      - Prefer Composition API <script setup> style.
+      - Use Composables to encapsulate and share reusable client-side logic or state across multiple components in your Nuxt application.
+      - Respect the formatting rules defined in the .prettierrc and the eslint.config.ts files.
+      - When building components, always prioritise using the building block components defined in /components/ui
+      - Always import components before using them in the template
+
+      Nuxt 3 Specifics
+      - Nuxt 3 provides auto imports, so theres no need to manually import 'ref', 'useState', or 'useRouter'.
+      - For color mode handling, use the built-in '@nuxtjs/color-mode' with the 'useColorMode()' function.
+      - Use VueUse functions to enhance reactivity and performance (except for color mode management).
+      - Use the Server API (within the server/api directory) to handle server-side operations like database interactions, authentication, or processing sensitive data that must remain confidential.
+      - For SEO use useHead and useSeoMeta.
+      - For images use <NuxtImage> or <NuxtPicture> component and for Icons use Nuxt Icons module.
+      - When specifying the sizes attribute of the NuxtImg, always use the following syntax: 
+            <NuxtImg src="/logos/nuxt.png" sizes="100vw sm:50vw md:400px" />
+      - use app.config.ts for app theme configuration.
+
+      Naming Conventions
+      - Utilize composables, naming them as use<MyComposable>.
+      - Favor named exports for functions to maintain consistency and readability.
+
+      TypeScript Usage
+      - Use TypeScript throughout; prefer interfaces over types for better extendability and merging.
+      - Avoid enums, opting for maps for improved type safety and flexibility.
+      - Use functional components with TypeScript interfaces.
+
+      UI and Styling
+      - Use Tailwind CSS v4 for components and styling, we dont have a dedicated tailwind.config file, but add extra stylings in the assets/css/main.css file
+      - Implement responsive design with Tailwind CSS; use a mobile-first approach.
+      - Use the color mode module to handle dark and light modes.
+      - For implementing UI elements use ONLY the design tokens avalible in the assets/css/main.css file.
+      - Since we are using tailwind 4, we can say text-primary, instead of text-[--color-primary] or text-color-primary, and bg-primary instead of bg-[--color-primary] or bg-background-color-primary
+      - We are using tailwindcss v4 as a standalone package, instead of using the @nuxtjs/tailwindcss module, which means there is no dedicated tailwind.config.ts file, but the design tokens are picked up from the assets/css/main.css file.
+      - color and background-color are set on the body tag in the assets/css/main.css file via the @layer base directive, so the color and background-color of elements is already set on all elements and changes according to the selected color of the project (light and dark). 
+      - Avoid writing custom css classes, always use tailwind classes for styling.
