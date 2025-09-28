@@ -19,10 +19,10 @@ export interface Project {
   date: string
   coverPhoto: string
   featured?: boolean
-  photos: string[]
+  photoFiles: string[]
   body?: object // For markdown content from Nuxt Content
 }
 
 export interface ProjectWithPhotos extends Project {
-  processedPhotos: ProjectPhoto[]
+  photos: ProjectPhoto[]
 }

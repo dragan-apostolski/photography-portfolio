@@ -61,7 +61,7 @@
                 </div>
                 <div class="flex items-center">
                   <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
-                  {{ project.processedPhotos.length }} photos
+                  {{ project.photos.length }} photos
                 </div>
               </div>
 
@@ -117,9 +117,9 @@
       <!-- Mobile/Tablet: Traditional Vertical Gallery -->
       <div class="block xl:hidden">
         <!-- Photo Gallery -->
-        <section v-if="project.processedPhotos.length > 0" class="px-4 py-8">
+        <section v-if="project.photos.length > 0" class="px-4 py-8">
           <div class="mx-auto max-w-4xl space-y-8">
-            <div v-for="(photo, index) in project.processedPhotos" :key="photo.id" class="group">
+            <div v-for="(photo, index) in project.photos" :key="photo.id" class="group">
               <!-- Photo Container -->
               <div
                 class="relative overflow-hidden rounded-2xl bg-secondary-100 dark:bg-secondary-800"
@@ -228,8 +228,8 @@ const coverPhoto = computed(() => {
   }
 
   // Fallback to first photo
-  if (project.value.processedPhotos.length === 0) return null
-  return project.value.processedPhotos[0]
+  if (project.value.photos.length === 0) return null
+  return project.value.photos[0]
 })
 
 // Related projects
@@ -246,11 +246,23 @@ const relatedProjects = computed((): Project[] => {
 const horizontalScrollItems = computed(() => {
   if (!project.value) return []
 
-  return project.value.processedPhotos.map((photo) => ({
-    id: photo.id,
-    type: 'photo',
-    photo,
-  }))
+  return project.value.photos.map((photo) => {
+    // Determine width based on aspect ratio
+    let width = 100 // Default to 100vw for horizontal photos
+    
+    if (photo.aspectRatio === 'vertical') {
+      width = 50 // Vertical photos get 50vw
+    } else if (photo.aspectRatio === 'square') {
+      width = 75 // Square photos get 75vw
+    }
+
+    return {
+      id: photo.id,
+      type: 'photo',
+      photo,
+      width,
+    }
+  })
 })
 
 // SEO

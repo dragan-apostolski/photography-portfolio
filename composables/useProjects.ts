@@ -21,7 +21,7 @@ export const useProjects = () => {
         date: meta.date || '',
         coverPhoto: meta.coverPhoto || '',
         featured: meta.featured || false,
-        photos: meta.photos || [],
+        photoFiles: meta.photos || [],
         body: projectData.body,
       }
     }) as Project[]
@@ -48,13 +48,12 @@ export const useProjects = () => {
       date: meta.date || '',
       coverPhoto: meta.coverPhoto || '',
       featured: meta.featured || false,
-      photos: meta.photos || [],
+      photoFiles: meta.photos || [],
       body: projectData.body,
     } as Project
   }
 
   /**
-   * Get featured projects only
    */
   const getFeaturedProjects = async (): Promise<Project[]> => {
     const projects = await getAllProjects()
@@ -70,12 +69,50 @@ export const useProjects = () => {
   }
 
   /**
+   * Get image dimensions and calculate aspect ratio
+   */
+  const getImageAspectRatio = (src: string): Promise<{ width: number; height: number; aspectRatio: 'square' | 'vertical' | 'horizontal' }> => {
+    return new Promise((resolve) => {
+      if (!import.meta.client) {
+        // On server side, default to horizontal
+        resolve({ width: 1920, height: 1080, aspectRatio: 'horizontal' })
+        return
+      }
+
+      const img = new Image()
+      img.onload = () => {
+        const { width, height } = img
+        let aspectRatio: 'square' | 'vertical' | 'horizontal' = 'horizontal'
+        
+        const ratio = width / height
+        
+        if (Math.abs(ratio - 1) < 0.1) {
+          aspectRatio = 'square' // Close to 1:1 ratio
+        } else if (ratio < 1) {
+          aspectRatio = 'vertical' // Height > Width
+        } else {
+          aspectRatio = 'horizontal' // Width > Height
+        }
+        
+        resolve({ width, height, aspectRatio })
+      }
+      
+      img.onerror = () => {
+        // Fallback to horizontal if image fails to load
+        resolve({ width: 1920, height: 1080, aspectRatio: 'horizontal' })
+      }
+      
+      img.src = src
+    })
+  }
+
+  /**
    * Load project photos from .md frontmatter
    */
   const loadProjectPhotos = async (projectSlug: string): Promise<ProjectPhoto[]> => {
     try {
       const project = await getProjectBySlug(projectSlug)
-      if (!project?.coverPhoto || !project?.photos) {
+      if (!project?.coverPhoto || !project?.photoFiles) {
         console.warn(`No project or photos found for slug: ${projectSlug}`)
         return []
       }
@@ -92,22 +129,30 @@ export const useProjects = () => {
         return []
       }
 
-      // Transform photos array from frontmatter to Photo format
+      // Transform photos array from frontmatter to Photo format with actual dimensions
       // Note: Don't encode paths here - let NuxtImg handle encoding internally
-      const photos = project.photos.map((fileName: string, index: number) => {
-        const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, '')
-        const imagePath = `/photos/projects/${directoryName}/${fileName}`
+      const photos = await Promise.all(
+        project.photoFiles.map(async (fileName: string, index: number) => {
+          const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, '')
+          const imagePath = `/photos/projects/${directoryName}/${fileName}`
 
-        return {
-          id: `${projectSlug}-${fileNameWithoutExt}`,
-          src: imagePath,
-          title: fileNameWithoutExt.replace(/-/g, ' '),
-          description: `Photo ${index + 1} from ${project.title}`,
-          location: project.location,
-          timestamp: project.date,
-          tag: project.tags || [],
-        } as ProjectPhoto
-      })
+          // Get actual image dimensions and aspect ratio
+          const { width, height, aspectRatio } = await getImageAspectRatio(imagePath)
+
+          return {
+            id: `${projectSlug}-${fileNameWithoutExt}`,
+            src: imagePath,
+            title: fileNameWithoutExt.replace(/-/g, ' '),
+            description: `Photo ${index + 1} from ${project.title}`,
+            location: project.location,
+            timestamp: project.date,
+            tag: project.tags || [],
+            width,
+            height,
+            aspectRatio,
+          } as ProjectPhoto
+        })
+      )
 
       return photos
     } catch (error) {
@@ -127,7 +172,7 @@ export const useProjects = () => {
 
     return {
       ...project,
-      processedPhotos,
+      photos: processedPhotos,
     }
   }
 

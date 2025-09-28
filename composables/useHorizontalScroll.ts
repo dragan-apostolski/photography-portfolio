@@ -1,31 +1,74 @@
 export interface HorizontalScrollItem {
-  id: string
+  id?: string
   content?: unknown
   type?: string
   photo?: unknown
+  width?: number // Width in vw units (default: 100)
   [key: string]: unknown
 }
 
 export interface HorizontalScrollOptions {
-  itemCount: number
+  items: HorizontalScrollItem[]
   startOffset?: number
   endOffset?: number
 }
 
 export function useHorizontalScroll(options: HorizontalScrollOptions) {
-  const { itemCount, endOffset = 0.15 } = options
+  const { items, endOffset = 0.15 } = options
 
   const trackRef = ref<HTMLElement>()
   const frameRef = ref<HTMLElement>()
   const isActive = ref(false)
   const progress = ref(0)
 
-  // Calculate track height based on number of items
-  const trackHeight = computed(() => `${itemCount * 100}vw`)
+  // Calculate cumulative widths for each item
+  const itemWidths = computed(() => {
+    return items.map(item => item.width || 100) // Default to 100vw if not specified
+  })
+
+  // Calculate total track width
+  const totalTrackWidth = computed(() => {
+    return itemWidths.value.reduce((sum, width) => sum + width, 0)
+  })
+
+  // Calculate track height based on total width
+  const trackHeight = computed(() => `${totalTrackWidth.value}vw`)
+
+  // Calculate cumulative positions for each item
+  const itemPositions = computed(() => {
+    const positions: number[] = []
+    let currentPosition = 0
+    
+    for (let i = 0; i < itemWidths.value.length; i++) {
+      positions.push(currentPosition)
+      currentPosition += itemWidths.value[i]
+    }
+    
+    return positions
+  })
 
   // Calculate frame transform based on scroll progress
   const frameTransform = computed(() => {
-    const maxTranslate = (itemCount - 1) * 100 // vw units
+    if (items.length === 0) return 'translateX(0vw)'
+    
+    // Calculate the optimal stopping point for the last item
+    const lastItemWidth = itemWidths.value[itemWidths.value.length - 1]
+    const viewportWidth = 100 // 100vw
+    
+    // If the last item is smaller than viewport, center it
+    // If it's full width or larger, align it to fill the viewport
+    let maxTranslate: number
+    
+    if (lastItemWidth < viewportWidth) {
+      // Center the last item: move so it appears at (100vw - itemWidth) / 2 from left
+      const lastItemStartPosition = itemPositions.value[itemPositions.value.length - 1]
+      const desiredLeftPosition = (viewportWidth - lastItemWidth) / 2
+      maxTranslate = lastItemStartPosition - desiredLeftPosition
+    } else {
+      // For full-width items, just ensure they fill the viewport
+      maxTranslate = totalTrackWidth.value - viewportWidth
+    }
+    
     const translateX = progress.value * maxTranslate
     return `translateX(-${translateX}vw)`
   })
@@ -123,5 +166,8 @@ export function useHorizontalScroll(options: HorizontalScrollOptions) {
     isActive,
     progress,
     shouldUseHorizontalScroll,
+    itemWidths,
+    itemPositions,
+    totalTrackWidth,
   }
 }

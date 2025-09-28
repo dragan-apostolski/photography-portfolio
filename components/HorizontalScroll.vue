@@ -1,7 +1,7 @@
 <template>
   <section
     ref="trackRef"
-    class="horizontal-scroll-track relative"
+    class="horizontal-scroll-track relative bg-primary dark:bg-primary-dark"
     :class="{
       'md:h-[var(--track-height)]': shouldUseHorizontalScroll,
       'h-auto': !shouldUseHorizontalScroll,
@@ -10,7 +10,7 @@
   >
     <!-- Camera: Viewport-sized sticky container -->
     <div
-      class="horizontal-scroll-camera"
+      class="horizontal-scroll-camera bg-primary dark:bg-primary-dark"
       :class="{
         'md:sticky md:top-0 md:h-screen md:w-screen md:overflow-hidden': shouldUseHorizontalScroll,
         'h-auto w-auto overflow-visible': !shouldUseHorizontalScroll,
@@ -34,7 +34,10 @@
           :key="item.id || index"
           class="horizontal-scroll-item flex-shrink-0"
           :class="{
-            'md:h-screen md:w-screen': shouldUseHorizontalScroll,
+            'md:h-screen': shouldUseHorizontalScroll,
+            'md:w-[50vw]': shouldUseHorizontalScroll && itemWidths[index] === 50,
+            'md:w-[75vw]': shouldUseHorizontalScroll && itemWidths[index] === 75,
+            'md:w-screen': shouldUseHorizontalScroll && itemWidths[index] === 100,
             'min-h-screen w-full': !shouldUseHorizontalScroll,
           }"
         >
@@ -56,12 +59,6 @@
 </template>
 
 <script setup lang="ts">
-interface HorizontalScrollItem {
-  id?: string
-  content?: unknown
-  [key: string]: unknown
-}
-
 interface Props {
   items: HorizontalScrollItem[]
   startOffset?: number
@@ -81,8 +78,9 @@ const {
   isActive,
   progress,
   shouldUseHorizontalScroll,
+  itemWidths,
 } = useHorizontalScroll({
-  itemCount: props.items.length,
+  items: props.items,
   startOffset: props.startOffset,
   endOffset: props.endOffset,
 })
