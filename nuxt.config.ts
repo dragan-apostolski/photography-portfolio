@@ -4,6 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-04-30',
   devtools: { enabled: true },
+  
+  // Vercel deployment configuration
+  nitro: {
+    preset: 'vercel',
+  },
 
   modules: [
     '@nuxt/content',
