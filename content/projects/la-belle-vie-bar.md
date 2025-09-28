@@ -2,8 +2,8 @@
 title: 'La Bella Vie Bar'
 description: "Hospitality photography capturing the atmosphere and elegance of La belle vie Bar, showcasing the venue's unique ambiance and stunning views."
 location: 'Hikkaduwa, Sri Lanka'
-date: '2024-07-20'
-tags: ['hospitality', 'client', 'interior']
+date: '2025-02-25'
+tags: ['hospitality', 'client']
 coverPhoto: '/photos/projects/La Bella Vie Bar/DSC07236.jpg'
 photos:
   - DSC07236.jpg

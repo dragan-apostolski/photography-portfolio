@@ -2,8 +2,8 @@
 title: 'The Laser Experiment'
 description: 'Creative experimental photography project exploring the interplay of light, color, and form through laser technology, creating dynamic visual narratives that blend science and art.'
 location: 'Ljubljana, Slovenia'
-date: '2024-08-15'
-tags: ['experimental', 'creative', 'laser', 'light']
+date: '2024-07-05'
+tags: ['experimental', 'portrait', 'art']
 coverPhoto: '/photos/projects/The Laser Experiment/DSC03900.jpg'
 photos:
   - DSC03647.jpg

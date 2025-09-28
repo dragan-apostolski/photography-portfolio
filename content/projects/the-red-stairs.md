@@ -2,8 +2,8 @@
 title: 'The Red Stairs'
 description: 'Architectural and portrait photography project featuring the iconic red stairs as a striking backdrop, exploring the interplay between human subjects and bold architectural elements.'
 location: 'Cukrarna, Ljubljana, Slovenia'
-date: '2024-04-20'
-tags: ['architecture', 'portrait', 'urban']
+date: '2025-08-01'
+tags: ['portrait', 'art']
 coverPhoto: '/photos/projects/The Red Stairs/DSC00095.jpg'
 photos:
   - DSC00080.jpg

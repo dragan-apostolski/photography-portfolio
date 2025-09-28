@@ -2,8 +2,8 @@
 title: 'Behind'
 description: 'Intimate behind-the-scenes photography capturing the unseen moments and authentic emotions that exist beyond the main narrative, revealing the stories that unfold in quiet spaces.'
 location: 'Ljubljana, Slovenia'
-date: '2024-09-05'
-tags: ['behind-the-scenes', 'candid', 'intimate', 'documentary']
+date: '2024-07-05'
+tags: ['portrait', 'art', 'studio']
 coverPhoto: '/photos/projects/Behind/DSC03725.jpg'
 photos:
   - DSC03711.jpg

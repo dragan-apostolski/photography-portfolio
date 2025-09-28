@@ -2,8 +2,8 @@
 title: 'Emilija'
 description: 'Professional portrait photography session capturing authentic personality and natural beauty through refined lighting and artistic composition.'
 location: 'Ljubljana, Slovenia'
-date: '2024-06-10'
-tags: ['portrait', 'professional', 'client']
+date: '2025-08-07'
+tags: ['portrait', 'family', 'baby', 'client']
 coverPhoto: '/photos/projects/Emilija/DSC00234.jpg'
 photos:
   - DSC00200.jpg
