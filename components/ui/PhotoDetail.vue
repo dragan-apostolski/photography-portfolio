@@ -93,75 +93,92 @@ const formattedCameraSettings = computed(() => {
 <template>
   <div
     ref="photoWrapper"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl transition-all duration-300"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-2xl transition-all duration-500 ease-out"
     @click="handleWrapperClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
+    <!-- Enhanced backdrop overlay -->
+    <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
+
     <!-- Close button -->
     <button
-      class="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-secondary-200/70 text-xl text-primary-dark transition-all duration-300 hover:bg-accent dark:bg-secondary-900/70"
-      :class="{ 'opacity-0': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
+      class="absolute top-4 right-4 md:top-6 md:right-6 z-20 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/10 text-2xl text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
       @click="onClose"
     >
-      ×
+      <Icon name="ph:x-bold" class="h-4 w-4 md:h-5 md:w-5" />
     </button>
 
-    <!-- Image container -->
-    <div
-      class="relative max-h-[90vh] max-w-[90vw] rounded-lg bg-secondary-200 p-4 shadow-xl dark:bg-secondary-700"
-    >
-      <NuxtImg
-        :src="photo.src"
-        :alt="photo.title || 'Photo'"
-        class="max-h-[75vh] max-w-full rounded object-contain"
-        loading="lazy"
-        format="webp"
-        sizes="md:100vw, lg:90vw"
-      />
+    <!-- Main modal container -->
+    <div class="relative z-10 mx-2 md:mx-4 max-h-[98vh] md:max-h-[95vh] max-w-[98vw] md:max-w-[85vw] lg:max-w-[80vw]">
+      <!-- Image container with enhanced styling -->
+      <div class="relative overflow-hidden rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
+        <!-- Image wrapper -->
+        <div class="relative">
+          <NuxtImg
+            :src="photo.src"
+            :alt="photo.title || 'Photo'"
+            class="max-h-[60vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] w-full rounded-t-2xl object-contain"
+            loading="lazy"
+            format="webp"
+            sizes="98vw sm:95vw md:85vw lg:80vw"
+          />
+          
+          <!-- Subtle image overlay for better text readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-t-2xl"></div>
+        </div>
 
-      <!-- Caption area -->
-      <div class="mt-4 text-center">
-        <h3 v-if="photo.title" class="text-xl font-semibold tracking-tight">{{ photo.title }}</h3>
-        <p v-if="photo.description" class="mt-1 text-sm opacity-90">{{ photo.description }}</p>
+        <!-- Enhanced caption area -->
+        <div class="relative px-4 py-4 md:px-8 md:py-6 bg-white/5 backdrop-blur-sm border-t border-white/10">
+          <!-- Title and description -->
+          <div class="text-center mb-4 md:mb-6">
+            <h3 v-if="photo.title" class="text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight text-white mb-2 md:mb-3 leading-tight">
+              {{ photo.title }}
+            </h3>
+            <p v-if="photo.description" class="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto px-2">
+              {{ photo.description }}
+            </p>
+          </div>
 
-        <div class="mt-2 flex flex-wrap items-center justify-center gap-3 text-xs opacity-75">
-          <span v-if="photo.location" class="flex items-center">
-            <Icon name="ph:map-pin" class="mr-1 h-3 w-3" />
-            {{ photo.location }}
-          </span>
+          <!-- Metadata with enhanced styling -->
+          <div class="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm text-white/70">
+            <div v-if="photo.location" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+              <Icon name="ph:map-pin-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
+              <span class="font-medium">{{ photo.location }}</span>
+            </div>
 
-          <span v-if="photo.timestamp" class="flex items-center">
-            <Icon name="ph:calendar" class="mr-1 h-3 w-3" />
-            {{ photo.timestamp }}
-          </span>
+            <div v-if="photo.timestamp" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+              <Icon name="ph:calendar-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
+              <span class="font-medium">{{ photo.timestamp }}</span>
+            </div>
 
-          <span v-if="formattedCameraSettings" class="flex items-center">
-            <Icon name="ph:camera" class="mr-1 h-3 w-3" />
-            {{ formattedCameraSettings }}
-          </span>
+            <div v-if="formattedCameraSettings" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+              <Icon name="ph:camera-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
+              <span class="font-medium text-xs md:text-sm">{{ formattedCameraSettings }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Previous button -->
+    <!-- Enhanced Previous button -->
     <button
       v-if="onPrevious && hasPrevious"
-      class="absolute top-1/2 left-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-secondary-200/70 text-primary-dark transition-all duration-300 hover:bg-accent dark:bg-secondary-900/70"
-      :class="{ 'opacity-0': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
+      class="absolute top-1/2 left-2 md:left-4 lg:left-8 z-20 flex h-10 w-10 md:h-14 md:w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+      :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onPrevious"
     >
-      <Icon name="ph:caret-left-bold" class="h-6 w-6" />
+      <Icon name="ph:caret-left-bold" class="h-4 w-4 md:h-6 md:w-6" />
     </button>
 
-    <!-- Next button -->
+    <!-- Enhanced Next button -->
     <button
       v-if="onNext && hasNext"
-      class="absolute top-1/2 right-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-secondary-200/70 text-primary-dark transition-all duration-300 hover:bg-accent dark:bg-secondary-900/70"
-      :class="{ 'opacity-0': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
+      class="absolute top-1/2 right-2 md:right-4 lg:right-8 z-20 flex h-10 w-10 md:h-14 md:w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+      :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onNext"
     >
-      <Icon name="ph:caret-right-bold" class="h-6 w-6" />
+      <Icon name="ph:caret-right-bold" class="h-4 w-4 md:h-6 md:w-6" />
     </button>
   </div>
 </template>
