@@ -10,19 +10,19 @@ export const useProjects = () => {
     return projects.map((project) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const projectData = project as any
-      // In Nuxt Content v3, custom frontmatter fields are in the meta property
+      // In Nuxt Content v3, custom frontmatter fields can be in meta property or directly on the object
       const meta = projectData.meta || {}
       return {
         slug: projectData.path?.replace('/projects/', '') || '',
         title: projectData.title || '',
         description: projectData.description || '',
-        location: meta.location,
-        tags: meta.tags || meta.tag || [],
-        date: meta.date || '',
-        coverPhoto: meta.coverPhoto || '',
-        projectRoot: meta.projectRoot || '',
-        featured: meta.featured || false,
-        photos: meta.photos || [],
+        location: meta.location || projectData.location,
+        tags: meta.tags || meta.tag || projectData.tags || projectData.tag || [],
+        date: meta.date || projectData.date || '',
+        coverPhoto: meta.coverPhoto || projectData.coverPhoto || '',
+        projectRoot: meta.projectRoot || projectData.projectRoot || '',
+        featured: meta.featured || projectData.featured || false,
+        photos: meta.photos || projectData.photos || [],
         body: projectData.body,
       }
     }) as Project[]
@@ -44,13 +44,13 @@ export const useProjects = () => {
       slug: projectData.path?.replace('/projects/', '') || '',
       title: projectData.title || '',
       description: projectData.description || '',
-      location: meta.location,
-      tags: meta.tags || meta.tag || [],
-      date: meta.date || '',
-      coverPhoto: meta.coverPhoto || '',
-      projectRoot: meta.projectRoot || '',
-      featured: meta.featured || false,
-      photos: meta.photos || [],
+      location: meta.location || projectData.location,
+      tags: meta.tags || meta.tag || projectData.tags || projectData.tag || [],
+      date: meta.date || projectData.date || '',
+      coverPhoto: meta.coverPhoto || projectData.coverPhoto || '',
+      projectRoot: meta.projectRoot || projectData.projectRoot || '',
+      featured: meta.featured || projectData.featured || false,
+      photos: meta.photos || projectData.photos || [],
       body: projectData.body,
     } as Project
   }
