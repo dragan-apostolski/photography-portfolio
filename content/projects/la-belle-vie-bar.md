@@ -5,15 +5,36 @@ location: 'Hikkaduwa, Sri Lanka'
 date: '2025-02-25'
 tags: ['hospitality', 'client']
 coverPhoto: '/photos/projects/La Bella Vie Bar/DSC07236.jpg'
+projectRoot: 'La Bella Vie Bar'
 photos:
-  - DSC07236.jpg
-  - DSC07237.jpg
-  - DSC07238.jpg
-  - DSC07240.jpg
-  - DSC07242.jpg
-  - DSC07247.jpg
-  - DSC07248.jpg
-  - DSC07249.jpg
-  - DSC07251.jpg
-  - DSC07252.jpg
+  - fileName: 'DSC07236.jpg'
+    description: 'La Bella Vie Bar elegant atmosphere'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07237.jpg'
+    description: 'Bar venue unique ambiance'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07238.jpg'
+    description: 'Hospitality photography showcase'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07240.jpg'
+    description: 'Stunning bar views capture'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07242.jpg'
+    description: 'Venue atmosphere and elegance'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07247.jpg'
+    description: 'Bar hospitality environment'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07248.jpg'
+    description: 'La Bella Vie interior design'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07249.jpg'
+    description: 'Bar venue commercial photography'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07251.jpg'
+    description: 'Elegant bar atmosphere capture'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC07252.jpg'
+    description: 'Final La Bella Vie bar shot'
+    aspectRatio: 'horizontal'
 ---

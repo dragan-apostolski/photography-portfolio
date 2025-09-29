@@ -5,19 +5,48 @@ location: 'Cukrarna, Ljubljana, Slovenia'
 date: '2025-08-01'
 tags: ['portrait', 'art']
 coverPhoto: '/photos/projects/The Red Stairs/DSC00095.jpg'
+projectRoot: 'The Red Stairs'
 photos:
-  - DSC00080.jpg
-  - DSC00082.jpg
-  - DSC00083.jpg
-  - DSC00085.jpg
-  - DSC00088.jpg
-  - DSC00094.jpg
-  - DSC00095.jpg
-  - DSC00097.jpg
-  - DSC00099.jpg
-  - DSC00102.jpg
-  - DSC00104.jpg
-  - DSC00106.jpg
-  - DSC00109.jpg
-  - DSC00114.jpg
+  - fileName: 'DSC00080.jpg'
+    description: 'Architectural portrait with red stairs backdrop'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00082.jpg'
+    description: 'Bold architectural elements and human subject'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00083.jpg'
+    description: 'Portrait photography with iconic red stairs'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00085.jpg'
+    description: 'Interplay between subject and architecture'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00088.jpg'
+    description: 'Red stairs architectural portrait'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00094.jpg'
+    description: 'Striking architectural backdrop portrait'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00095.jpg'
+    description: 'Main red stairs architectural shot'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00097.jpg'
+    description: 'Portrait with bold red architectural elements'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00099.jpg'
+    description: 'Human subject and architectural interplay'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00102.jpg'
+    description: 'Red stairs portrait photography'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00104.jpg'
+    description: 'Architectural and portrait fusion'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00106.jpg'
+    description: 'Iconic red stairs backdrop'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00109.jpg'
+    description: 'Portrait with striking architectural elements'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00114.jpg'
+    description: 'Final red stairs architectural portrait'
+    aspectRatio: 'vertical'
 ---

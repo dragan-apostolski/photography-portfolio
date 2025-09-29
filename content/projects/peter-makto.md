@@ -5,12 +5,27 @@ location: 'Trakošćan, Croatia'
 date: '2024-09-07'
 tags: ['portrait', 'music', 'event']
 coverPhoto: '/photos/projects/Peter Makto/DSC04892.jpg'
+projectRoot: 'Peter Makto'
 photos:
-  - DSC04867.jpg
-  - DSC04879.jpg
-  - DSC04889.jpg
-  - DSC04890.jpg
-  - DSC04892.jpg
-  - DSC04897.jpg
-  - DSC04909.jpg
+  - fileName: 'DSC04867.jpg'
+    description: 'Professional portrait with refined lighting'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04879.jpg'
+    description: 'Authentic personality capture'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04889.jpg'
+    description: 'Professional presence portrait'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04890.jpg'
+    description: 'Music event portrait session'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04892.jpg'
+    description: 'Main professional portrait'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04897.jpg'
+    description: 'Portrait with artistic composition'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC04909.jpg'
+    description: 'Final portrait session capture'
+    aspectRatio: 'horizontal'
 ---

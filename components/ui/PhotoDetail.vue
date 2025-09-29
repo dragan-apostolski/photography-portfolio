@@ -99,62 +99,93 @@ const formattedCameraSettings = computed(() => {
     @mouseleave="handleMouseLeave"
   >
     <!-- Enhanced backdrop overlay -->
-    <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60" />
 
     <!-- Close button -->
     <button
-      class="absolute top-4 right-4 md:top-6 md:right-6 z-20 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-white/10 text-2xl text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+      class="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-white/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:top-6 md:right-6 md:h-12 md:w-12"
       @click="onClose"
     >
       <Icon name="ph:x-bold" class="h-4 w-4 md:h-5 md:w-5" />
     </button>
 
     <!-- Main modal container -->
-    <div class="relative z-10 mx-2 md:mx-4 max-h-[98vh] md:max-h-[95vh] max-w-[98vw] md:max-w-[85vw] lg:max-w-[80vw]">
+    <div
+      class="relative z-10 mx-2 max-h-[98vh] max-w-[98vw] md:mx-4 md:max-h-[95vh] md:max-w-[85vw] lg:max-w-[80vw]"
+    >
       <!-- Image container with enhanced styling -->
-      <div class="relative overflow-hidden rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
+      <div
+        class="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-md"
+      >
         <!-- Image wrapper -->
         <div class="relative">
           <NuxtImg
             :src="photo.src"
             :alt="photo.title || 'Photo'"
-            class="max-h-[60vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] w-full rounded-t-2xl object-contain"
+            class="max-h-[60vh] w-full rounded-t-2xl object-contain sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh]"
             loading="lazy"
             format="webp"
             sizes="98vw sm:95vw md:85vw lg:80vw"
           />
-          
+
           <!-- Subtle image overlay for better text readability -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-t-2xl"></div>
+          <div
+            class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-black/20 via-transparent to-transparent"
+          />
         </div>
 
         <!-- Enhanced caption area -->
-        <div class="relative px-4 py-4 md:px-8 md:py-6 bg-white/5 backdrop-blur-sm border-t border-white/10">
+        <div
+          class="relative border-t border-white/10 bg-white/5 px-4 py-4 backdrop-blur-sm md:px-8 md:py-6"
+        >
           <!-- Title and description -->
-          <div class="text-center mb-4 md:mb-6">
-            <h3 v-if="photo.title" class="text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight text-white mb-2 md:mb-3 leading-tight">
+          <div class="mb-4 text-center md:mb-6">
+            <h3
+              v-if="photo.title"
+              class="mb-2 text-xl leading-tight font-semibold tracking-tight text-white md:mb-3 md:text-2xl lg:text-3xl"
+            >
               {{ photo.title }}
             </h3>
-            <p v-if="photo.description" class="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto px-2">
+            <p
+              v-if="photo.description"
+              class="mx-auto max-w-2xl px-2 text-sm leading-relaxed text-white/80 md:text-base lg:text-lg"
+            >
               {{ photo.description }}
             </p>
           </div>
 
           <!-- Metadata with enhanced styling -->
-          <div class="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm text-white/70">
-            <div v-if="photo.location" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Icon name="ph:map-pin-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
+          <div
+            class="flex flex-wrap items-center justify-center gap-3 text-xs text-white/70 md:gap-6 md:text-sm"
+          >
+            <div
+              v-if="photo.location"
+              class="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2"
+            >
+              <Icon
+                name="ph:map-pin-fill"
+                class="h-3 w-3 flex-shrink-0 text-accent md:h-4 md:w-4"
+              />
               <span class="font-medium">{{ photo.location }}</span>
             </div>
 
-            <div v-if="photo.timestamp" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Icon name="ph:calendar-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
+            <div
+              v-if="photo.timestamp"
+              class="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2"
+            >
+              <Icon
+                name="ph:calendar-fill"
+                class="h-3 w-3 flex-shrink-0 text-accent md:h-4 md:w-4"
+              />
               <span class="font-medium">{{ photo.timestamp }}</span>
             </div>
 
-            <div v-if="formattedCameraSettings" class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1.5 md:px-3 md:py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-              <Icon name="ph:camera-fill" class="h-3 w-3 md:h-4 md:w-4 text-accent flex-shrink-0" />
-              <span class="font-medium text-xs md:text-sm">{{ formattedCameraSettings }}</span>
+            <div
+              v-if="formattedCameraSettings"
+              class="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2"
+            >
+              <Icon name="ph:camera-fill" class="h-3 w-3 flex-shrink-0 text-accent md:h-4 md:w-4" />
+              <span class="text-xs font-medium md:text-sm">{{ formattedCameraSettings }}</span>
             </div>
           </div>
         </div>
@@ -164,7 +195,7 @@ const formattedCameraSettings = computed(() => {
     <!-- Enhanced Previous button -->
     <button
       v-if="onPrevious && hasPrevious"
-      class="absolute top-1/2 left-2 md:left-4 lg:left-8 z-20 flex h-10 w-10 md:h-14 md:w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+      class="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-white/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:left-4 md:h-14 md:w-14 lg:left-8"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onPrevious"
     >
@@ -174,7 +205,7 @@ const formattedCameraSettings = computed(() => {
     <!-- Enhanced Next button -->
     <button
       v-if="onNext && hasNext"
-      class="absolute top-1/2 right-2 md:right-4 lg:right-8 z-20 flex h-10 w-10 md:h-14 md:w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/50"
+      class="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-white/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:right-4 md:h-14 md:w-14 lg:right-8"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onNext"
     >

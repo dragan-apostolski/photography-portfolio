@@ -1,4 +1,4 @@
-import type { Project, ProjectPhoto, ProjectWithPhotos } from '~/types/project'
+import type { Project, ProjectPhoto, ProjectWithPhotos, ProjectPhotoConfig } from '~/types/project'
 
 export const useProjects = () => {
   /**
@@ -20,8 +20,9 @@ export const useProjects = () => {
         tags: meta.tags || meta.tag || [],
         date: meta.date || '',
         coverPhoto: meta.coverPhoto || '',
+        projectRoot: meta.projectRoot || '',
         featured: meta.featured || false,
-        photoFiles: meta.photos || [],
+        photos: meta.photos || [],
         body: projectData.body,
       }
     }) as Project[]
@@ -47,8 +48,9 @@ export const useProjects = () => {
       tags: meta.tags || meta.tag || [],
       date: meta.date || '',
       coverPhoto: meta.coverPhoto || '',
+      projectRoot: meta.projectRoot || '',
       featured: meta.featured || false,
-      photoFiles: meta.photos || [],
+      photos: meta.photos || [],
       body: projectData.body,
     } as Project
   }
@@ -69,90 +71,31 @@ export const useProjects = () => {
   }
 
   /**
-   * Get image dimensions and calculate aspect ratio
-   */
-  const getImageAspectRatio = (src: string): Promise<{ width: number; height: number; aspectRatio: 'square' | 'vertical' | 'horizontal' }> => {
-    return new Promise((resolve) => {
-      if (!import.meta.client) {
-        // On server side, default to horizontal
-        resolve({ width: 1920, height: 1080, aspectRatio: 'horizontal' })
-        return
-      }
-
-      const img = new Image()
-      img.onload = () => {
-        const { width, height } = img
-        let aspectRatio: 'square' | 'vertical' | 'horizontal' = 'horizontal'
-        
-        const ratio = width / height
-        
-        if (Math.abs(ratio - 1) < 0.1) {
-          aspectRatio = 'square' // Close to 1:1 ratio
-        } else if (ratio < 1) {
-          aspectRatio = 'vertical' // Height > Width
-        } else {
-          aspectRatio = 'horizontal' // Width > Height
-        }
-        
-        resolve({ width, height, aspectRatio })
-      }
-      
-      img.onerror = () => {
-        // Fallback to horizontal if image fails to load
-        resolve({ width: 1920, height: 1080, aspectRatio: 'horizontal' })
-      }
-      
-      img.src = src
-    })
-  }
-
-  /**
    * Load project photos from .md frontmatter
    */
   const loadProjectPhotos = async (projectSlug: string): Promise<ProjectPhoto[]> => {
     try {
       const project = await getProjectBySlug(projectSlug)
-      if (!project?.coverPhoto || !project?.photoFiles) {
+      if (!project?.projectRoot || !project?.photos) {
         console.warn(`No project or photos found for slug: ${projectSlug}`)
         return []
       }
 
-      // Extract directory name from coverPhoto path
-      // Expected format: /photos/projects/DirectoryName/filename.avif
-      const pathParts = project.coverPhoto.split('/')
-      const directoryName = pathParts[3] // /photos/projects/DirectoryName/filename.avif
+      // Transform photos array from frontmatter to ProjectPhoto format
+      const photos = project.photos.map((photoConfig: ProjectPhotoConfig, index: number) => {
+        const fileNameWithoutExt = photoConfig.fileName.replace(/\.[^/.]+$/, '')
+        const imagePath = `/photos/projects/${project.projectRoot}/${photoConfig.fileName}`
 
-      if (!directoryName) {
-        console.warn(
-          `Could not extract directory name for project: ${projectSlug}, coverPhoto: ${project.coverPhoto}`
-        )
-        return []
-      }
-
-      // Transform photos array from frontmatter to Photo format with actual dimensions
-      // Note: Don't encode paths here - let NuxtImg handle encoding internally
-      const photos = await Promise.all(
-        project.photoFiles.map(async (fileName: string, index: number) => {
-          const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, '')
-          const imagePath = `/photos/projects/${directoryName}/${fileName}`
-
-          // Get actual image dimensions and aspect ratio
-          const { width, height, aspectRatio } = await getImageAspectRatio(imagePath)
-
-          return {
-            id: `${projectSlug}-${fileNameWithoutExt}`,
-            src: imagePath,
-            title: fileNameWithoutExt.replace(/-/g, ' '),
-            description: `Photo ${index + 1} from ${project.title}`,
-            location: project.location,
-            timestamp: project.date,
-            tag: project.tags || [],
-            width,
-            height,
-            aspectRatio,
-          } as ProjectPhoto
-        })
-      )
+        return {
+          id: `${projectSlug}-${fileNameWithoutExt}`,
+          src: imagePath,
+          fileName: photoConfig.fileName,
+          description: photoConfig.description || `Photo ${index + 1} from ${project.title}`,
+          aspectRatio: photoConfig.aspectRatio,
+          location: project.location,
+          timestamp: project.date,
+        } as ProjectPhoto
+      })
 
       return photos
     } catch (error) {

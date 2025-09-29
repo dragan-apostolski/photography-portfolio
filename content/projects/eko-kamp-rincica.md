@@ -5,17 +5,42 @@ location: 'Eko Kamp Rinčica, Slovenia'
 date: '2024-08-15'
 tags: ['hospitality', 'client', 'nature']
 coverPhoto: '/photos/projects/Eko Kamp Rinčica/DSC02315.jpg'
+projectRoot: 'Eko Kamp Rinčica'
 photos:
-  - DSC02119.jpg
-  - DSC02123.jpg
-  - DSC02129.jpg
-  - DSC02151.jpg
-  - DSC02163.jpg
-  - DSC02308.jpg
-  - DSC02315.jpg
-  - DSC02320.jpg
-  - DSC02333.jpg
-  - DSC02337.jpg
-  - DSC02342.jpg
-  - DSC02347.jpg
+  - fileName: 'DSC02119.jpg'
+    description: 'Eco-camping resort natural landscape'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC02123.jpg'
+    description: 'Sustainable tourism accommodation'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC02129.jpg'
+    description: 'Pristine wilderness camping area'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC02151.jpg'
+    description: 'Natural beauty of Rinčica resort'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02163.jpg'
+    description: 'Eco-friendly camping facilities'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02308.jpg'
+    description: 'Commercial resort photography'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02315.jpg'
+    description: 'Main eco-camp resort view'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02320.jpg'
+    description: 'Natural wilderness accommodation'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02333.jpg'
+    description: 'Sustainable tourism showcase'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02337.jpg'
+    description: 'Eco-camping natural environment'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02342.jpg'
+    description: 'Resort facilities in nature'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02347.jpg'
+    description: 'Final eco-camp landscape shot'
+    aspectRatio: 'horizontal'
 ---

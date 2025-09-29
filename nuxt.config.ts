@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-04-30',
   devtools: { enabled: true },
-  
+
   // Vercel deployment configuration
   nitro: {
     preset: 'vercel',
@@ -22,7 +22,7 @@ export default defineNuxtConfig({
   // Image configuration - IPX dynamic transformation
   image: {
     quality: 80,
-    format: ['webp', 'avif', 'jpg'],
+    format: ['webp', 'jpg'],
   },
 
   // Color mode configuration

@@ -21,7 +21,9 @@
     "@nuxt/image": "^1.10.0",
     "@tailwindcss/vite": "^4.1.5",
     "better-sqlite3": "^12.2.0",
+    "image-size": "^2.0.2",
     "nuxt": "^3.17.1",
+    "sharp": "^0.34.4",
     "tailwindcss": "^4.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
@@ -44,7 +46,6 @@
     "postcss-nesting": "^13.0.1",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "sharp": "^0.33.5",
     "tsx": "^4.19.4"
   }
 }

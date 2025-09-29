@@ -5,14 +5,33 @@ location: 'Ljubljana, Slovenia'
 date: '2022-07-22'
 tags: ['portrait', 'outdoor']
 coverPhoto: '/photos/projects/Feeling Blue/cover.jpg'
+projectRoot: 'Feeling Blue'
 photos:
-  - DSC_1874.jpg
-  - DSC_1903.jpg
-  - DSC_1949.jpg
-  - DSC_1960.jpg
-  - DSC_1972.jpg
-  - DSC_1979.jpg
-  - DSC_1982.jpg
-  - DSC_1992.jpg
-  - DSC_2026.jpg
+  - fileName: 'DSC_1874.jpg'
+    description: 'Contemplative portrait with blue atmospheric lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1903.jpg'
+    description: 'Moody outdoor portrait capturing emotional depth'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1949.jpg'
+    description: 'Blue-toned portrait with atmospheric shadows'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1960.jpg'
+    description: 'Introspective moment in natural lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1972.jpg'
+    description: 'Portrait with dramatic blue color grading'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1979.jpg'
+    description: 'Contemplative expression in moody lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1982.jpg'
+    description: 'Atmospheric portrait with emotional depth'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_1992.jpg'
+    description: 'Blue-toned portrait capturing introspection'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC_2026.jpg'
+    description: 'Final portrait in the moody blue series'
+    aspectRatio: 'vertical'
 ---

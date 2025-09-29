@@ -5,17 +5,42 @@ location: 'Ljubljana, Slovenia'
 date: '2024-07-05'
 tags: ['portrait', 'art', 'studio']
 coverPhoto: '/photos/projects/Behind/DSC03725.jpg'
+projectRoot: 'Behind'
 photos:
-  - DSC03711.jpg
-  - DSC03713.jpg
-  - DSC03716.jpg
-  - DSC03719.jpg
-  - DSC03721.jpg
-  - DSC03723.jpg
-  - DSC03905.jpg
-  - DSC03944.jpg
-  - DSC03999.jpg
-  - DSC04001.jpg
-  - DSC04009.jpg
-  - DSC04011.jpg
+  - fileName: 'DSC03711.jpg'
+    description: 'Behind-the-scenes moment in natural lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03713.jpg'
+    description: 'Candid portrait capturing authentic emotion'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03716.jpg'
+    description: 'Intimate studio moment'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03719.jpg'
+    description: 'Artistic composition in soft light'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03721.jpg'
+    description: 'Behind-the-scenes artistic portrait'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03723.jpg'
+    description: 'Studio portrait with dramatic lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03905.jpg'
+    description: 'Contemplative moment in studio setting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03944.jpg'
+    description: 'Artistic behind-the-scenes capture'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03999.jpg'
+    description: 'Intimate portrait in natural light'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC04001.jpg'
+    description: 'Behind-the-scenes emotional moment'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC04009.jpg'
+    description: 'Studio portrait with soft lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC04011.jpg'
+    description: 'Final behind-the-scenes capture'
+    aspectRatio: 'vertical'
 ---

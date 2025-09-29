@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import Button from '~/components/ui/Button.vue'
 
 useSeoMeta({
@@ -100,7 +99,6 @@ useSeoMeta({
         reach out. I'm always looking for new projects and collaborations.
       </p>
       <Button custom-classes="mt-6">Contact me</Button>
-
     </div>
   </div>
 </template>

@@ -3,7 +3,7 @@ export interface HorizontalScrollItem {
   content?: unknown
   type?: string
   photo?: unknown
-  width?: number // Width in vw units (default: 100)
+  aspectRatio?: 'square' | 'vertical' | 'horizontal'
   [key: string]: unknown
 }
 
@@ -21,9 +21,20 @@ export function useHorizontalScroll(options: HorizontalScrollOptions) {
   const isActive = ref(false)
   const progress = ref(0)
 
-  // Calculate cumulative widths for each item
+  // Calculate cumulative widths for each item based on aspect ratio
   const itemWidths = computed(() => {
-    return items.map(item => item.width || 100) // Default to 100vw if not specified
+    return items.map((item) => {
+      const aspectRatio = item.aspectRatio || 'horizontal'
+      switch (aspectRatio) {
+        case 'vertical':
+          return 50 // 50vw for vertical photos
+        case 'square':
+          return 75 // 75vw for square photos
+        case 'horizontal':
+        default:
+          return 100 // 100vw for horizontal photos
+      }
+    })
   })
 
   // Calculate total track width
@@ -38,27 +49,27 @@ export function useHorizontalScroll(options: HorizontalScrollOptions) {
   const itemPositions = computed(() => {
     const positions: number[] = []
     let currentPosition = 0
-    
+
     for (let i = 0; i < itemWidths.value.length; i++) {
       positions.push(currentPosition)
       currentPosition += itemWidths.value[i]
     }
-    
+
     return positions
   })
 
   // Calculate frame transform based on scroll progress
   const frameTransform = computed(() => {
     if (items.length === 0) return 'translateX(0vw)'
-    
+
     // Calculate the optimal stopping point for the last item
     const lastItemWidth = itemWidths.value[itemWidths.value.length - 1]
     const viewportWidth = 100 // 100vw
-    
+
     // If the last item is smaller than viewport, center it
     // If it's full width or larger, align it to fill the viewport
     let maxTranslate: number
-    
+
     if (lastItemWidth < viewportWidth) {
       // Center the last item: move so it appears at (100vw - itemWidth) / 2 from left
       const lastItemStartPosition = itemPositions.value[itemPositions.value.length - 1]
@@ -68,7 +79,7 @@ export function useHorizontalScroll(options: HorizontalScrollOptions) {
       // For full-width items, just ensure they fill the viewport
       maxTranslate = totalTrackWidth.value - viewportWidth
     }
-    
+
     const translateX = progress.value * maxTranslate
     return `translateX(-${translateX}vw)`
   })

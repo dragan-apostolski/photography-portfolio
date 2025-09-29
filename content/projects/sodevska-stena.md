@@ -5,13 +5,30 @@ location: 'Bela Krajina, Slovenia'
 date: '2024-04-10'
 tags: ['landscape', 'client', 'adventure']
 coverPhoto: '/photos/projects/Sodevska Stena/DSC02259.jpg'
+projectRoot: 'Sodevska Stena'
 photos:
-  - DSC02237.jpg
-  - DSC02238.jpg
-  - DSC02245.jpg
-  - DSC02246.jpg
-  - DSC02255-Enhanced-NR.jpg
-  - DSC02259.jpg
-  - DSC02270.jpg
-  - DSC02275.jpg
+  - fileName: 'DSC02237.jpg'
+    description: 'Dramatic limestone cliffs landscape'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02238.jpg'
+    description: 'Sodevska Stena natural beauty'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02245.jpg'
+    description: 'Adventure climbing location'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02246.jpg'
+    description: 'Limestone cliff formations'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC02255-Enhanced-NR.jpg'
+    description: 'Enhanced landscape photography'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02259.jpg'
+    description: 'Main Sodevska Stena cliff view'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC02270.jpg'
+    description: 'Adventure sports atmosphere'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC02275.jpg'
+    description: 'Final cliff landscape capture'
+    aspectRatio: 'vertical'
 ---

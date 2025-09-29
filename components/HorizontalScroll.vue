@@ -35,9 +35,9 @@
           class="horizontal-scroll-item flex-shrink-0"
           :class="{
             'md:h-screen': shouldUseHorizontalScroll,
-            'md:w-[50vw]': shouldUseHorizontalScroll && itemWidths[index] === 50,
-            'md:w-[75vw]': shouldUseHorizontalScroll && itemWidths[index] === 75,
-            'md:w-screen': shouldUseHorizontalScroll && itemWidths[index] === 100,
+            'md:w-[50vw]': shouldUseHorizontalScroll && item.aspectRatio === 'vertical',
+            'md:w-[75vw]': shouldUseHorizontalScroll && item.aspectRatio === 'square',
+            'md:w-screen': shouldUseHorizontalScroll && item.aspectRatio === 'horizontal',
             'min-h-screen w-full': !shouldUseHorizontalScroll,
           }"
         >
@@ -59,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+import type { HorizontalScrollItem } from '~/composables/useHorizontalScroll'
+
 interface Props {
   items: HorizontalScrollItem[]
   startOffset?: number
@@ -78,7 +80,6 @@ const {
   isActive,
   progress,
   shouldUseHorizontalScroll,
-  itemWidths,
 } = useHorizontalScroll({
   items: props.items,
   startOffset: props.startOffset,

@@ -5,10 +5,21 @@ location: 'Ugljan, Croatia'
 date: '2024-06-18'
 tags: ['portrait', 'couple', 'outdoor']
 coverPhoto: '/photos/projects/Sunset Love/DSC03598.jpg'
+projectRoot: 'Sunset Love'
 photos:
-  - DSC03585.jpg
-  - DSC03591.jpg
-  - DSC03592.jpg
-  - DSC03594.jpg
-  - DSC03598.jpg
+  - fileName: 'DSC03585.jpg'
+    description: 'Romantic couple in golden hour light'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC03591.jpg'
+    description: 'Intimate moment against sunset backdrop'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03592.jpg'
+    description: 'Couple photography during golden hour'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03594.jpg'
+    description: 'Romantic sunset couple portrait'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC03598.jpg'
+    description: 'Main sunset love portrait'
+    aspectRatio: 'horizontal'
 ---

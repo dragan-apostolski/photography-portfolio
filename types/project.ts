@@ -1,13 +1,17 @@
 export interface ProjectPhoto {
   id: string
   src: string
-  title?: string
+  fileName: string
   description?: string
+  aspectRatio: 'square' | 'vertical' | 'horizontal'
   location?: string
   timestamp?: string
-  width?: number
-  height?: number
-  aspectRatio?: 'square' | 'vertical' | 'horizontal'
+}
+
+export interface ProjectPhotoConfig {
+  fileName: string
+  description?: string
+  aspectRatio: 'square' | 'vertical' | 'horizontal'
 }
 
 export interface Project {
@@ -18,8 +22,9 @@ export interface Project {
   tags: string[]
   date: string
   coverPhoto: string
+  projectRoot: string
   featured?: boolean
-  photoFiles: string[]
+  photos: ProjectPhotoConfig[]
   body?: object // For markdown content from Nuxt Content
 }
 

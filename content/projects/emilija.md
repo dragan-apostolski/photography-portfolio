@@ -5,27 +5,72 @@ location: 'Ljubljana, Slovenia'
 date: '2025-08-07'
 tags: ['portrait', 'family', 'baby', 'client']
 coverPhoto: '/photos/projects/Emilija/DSC00234.jpg'
+projectRoot: 'Emilija'
 photos:
-  - DSC00200.jpg
-  - DSC00202.jpg
-  - DSC00208.jpg
-  - DSC00210.jpg
-  - DSC00234.jpg
-  - DSC00242.jpg
-  - DSC00244.jpg
-  - DSC00252.jpg
-  - DSC00259.jpg
-  - DSC00292.jpg
-  - DSC00303.jpg
-  - DSC00319.jpg
-  - DSC00327.jpg
-  - DSC00329.jpg
-  - DSC00349.jpg
-  - DSC00357.jpg
-  - DSC00360.jpg
-  - DSC00367.jpg
-  - DSC00446.jpg
-  - DSC00454.jpg
-  - DSC00474.jpg
-  - DSC00481.jpg
+  - fileName: 'DSC00200.jpg'
+    description: 'Professional portrait with natural lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00202.jpg'
+    description: 'Authentic personality capture'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00208.jpg'
+    description: 'Family portrait session moment'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00210.jpg'
+    description: 'Natural beauty in soft light'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00234.jpg'
+    description: 'Professional headshot with artistic composition'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00242.jpg'
+    description: 'Candid family moment'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00244.jpg'
+    description: 'Portrait with refined lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00252.jpg'
+    description: 'Baby portrait with gentle lighting'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00259.jpg'
+    description: 'Family interaction capture'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00292.jpg'
+    description: 'Professional portrait session'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00303.jpg'
+    description: 'Natural family moment'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00319.jpg'
+    description: 'Artistic portrait composition'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00327.jpg'
+    description: 'Baby portrait with soft focus'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00329.jpg'
+    description: 'Family portrait with natural lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00349.jpg'
+    description: 'Professional headshot session'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00357.jpg'
+    description: 'Candid family interaction'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00360.jpg'
+    description: 'Portrait with artistic lighting'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00367.jpg'
+    description: 'Natural family portrait'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00446.jpg'
+    description: 'Professional portrait with refined composition'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00454.jpg'
+    description: 'Baby portrait session'
+    aspectRatio: 'horizontal'
+  - fileName: 'DSC00474.jpg'
+    description: 'Family moment with natural light'
+    aspectRatio: 'vertical'
+  - fileName: 'DSC00481.jpg'
+    description: 'Final portrait from the session'
+    aspectRatio: 'horizontal'
 ---

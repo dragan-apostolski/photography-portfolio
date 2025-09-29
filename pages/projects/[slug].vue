@@ -26,7 +26,7 @@
         <div v-if="coverPhoto" class="h-full w-full">
           <NuxtImg
             :src="coverPhoto.src"
-            :alt="coverPhoto.title || project.title"
+            :alt="project.title"
             class="h-full w-full object-cover"
             format="webp"
             quality="80"
@@ -107,6 +107,8 @@
                 :alt="(item.photo as any).title || `${project.title} - Photo ${index + 1}`"
                 class="max-h-[90vh] max-w-full rounded-2xl object-contain"
                 loading="lazy"
+                format="webp"
+                quality="80"
                 sizes="100vw xl:80vw"
               />
             </div>
@@ -126,7 +128,7 @@
               >
                 <NuxtImg
                   :src="photo.src"
-                  :alt="photo.title || `${project.title} - Photo ${index + 1}`"
+                  :alt="photo.description || `${project.title} - Photo ${index + 1}`"
                   class="w-full object-contain"
                   loading="lazy"
                   format="webp"
@@ -135,11 +137,11 @@
 
                 <!-- Photo Metadata (if available) -->
                 <div
-                  v-if="photo.title || photo.description"
+                  v-if="photo.description"
                   class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 >
-                  <h3 v-if="photo.title" class="mb-2 text-lg font-semibold">
-                    {{ photo.title }}
+                  <h3 v-if="photo.description" class="mb-2 text-lg font-semibold">
+                    {{ photo.fileName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ') }}
                   </h3>
                   <p v-if="photo.description" class="text-sm opacity-90">
                     {{ photo.description }}
@@ -247,20 +249,11 @@ const horizontalScrollItems = computed(() => {
   if (!project.value) return []
 
   return project.value.photos.map((photo) => {
-    // Determine width based on aspect ratio
-    let width = 100 // Default to 100vw for horizontal photos
-    
-    if (photo.aspectRatio === 'vertical') {
-      width = 50 // Vertical photos get 50vw
-    } else if (photo.aspectRatio === 'square') {
-      width = 75 // Square photos get 75vw
-    }
-
     return {
       id: photo.id,
       type: 'photo',
       photo,
-      width,
+      aspectRatio: photo.aspectRatio,
     }
   })
 })
