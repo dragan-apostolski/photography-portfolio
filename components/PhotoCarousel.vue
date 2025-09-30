@@ -101,7 +101,6 @@ watch(currentIndex, () => {
             :alt="photo.alt"
             class="h-full w-full object-cover"
             quality="100"
-            format="webp"
             loading="lazy"
             placeholder
           />

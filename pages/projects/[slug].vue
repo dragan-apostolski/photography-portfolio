@@ -28,7 +28,6 @@
             :src="coverPhoto.src"
             :alt="project.title"
             class="h-full w-full object-cover"
-            format="webp"
             quality="80"
             loading="lazy"
             placeholder
@@ -107,7 +106,6 @@
                 :alt="(item.photo as any).title || `${project.title} - Photo ${index + 1}`"
                 class="max-h-[90vh] max-w-full rounded-2xl object-contain"
                 loading="lazy"
-                format="webp"
                 quality="80"
                 sizes="100vw xl:80vw"
               />
@@ -131,7 +129,6 @@
                   :alt="photo.description || `${project.title} - Photo ${index + 1}`"
                   class="w-full object-contain"
                   loading="lazy"
-                  format="webp"
                   sizes="100vw md:768px"
                 />
 
@@ -176,7 +173,6 @@
                     :alt="relatedProject.title"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
-                    format="webp"
                     sizes="sm:100vw, md:320px"
                   />
                 </div>

@@ -124,7 +124,6 @@ const formattedCameraSettings = computed(() => {
             :alt="photo.title || 'Photo'"
             class="max-h-[60vh] w-full rounded-t-2xl object-contain sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh]"
             loading="lazy"
-            format="webp"
             sizes="98vw sm:95vw md:85vw lg:80vw"
           />
 

@@ -19,10 +19,13 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
   ],
 
-  // Image configuration - IPX dynamic transformation
+  // Image configuration - Vercel Image Optimization
   image: {
     quality: 80,
-    format: ['webp', 'jpg'],
+    format: ['avif', 'webp', 'jpg'],
+    vercel: {
+      formats: ['avif', 'webp', 'jpeg']
+    }
   },
 
   // Color mode configuration

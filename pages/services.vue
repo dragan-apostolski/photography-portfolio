@@ -64,7 +64,6 @@ const services = ref<Service[]>([
             class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
             :class="{ 'object-top': service.title === 'Portraits' }"
             loading="lazy"
-            format="webp"
             sizes="sm:100vw md:50vw lg:33vw"
           />
         </div>

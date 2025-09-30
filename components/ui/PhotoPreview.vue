@@ -57,7 +57,6 @@ const aspectRatioClass = computed(() => {
         class="h-full w-full object-cover transition-transform duration-300 ease-in-out"
         :class="{ 'scale-105': isHovered }"
         loading="lazy"
-        format="webp"
         sizes="sm:100vw md:40vw lg:30vw"
       />
 
