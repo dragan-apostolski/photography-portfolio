@@ -132,7 +132,7 @@
                   class="w-full object-contain"
                   loading="lazy"
                   format="webp"
-                  sizes="(max-width: 768px) 100vw, 768px"
+                  sizes="100vw md:768px"
                 />
 
                 <!-- Photo Metadata (if available) -->
@@ -212,7 +212,7 @@ const {
   error,
 } = await useAsyncData(`project-${slug}`, () => getProjectWithPhotos(slug), {
   default: () => null,
-  server: false,
+  server: true,
   lazy: false,
 })
 
