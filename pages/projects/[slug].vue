@@ -107,7 +107,7 @@
                 class="max-h-[90vh] max-w-full rounded-2xl object-contain"
                 loading="lazy"
                 quality="80"
-                sizes="100vw xl:80vw"
+                sizes="100vw xl:90vw"
               />
             </div>
           </template>
