@@ -28,10 +28,10 @@
             :src="coverPhoto.src"
             :alt="project.title"
             class="h-full w-full object-cover"
-            quality="80"
+            quality="100"
             loading="lazy"
-            placeholder
             sizes="100vw sm:400px md:800px lg:100vw"
+            placeholder
           />
 
           <!-- Cover Photo Overlay -->
