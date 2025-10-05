@@ -2,6 +2,7 @@
 import type { Photo } from '~/types/photo'
 import CarouselNavButton from './ui/CarouselNavButton.vue'
 import Button from './ui/Button.vue'
+import ScrollIncentive from './ui/ScrollIncentive.vue'
 
 interface Props {
   photos: Photo[]
@@ -123,6 +124,9 @@ watch(currentIndex, () => {
           @mouseleave="startAutoplay"
         />
       </div>
+      
+      <!-- Scroll Incentive Icon -->
+      <ScrollIncentive />
     </ClientOnly>
 
     <!-- Mobile Arrow Navigation -->

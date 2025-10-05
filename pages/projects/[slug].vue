@@ -32,6 +32,7 @@
             loading="lazy"
             sizes="100vw sm:400px md:800px lg:100vw"
             placeholder
+            priority
           />
 
           <!-- Cover Photo Overlay -->
@@ -40,7 +41,7 @@
           />
 
           <!-- Cover Photo Content -->
-          <div class="absolute right-0 bottom-0 left-0 p-6 md:p-12">
+          <div class="absolute right-0 bottom-0 left-0 p-6 pb-24 md:p-12">
             <div class="max-w-2xl">
               <h1 class="mb-4 text-4xl font-bold text-primary md:text-6xl dark:text-primary-dark">
                 {{ project.title }}
@@ -58,7 +59,7 @@
                   <Icon name="heroicons:calendar" class="mr-1 h-4 w-4" />
                   {{ formatDate(project.date) }}
                 </div>
-                <div class="flex items-center">
+                <div class="hidden md:flex items-center">
                   <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
                   {{ project.photos.length }} photos
                 </div>
@@ -77,13 +78,13 @@
             </div>
           </div>
 
-          <!-- Scroll Indicator -->
-          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
-            <Icon
-              name="heroicons:chevron-down"
-              class="h-6 w-6 text-primary-dark dark:text-primary"
-            />
-          </div>
+          <!-- Scroll Incentive -->
+          <ScrollIncentive 
+            position="bottom-6" 
+            mobile-position="bottom-4" 
+            :scroll-amount="0.8"
+            label="Explore Photos"
+          />
         </div>
       </section>
 
@@ -193,6 +194,7 @@
 
 <script setup lang="ts">
 import type { Project } from '~/types/project'
+import ScrollIncentive from '~/components/ui/ScrollIncentive.vue'
 
 // Route
 const route = useRoute()
