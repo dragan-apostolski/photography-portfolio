@@ -37,6 +37,27 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    // Homepage pre-rendered at build time
+    '/': { prerender: true },
+    
+    // About page pre-rendered at build time  
+    '/about': { prerender: true },
+    
+    // Projects index pre-rendered
+    '/projects': { prerender: true },
+    
+    // Individual project pages with ISR (regenerate every hour)
+    '/projects/**': {
+      prerender: true,
+    },
+    
+    // Gallery with longer cache
+    '/gallery': { 
+      prerender: true,
+    },
+  },
+
   // Color mode configuration
   colorMode: {
     preference: 'system',
