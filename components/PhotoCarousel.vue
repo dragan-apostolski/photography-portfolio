@@ -126,7 +126,11 @@ watch(currentIndex, () => {
       </div>
       
       <!-- Scroll Incentive Icon -->
-      <ScrollIncentive />
+      <ScrollIncentive 
+        position="bottom-6" 
+        mobile-position="bottom-6"
+        variant="light"
+      />
     </ClientOnly>
 
     <!-- Mobile Arrow Navigation -->

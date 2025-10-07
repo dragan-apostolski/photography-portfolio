@@ -4,13 +4,30 @@ interface Props {
   mobilePosition?: 'bottom-4' | 'bottom-6' | 'bottom-8' | 'bottom-12' | 'bottom-16' | 'bottom-20'
   scrollAmount?: number // Viewport percentage (0.5 = 50%)
   label?: string
+  variant?: 'auto' | 'light' // auto = responsive to color mode, light = always white text
 }
 
 const props = withDefaults(defineProps<Props>(), {
   position: 'bottom-4',
   mobilePosition: 'bottom-4',
   scrollAmount: 0.5,
-  label: 'Explore'
+  label: 'Explore',
+  variant: 'auto'
+})
+
+// Computed classes based on variant
+const textClasses = computed(() => {
+  if (props.variant === 'light') {
+    return 'text-white/90 hover:text-accent'
+  }
+  return 'text-gray-800 hover:text-accent dark:text-white/90 dark:hover:text-accent'
+})
+
+const mobileTextClasses = computed(() => {
+  if (props.variant === 'light') {
+    return 'text-white/80 active:text-accent'
+  }
+  return 'text-gray-800 active:text-accent dark:text-white/80 dark:active:text-accent'
 })
 
 // Scroll incentive functionality
@@ -28,7 +45,7 @@ const scrollDown = () => {
   <div :class="`absolute ${position} left-1/2 z-20 -translate-x-1/2 hidden md:block`">
     <button
       aria-label="Scroll to explore more"
-      class="group flex flex-col items-center gap-2 text-gray-800 hover:text-accent dark:text-white/90 dark:hover:text-accent transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-transparent cursor-pointer"
+      :class="`group flex flex-col items-center gap-2 ${textClasses} transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-transparent cursor-pointer`"
       @click="scrollDown"
     >
       <!-- Animated chevron down icon -->
@@ -55,7 +72,7 @@ const scrollDown = () => {
   <div :class="`absolute ${mobilePosition} left-1/2 z-20 -translate-x-1/2 md:hidden`">
     <button
       aria-label="Scroll to explore more"
-      class="group flex flex-col items-center gap-1 text-gray-800 active:text-accent dark:text-white/80 dark:active:text-accent transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-transparent cursor-pointer"
+      :class="`group flex flex-col items-center gap-1 ${mobileTextClasses} transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-transparent cursor-pointer`"
       @click="scrollDown"
     >
       <!-- Animated chevron down icon -->
