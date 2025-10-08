@@ -4,11 +4,18 @@ import CarouselNavButton from './ui/CarouselNavButton.vue'
 import Button from './ui/Button.vue'
 import ScrollIncentive from './ui/ScrollIncentive.vue'
 
-interface Props {
-  photos: Photo[]
+interface CarouselPhoto extends Photo {
+  projectSlug?: string
 }
 
-const props = defineProps<Props>()
+interface Props {
+  photos: CarouselPhoto[]
+  mode?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  mode: 'gallery'
+})
 const currentIndex = ref(0)
 const intervalId = ref<NodeJS.Timeout | null>(null)
 const isClient = ref(false)
@@ -59,6 +66,19 @@ const next = () => {
 const prev = () => {
   if (props.photos && props.photos.length > 0) {
     currentIndex.value = (currentIndex.value - 1 + props.photos.length) % props.photos.length
+  }
+}
+
+// Handle button click navigation
+const handleButtonClick = () => {
+  const currentPhoto = props.photos[currentIndex.value]
+  
+  if (props.mode === 'projects' && currentPhoto?.projectSlug) {
+    // Navigate to the project page
+    navigateTo(`/projects/${currentPhoto.projectSlug}`)
+  } else {
+    // For gallery mode, navigate to gallery page
+    navigateTo('/gallery')
   }
 }
 

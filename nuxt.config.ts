@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-04-30',
   devtools: { enabled: true },
 
+  // Runtime configuration
+  runtimeConfig: {
+    public: {
+      carouselMode: process.env.NUXT_PUBLIC_CAROUSEL_MODE || 'projects', // 'gallery' or 'projects'
+    },
+  },
+
   // Vercel deployment configuration
   nitro: {
     preset: 'vercel',

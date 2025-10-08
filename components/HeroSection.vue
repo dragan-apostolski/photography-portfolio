@@ -1,31 +1,15 @@
 <script setup lang="ts">
-import type { Photo } from '~/types/photo'
+const { getCarouselPhotos, getCarouselMode } = useCarousel()
 
-interface ContentItem {
-  meta?: {
-    photos?: Photo[]
-  }
-}
+// Fetch carousel data based on the configured mode
+const { data: photos } = await useAsyncData('carousel-photos', () => getCarouselPhotos())
 
-// Fetch photo data from content file using useAsyncData for proper SSR handling
-const { data: carouselData } = await useAsyncData('carousel', async () => {
-  const all = await queryCollection('content').all()
-
-  // Find the carousel file by checking different possible paths
-  return (
-    all.find((item) => item.path === '/carousel') ||
-    all.find((item) => item.title === 'Hero Carousel Photos') ||
-    null
-  )
-})
-
-const photos = computed<Photo[]>(() => {
-  return (carouselData.value as ContentItem)?.meta?.photos || []
-})
+// Get the current carousel mode
+const carouselMode = getCarouselMode()
 </script>
 
 <template>
   <section id="hero" class="relative h-screen w-full">
-    <PhotoCarousel :photos="photos" />
+    <PhotoCarousel :photos="photos || []" :mode="carouselMode" />
   </section>
 </template>
