@@ -5,6 +5,7 @@ location: 'Ugljan, Croatia'
 date: '2024-06-18'
 tags: ['portrait', 'couple', 'outdoor']
 coverPhoto: '/photos/projects/Sunset Love/DSC03598.jpg'
+coverPhotoMobile: '/photos/projects/Sunset Love/DSC03591.jpg'
 projectRoot: 'Sunset Love'
 photos:
   - fileName: 'DSC03585.jpg'

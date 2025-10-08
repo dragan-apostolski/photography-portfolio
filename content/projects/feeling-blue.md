@@ -5,6 +5,7 @@ location: 'Ljubljana, Slovenia'
 date: '2022-07-22'
 tags: ['portrait', 'outdoor']
 coverPhoto: '/photos/projects/Feeling Blue/cover.jpg'
+coverPhotoMobile: '/photos/projects/Feeling Blue/DSC_1874.jpg'
 projectRoot: 'Feeling Blue'
 photos:
   - fileName: 'DSC_1874.jpg'

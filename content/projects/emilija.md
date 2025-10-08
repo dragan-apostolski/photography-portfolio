@@ -5,6 +5,7 @@ location: 'Ljubljana, Slovenia'
 date: '2025-08-07'
 tags: ['portrait', 'family', 'baby', 'client']
 coverPhoto: '/photos/projects/Emilija/DSC00234.jpg'
+coverPhotoMobile: '/photos/projects/Emilija/DSC00200.jpg'
 projectRoot: 'Emilija'
 photos:
   - fileName: 'DSC00200.jpg'

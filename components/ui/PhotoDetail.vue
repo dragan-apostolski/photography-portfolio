@@ -103,7 +103,7 @@ const formattedCameraSettings = computed(() => {
 
     <!-- Close button -->
     <button
-      class="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:top-6 md:right-6 md:h-12 md:w-12 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+      class="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:top-6 md:right-6 md:h-12 md:w-12 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
       @click="onClose"
     >
       <Icon name="ph:x-bold" class="h-4 w-4 md:h-5 md:w-5" />
@@ -194,7 +194,7 @@ const formattedCameraSettings = computed(() => {
     <!-- Enhanced Previous button -->
     <button
       v-if="onPrevious && hasPrevious"
-      class="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:left-4 md:h-14 md:w-14 lg:left-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+      class="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:left-4 md:h-14 md:w-14 lg:left-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onPrevious"
     >
@@ -204,7 +204,7 @@ const formattedCameraSettings = computed(() => {
     <!-- Enhanced Next button -->
     <button
       v-if="onNext && hasNext"
-      class="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:right-4 md:h-14 md:w-14 lg:right-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+      class="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:right-4 md:h-14 md:w-14 lg:right-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onNext"
     >

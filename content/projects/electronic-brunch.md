@@ -5,6 +5,7 @@ location: 'Neubar, Ljubljana, Slovenia'
 date: '2025-05-10'
 tags: ['event', 'music', 'client']
 coverPhoto: '/photos/projects/Electronic Brunch/DSC09448.jpg'
+coverPhotoMobile: '/photos/projects/Electronic Brunch/DSC09384.jpg'
 projectRoot: 'Electronic Brunch'
 photos:
   - fileName: 'DSC09213.jpg'

@@ -22,6 +22,7 @@ export interface Project {
   tags: string[]
   date: string
   coverPhoto: string
+  coverPhotoMobile?: string
   projectRoot: string
   featured?: boolean
   photos: ProjectPhotoConfig[]

@@ -5,6 +5,7 @@ location: 'Ljubljana, Slovenia'
 date: '2024-07-05'
 tags: ['portrait', 'art', 'studio']
 coverPhoto: '/photos/projects/Behind/DSC03725.jpg'
+coverPhotoMobile: '/photos/projects/Behind/DSC03711.jpg'
 projectRoot: 'Behind'
 photos:
   - fileName: 'DSC03711.jpg'

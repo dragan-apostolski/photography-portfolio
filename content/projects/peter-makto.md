@@ -5,6 +5,7 @@ location: 'Trakošćan, Croatia'
 date: '2024-09-07'
 tags: ['portrait', 'music', 'event']
 coverPhoto: '/photos/projects/Peter Makto/DSC04892.jpg'
+coverPhotoMobile: '/photos/projects/Peter Makto/DSC04867.jpg'
 projectRoot: 'Peter Makto'
 photos:
   - fileName: 'DSC04867.jpg'

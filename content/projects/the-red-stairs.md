@@ -5,6 +5,7 @@ location: 'Cukrarna, Ljubljana, Slovenia'
 date: '2025-08-01'
 tags: ['portrait', 'art']
 coverPhoto: '/photos/projects/The Red Stairs/DSC00095.jpg'
+coverPhotoMobile: '/photos/projects/The Red Stairs/DSC00080.jpg'
 projectRoot: 'The Red Stairs'
 photos:
   - fileName: 'DSC00080.jpg'

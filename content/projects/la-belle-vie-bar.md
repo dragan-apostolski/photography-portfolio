@@ -5,6 +5,7 @@ location: 'Hikkaduwa, Sri Lanka'
 date: '2025-02-25'
 tags: ['hospitality', 'client']
 coverPhoto: '/photos/projects/La Bella Vie Bar/DSC07236.jpg'
+coverPhotoMobile: '/photos/projects/La Bella Vie Bar/DSC07237.jpg'
 projectRoot: 'La Bella Vie Bar'
 photos:
   - fileName: 'DSC07236.jpg'

@@ -5,6 +5,7 @@ location: 'Eko Kamp Rinčica, Slovenia'
 date: '2024-08-15'
 tags: ['hospitality', 'client', 'nature']
 coverPhoto: '/photos/projects/Eko Kamp Rinčica/DSC02315.jpg'
+coverPhotoMobile: '/photos/projects/Eko Kamp Rinčica/DSC02119.jpg'
 projectRoot: 'Eko Kamp Rinčica'
 photos:
   - fileName: 'DSC02119.jpg'

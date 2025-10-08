@@ -5,6 +5,7 @@ location: 'Ljubljana, Slovenia'
 date: '2024-07-05'
 tags: ['experimental', 'portrait', 'art']
 coverPhoto: '/photos/projects/The Laser Experiment/DSC03900.jpg'
+coverPhotoMobile: '/photos/projects/The Laser Experiment/DSC03647.jpg'
 projectRoot: 'The Laser Experiment'
 photos:
   - fileName: 'DSC03647.jpg'

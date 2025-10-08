@@ -214,11 +214,47 @@ const {
   lazy: false,
 })
 
+// Reactive mobile detection
+const isMobile = ref(false)
+
+// Update mobile state on client side
+const updateMobileState = async () => {
+  if (import.meta.client) {
+    const newIsMobile = window.innerWidth < 768
+    if (newIsMobile !== isMobile.value) {
+      isMobile.value = newIsMobile
+      await nextTick() // Ensure DOM updates
+    }
+  }
+}
+
+// Initialize and setup event listeners
+onMounted(async () => {
+  await updateMobileState()
+  
+  if (import.meta.client) {
+    window.addEventListener('resize', updateMobileState)
+    
+    onUnmounted(() => {
+      window.removeEventListener('resize', updateMobileState)
+    })
+  }
+})
+
 // Cover photo from project frontmatter or fallback to first photo
 const coverPhoto = computed(() => {
   if (!project.value) return null
 
-  // Use coverPhoto from frontmatter if available
+  // Use mobile cover photo on mobile devices if available
+  if (isMobile.value && project.value.coverPhotoMobile) {
+    return {
+      src: project.value.coverPhotoMobile,
+      title: project.value.title,
+      id: 'cover-mobile',
+    }
+  }
+
+  // Use desktop cover photo from frontmatter if available
   if (project.value.coverPhoto) {
     return {
       src: project.value.coverPhoto,

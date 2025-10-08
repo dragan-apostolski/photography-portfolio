@@ -5,6 +5,7 @@ location: 'Bela Krajina, Slovenia'
 date: '2024-04-10'
 tags: ['landscape', 'client', 'adventure']
 coverPhoto: '/photos/projects/Sodevska Stena/DSC02259.jpg'
+coverPhotoMobile: '/photos/projects/Sodevska Stena/DSC02246.jpg'
 projectRoot: 'Sodevska Stena'
 photos:
   - fileName: 'DSC02237.jpg'
