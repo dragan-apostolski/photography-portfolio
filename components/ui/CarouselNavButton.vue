@@ -20,8 +20,8 @@ const emit = defineEmits<{
     class="group relative cursor-pointer px-2 py-1 tracking-wider uppercase transition-all duration-300 lg:text-xl"
     :class="[
       active
-        ? 'font-semibold text-primary-dark'
-        : 'text-secondary-300 hover:text-accent dark:hover:text-accent',
+        ? 'font-semibold text-white'
+        : 'text-white/70 hover:text-accent dark:hover:text-accent',
     ]"
     @click="emit('click')"
     @mouseenter="emit('mouseenter')"

@@ -10,20 +10,11 @@ interface CarouselPhoto extends Photo {
 
 interface Props {
   photos: CarouselPhoto[]
-  mode?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  mode: 'gallery'
-})
+const props = defineProps<Props>()
 const currentIndex = ref(0)
 const intervalId = ref<NodeJS.Timeout | null>(null)
-const isClient = ref(false)
-
-// Fix hydration mismatch by setting isClient flag only on client side
-onMounted(() => {
-  isClient.value = true
-})
 
 // Start autoplay and handle cleanup
 onMounted(() => {
@@ -73,12 +64,9 @@ const prev = () => {
 const handleButtonClick = () => {
   const currentPhoto = props.photos[currentIndex.value]
   
-  if (props.mode === 'projects' && currentPhoto?.projectSlug) {
+  if (currentPhoto?.projectSlug) {
     // Navigate to the project page
     navigateTo(`/projects/${currentPhoto.projectSlug}`)
-  } else {
-    // For gallery mode, navigate to gallery page
-    navigateTo('/gallery')
   }
 }
 
@@ -94,13 +82,38 @@ watch(currentIndex, () => {
     <!-- Description and CTA overlay -->
     <div
       v-if="props.photos && props.photos.length > 0"
-      class="absolute top-1/2 left-1/2 z-30 -translate-x-1/2 -translate-y-1/2 space-y-4 text-center lg:left-32 lg:translate-x-0 lg:text-left"
+      class="absolute top-1/2 left-1/2 z-30 -translate-x-1/2 -translate-y-1/2 space-y-6 text-center lg:left-32 lg:translate-x-0 lg:text-left"
     >
-      <h2 class="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl">
-        {{ props.photos[currentIndex]?.description }}
+      <!-- Featured Projects Badge -->
+      <div class="flex items-center justify-center gap-2 lg:justify-start">
+        <div class="flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md px-4 py-2 border border-white/30">
+          <Icon name="material-symbols:collections-bookmark" class="h-5 w-5 text-white" />
+          <span class="text-sm font-medium text-white uppercase tracking-wide">Featured Project</span>
+        </div>
+      </div>
+
+      <!-- Project Title -->
+      <h2 class="text-4xl font-semibold tracking-tight text-white md:text-5xl lg:text-6xl drop-shadow-2xl">
+        {{ props.photos[currentIndex]?.title }}
       </h2>
-      <Button custom-classes="text-white">
-        {{ props.photos[currentIndex]?.buttonTitle }}
+
+      <!-- Project Description (if available) -->
+      <p 
+        v-if="props.photos[currentIndex]?.description" 
+        class="hidden text-lg text-white/90 max-w-xl lg:mx-0 lg:block drop-shadow-lg"
+      >
+        {{ props.photos[currentIndex]?.description }}
+      </p>
+
+      <!-- CTA Button with click handler -->
+      <Button 
+        custom-classes="text-white"
+        @click="handleButtonClick"
+      >
+        <span class="flex items-center gap-2">
+          View Project
+          <Icon name="material-symbols:arrow-forward" class="h-5 w-5" />
+        </span>
       </Button>
     </div>
 
@@ -122,9 +135,12 @@ watch(currentIndex, () => {
             :alt="photo.alt"
             class="h-full w-full object-cover"
             quality="100"
-            loading="lazy"
+            loading="eager"
             placeholder
           />
+          <!-- Gradient overlay for better text readability -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent lg:from-black/60"></div>
         </div>
       </div>
     </div>

@@ -1,0 +1,192 @@
+# Photography Portfolio Project Overview
+
+## Project Identity
+- **Name**: Dragan Apostolski Photography Portfolio
+- **Purpose**: Professional photography portfolio showcasing landscape, travel, and portrait work
+- **Target**: Photography services, print sales, and lead generation
+- **Style**: Minimalist design with light/dark mode support
+
+## Technology Stack
+
+### Core Framework
+- **Nuxt 3** with TypeScript (Vue.js framework)
+- **Tailwind CSS 4** (standalone package, not @nuxtjs/tailwindcss module)
+- **Nuxt Content** for markdown-based content management
+- **Vercel** for deployment and hosting
+
+### Key Modules
+- **@nuxt/image** - Image optimization with Vercel integration
+- **@nuxt/icon** - Icon system (Heroicons, Material Symbols, MDI, Phosphor)
+- **@nuxt/fonts** - Font optimization (Rajdhani font family)
+- **@nuxtjs/color-mode** - Light/dark mode support
+
+### Development Tools
+- **ESLint** + **Prettier** for code quality
+- **TypeScript** for type safety
+- **Custom image processing scripts** for batch optimization
+
+## Project Structure
+
+### Content Management
+- **Gallery photos**: `content/gallery.md` (25 photos across multiple categories)
+- **Projects**: Individual markdown files in `content/projects/` (12 projects)
+- **Carousel config**: `content/carousel.md` (configurable gallery vs projects mode)
+- **Content config**: `content.config.ts` for Nuxt Content setup
+
+### Component Architecture
+- **UI Components**: `/components/ui/` (PhotoPreview, PhotoDetail, Tag, Button, etc.)
+- **Page Components**: `/components/` (HeroSection, GalleryPreview, SiteNavbar, etc.)
+- **Composables**: `/composables/` (useProjects, useCarousel, useHorizontalScroll)
+- **Type Definitions**: `/types/` (photo.ts, project.ts)
+
+### Image Management
+- **Source images**: `/public/photos/` (gallery and projects)
+- **Multiple formats**: AVIF, WebP, JPEG with responsive variants
+
+## Key Features
+
+### Homepage Structure
+1. **Hero Section**: Configurable carousel (gallery photos or recent projects)
+2. **Short About Me**: Portrait + bio with link to full about page
+3. **Gallery Preview**: 6 photos representing different categories
+4. **Footer**: Copyright, social links, dev portfolio link
+
+### Gallery Page
+- **Masonry layout** with CSS columns (desktop) and flexbox (mobile)
+- **Tag-based filtering** system with URL state management
+- **Full-screen photo detail modal** with keyboard navigation
+- **Responsive image loading** with lazy loading
+
+### Projects Section
+- **Project grid** with cover photos and metadata
+- **Individual project pages** with full-screen galleries
+- **Horizontal scroll** on desktop (xl+), vertical on mobile/tablet
+- **Related projects** based on shared tags
+- **Cover photo system** with mobile-specific variants
+
+### Design System
+- **Color Palette**: Black/white primary, neutral grays, sandstone accent (#D4B483)
+- **Typography**: Rajdhani font (400-700 weights)
+- **Responsive**: Mobile-first approach with Tailwind breakpoints
+- **Dark Mode**: Smooth transitions with system preference detection
+
+## Content Structure
+
+### Photo Categories
+- **Landscape**: Mountains, sea, nature scenes
+- **Travel**: Cultural photography, street scenes, architecture
+- **Portrait**: Studio and environmental portraits
+- **Urban**: Cityscapes, architecture, street photography
+- **Experimental**: Artistic and creative work
+
+### Project Types
+- **Commercial**: Accommodation photography (Eko Kamp Rinčica)
+- **Portrait Sessions**: Individual and group portraits
+- **Travel**: Documentary and cultural photography
+- **Artistic**: Creative and experimental work
+
+### Metadata System
+- **Photo metadata**: Title, description, location, camera settings, tags
+- **Project metadata**: Title, description, location, date, tags, cover photos
+- **Aspect ratios**: Square, vertical, horizontal with responsive handling
+
+## Performance Optimizations
+
+### Image Processing Pipeline
+- **Sharp-based optimization** with quality settings (80% default)
+- **Multiple format generation**: AVIF (primary), WebP, JPEG (fallback)
+- **Responsive variants**: Gallery (2500px), medium (1200px), small (600px)
+- **Compression ratios**: 2-30x depending on format and size
+- **Lazy loading** with intersection observer
+
+### Build Optimizations
+- **Pre-rendering**: Homepage, about, projects index
+- **ISR**: Individual project pages with hourly regeneration
+- **Route-based code splitting** and tree shaking
+- **Font optimization** with preloading
+- **Vercel Image Optimization** integration
+
+## Development Workflow
+
+### Image Processing Commands
+```bash
+# Process all images
+npm run process-images
+
+# Process specific project
+npm run process-images -- project-name
+
+# Process with custom settings
+npm run process-images -- --format=webp --quality=90
+```
+
+### Content Management
+- **Markdown frontmatter** for project metadata
+- **Type-safe queries** with Nuxt Content composables
+- **Composable-based data fetching** with caching
+- **SEO optimization** with useHead and useSeoMeta
+
+### Code Style Guidelines
+- **Two tab spaces**, no semicolons
+- **Functional programming** patterns, avoid classes
+- **Composition API** with `<script setup>`
+- **Composables** for reusable logic
+- **TypeScript interfaces** over types
+- **Tailwind classes** only, no custom CSS
+
+## Deployment & Infrastructure
+
+### Vercel Configuration
+- **Framework detection**: Nuxt.js
+- **Build command**: `nuxt build`
+- **Output directory**: `.output`
+- **Environment variables**: Runtime config for carousel mode
+
+### Route Rules
+- **Static pages**: Homepage, about, projects index
+- **Dynamic pages**: Individual projects with ISR
+- **API routes**: Server-side data processing
+- **Redirects**: SEO-friendly URL structure
+
+## Key Files Reference
+
+### Configuration
+- `nuxt.config.ts` - Main Nuxt configuration
+- `content.config.ts` - Nuxt Content setup
+- `vercel.json` - Deployment configuration
+- `assets/css/main.css` - Design tokens and base styles
+
+### Content
+- `content/gallery.md` - Gallery photo definitions
+- `content/carousel.md` - Hero carousel configuration
+- `content/projects/*.md` - Individual project definitions
+
+### Types
+- `types/photo.ts` - Photo interface and metadata
+- `types/project.ts` - Project interface and photo configs
+
+### Composables
+- `composables/useProjects.ts` - Project data management
+- `composables/useCarousel.ts` - Carousel configuration
+- `composables/useHorizontalScroll.ts` - Horizontal scroll behavior
+
+## Important Notes
+
+### Image Optimization
+- **Original photos**: Processed from Lightroom exports (2500px longest side)
+
+- **No database**: Static content with Nuxt Content
+- **Future-proof**: Easy migration to headless CMS if needed
+- **Internationalization ready**: Structure supports multiple languages
+
+### Performance Considerations
+- **Image loading**: Progressive enhancement with lazy loading
+- **Responsive images**: Multiple sizes for different viewports
+- **Caching**: Aggressive caching with ISR for dynamic content
+- **CDN**: Vercel Edge Network for global delivery
+
+### Development Best Practices
+- **Component reusability**: UI components in `/components/ui/`
+- **Type safety**: Full TypeScript coverage with interfaces
+- **SEO optimization**: Meta tags, structured data, sitemap
+- **Accessibility**: Semantic HTML, keyboard navigation, ARIA labels

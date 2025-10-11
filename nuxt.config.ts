@@ -7,9 +7,7 @@ export default defineNuxtConfig({
 
   // Runtime configuration
   runtimeConfig: {
-    public: {
-      carouselMode: process.env.NUXT_PUBLIC_CAROUSEL_MODE || 'projects', // 'gallery' or 'projects'
-    },
+    public: {},
   },
 
   // Vercel deployment configuration
