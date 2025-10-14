@@ -1,16 +1,30 @@
 <script setup lang="ts">
 import Button from '~/components/ui/Button.vue'
+import ContactForm from '~/components/ContactForm.vue'
 
 useSeoMeta({
   title: 'Services | Photography Portfolio',
   description: 'Photography services including accommodations, portraits, and events.',
 })
 
+// Contact form state
+const isContactFormOpen = ref(false)
+
+const openContactForm = () => {
+  isContactFormOpen.value = true
+}
+
+const closeContactForm = () => {
+  isContactFormOpen.value = false
+}
+
 interface Service {
   id: number
   title: string
   description: string
   imageUrl: string
+  buttonText: string
+  link: string
 }
 
 // Services offered
@@ -21,6 +35,8 @@ const services = ref<Service[]>([
     description:
       "Creating content for camps, resorts, airbnb's and other accommodations in nature. Showcase your property with stunning photographs that highlight its unique features and surroundings.",
     imageUrl: '/photos/projects/Eko Kamp Rinčica/DSC02308.jpg',
+    buttonText: 'See Hospitality Projects',
+    link: '/projects?tag=hospitality',
   },
   {
     id: 2,
@@ -28,6 +44,8 @@ const services = ref<Service[]>([
     description:
       'Professional portrait photography for individuals and groups. Capture your personality and create memories that will last a lifetime.',
     imageUrl: '/photos/projects/The Red Stairs/DSC00085.jpg',
+    buttonText: 'See Portrait Projects',
+    link: '/projects?tag=portrait',
   },
   {
     id: 3,
@@ -35,6 +53,8 @@ const services = ref<Service[]>([
     description:
       "Comprehensive event photography covering conferences, celebrations, corporate events, and more. Don't miss a moment of your special occasion.",
     imageUrl: '/photos/projects/Electronic Brunch/DSC09448.jpg',
+    buttonText: 'See Event Projects',
+    link: '/projects?tag=event',
   },
 ])
 </script>
@@ -73,7 +93,11 @@ const services = ref<Service[]>([
           <h3 class="mb-3 text-2xl font-semibold">{{ service.title }}</h3>
           <p>{{ service.description }}</p>
 
-          <Button custom-classes="mt-6">Learn More</Button>
+          <NuxtLink :to="service.link" class="flex justify-center">
+            <Button custom-classes="mt-6 w-full lg:w-auto lg:!px-4 lg:!py-2 lg:!text-base">
+              {{ service.buttonText }}
+            </Button>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -85,7 +109,10 @@ const services = ref<Service[]>([
         Let's discuss how I can help you with your photography needs. Get in touch to discuss rates,
         availability, and custom packages.
       </p>
-      <Button>Contact Me</Button>
+      <Button @click="openContactForm">Contact Me</Button>
     </div>
+
+    <!-- Contact Form Modal -->
+    <ContactForm :is-open="isContactFormOpen" @close="closeContactForm" />
   </div>
 </template>

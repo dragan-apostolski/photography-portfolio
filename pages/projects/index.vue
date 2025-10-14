@@ -15,14 +15,14 @@
           <Tag
             label="All Projects"
             :active="selectedTag === null"
-            :on-click="() => (selectedTag = null)"
+            :on-click="() => selectTag(null)"
           />
           <Tag
             v-for="tag in availableTags"
             :key="tag"
             :label="tag"
             :active="selectedTag === tag"
-            :on-click="() => (selectedTag = tag)"
+            :on-click="() => selectTag(tag)"
           />
         </div>
       </div>
@@ -111,8 +111,12 @@ useSeoMeta({
     'Explore my photography projects including commercial work, weddings, portraits, and artistic endeavors.',
 })
 
-// State
-const selectedTag = ref<string | null>(null)
+// Get route and router
+const route = useRoute()
+const router = useRouter()
+
+// State - initialize from query parameter if present
+const selectedTag = ref<string | null>((route.query.tag as string) || null)
 
 // Composables
 const { getAllProjects, getProjectTags } = useProjects()
@@ -129,6 +133,15 @@ const filteredProjects = computed((): Project[] => {
   if (!selectedTag.value) return projects.value
   return projects.value.filter((project) => project.tags?.includes(selectedTag.value!))
 })
+
+// Tag selection handler
+const selectTag = (tag: string | null) => {
+  selectedTag.value = tag
+  // Update URL query parameter
+  router.push({
+    query: tag ? { tag } : {},
+  })
+}
 
 // Utilities
 const formatDate = (dateString: string): string => {

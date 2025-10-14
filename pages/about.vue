@@ -1,10 +1,22 @@
 <script setup lang="ts">
 import Button from '~/components/ui/Button.vue'
+import ContactForm from '~/components/ContactForm.vue'
 
 useSeoMeta({
   title: 'About Me | Photography Portfolio',
   description: 'Learn more about me as a landscape, travel, and portrait photographer.',
 })
+
+// Contact form state
+const isContactFormOpen = ref(false)
+
+const openContactForm = () => {
+  isContactFormOpen.value = true
+}
+
+const closeContactForm = () => {
+  isContactFormOpen.value = false
+}
 </script>
 
 <template>
@@ -30,8 +42,8 @@ useSeoMeta({
         <h2 class="mb-4 text-2xl font-semibold">Dragan Apostolski</h2>
 
         <p class="mb-4">
-          I am a landscape & travel photographer, with a passion for capturing the beauty of nature
-          and everyday moments. My style encompasses stunning landscapes from beautiful locations,
+          I am a landscape & travel photographer, with a passion for capturing the beauty of nature, and interesting moments from my journeys.
+           My style encompasses stunning landscapes from beautiful locations,
           artistic portraits, and candid moments from everyday life.
         </p>
 
@@ -97,7 +109,10 @@ useSeoMeta({
         If you'd like to work with me or have any questions about my work, please don't hesitate to
         reach out. I'm always looking for new projects and collaborations.
       </p>
-      <Button custom-classes="mt-6">Contact me</Button>
+      <Button custom-classes="mt-6" @click="openContactForm">Contact me</Button>
     </div>
+
+    <!-- Contact Form Modal -->
+    <ContactForm :is-open="isContactFormOpen" @close="closeContactForm" />
   </div>
 </template>

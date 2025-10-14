@@ -36,6 +36,7 @@ TypeScript Usage
 UI and Styling
 - Use Tailwind CSS v4 for components and styling, we dont have a dedicated tailwind.config file, but add extra stylings in the assets/css/main.css file
 - Implement responsive design with Tailwind CSS; use a mobile-first approach.
+- Always set hover:cursor-pointer to buttons and links.
 - Use the color mode module to handle dark and light modes.
 - For implementing UI elements use ONLY the design tokens avalible in the assets/css/main.css file.
 - Since we are using tailwind 4, we can say text-primary, instead of text-[--color-primary] or text-color-primary, and bg-primary instead of bg-[--color-primary] or bg-background-color-primary
