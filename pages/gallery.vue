@@ -20,7 +20,7 @@
         <div
           v-for="photo in filteredPhotos"
           :key="photo.id"
-          class="mb-4 inline-block w-full break-inside-avoid"
+          class="inline-block w-full break-inside-avoid sm:mb-4"
         >
           <div
             class="w-full transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"

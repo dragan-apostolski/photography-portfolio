@@ -45,7 +45,7 @@
           <!-- Color Mode Toggle (shared) -->
           <button
             aria-label="Toggle dark mode"
-            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:cursor-pointer hover:bg-accent hover:text-primary md:h-auto md:w-auto md:p-2 dark:hover:text-primary-dark"
+            class="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-accent hover:text-primary md:h-auto md:w-auto md:p-2 dark:hover:text-primary-dark"
             @click="toggleColorMode"
           >
             <span class="flex items-center justify-center text-xl">
@@ -56,7 +56,7 @@
           <!-- Mobile Menu Toggle (mobile only) -->
           <button
             aria-label="Toggle menu"
-            class="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:text-accent md:hidden"
+            class="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 hover:text-accent md:hidden"
             @click="toggleMenu"
           >
             <div class="relative h-5 w-6">

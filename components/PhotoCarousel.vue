@@ -175,7 +175,7 @@ watch(currentIndex, () => {
     >
       <button
         aria-label="Previous photo"
-        class="flex items-center justify-center rounded-full bg-white/30 p-2 text-white transition-colors hover:bg-white/50 focus:ring-2 focus:ring-accent focus:outline-none"
+        class="cursor-pointer flex items-center justify-center rounded-full bg-white/30 p-2 text-white transition-colors hover:bg-white/50 focus:ring-2 focus:ring-accent focus:outline-none"
         @click="prev"
         @mouseenter="stopAutoplay"
         @mouseleave="startAutoplay"
@@ -184,7 +184,7 @@ watch(currentIndex, () => {
       </button>
       <button
         aria-label="Next photo"
-        class="flex items-center justify-center rounded-full bg-white/30 p-2 text-white transition-colors hover:bg-white/50 focus:ring-2 focus:ring-accent focus:outline-none"
+        class="cursor-pointer flex items-center justify-center rounded-full bg-white/30 p-2 text-white transition-colors hover:bg-white/50 focus:ring-2 focus:ring-accent focus:outline-none"
         @click="next"
         @mouseenter="stopAutoplay"
         @mouseleave="startAutoplay"

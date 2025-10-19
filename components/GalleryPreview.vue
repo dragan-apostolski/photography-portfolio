@@ -43,8 +43,8 @@ const previewPhotos = computed<GalleryPhoto[]>(() => {
   <section class="py-16">
     <div class="container mx-auto px-4">
       <h2 class="mb-8 text-center text-3xl font-semibold">Gallery Preview</h2>
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div v-for="(photo, index) in previewPhotos" :key="index" class="mb-6">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div v-for="(photo, index) in previewPhotos" :key="index">
           <PhotoPreview
             :photo="photo"
             aspect-ratio="square"

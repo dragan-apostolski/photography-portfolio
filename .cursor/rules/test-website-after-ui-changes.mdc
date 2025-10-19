@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Always test the website by running `npm run dev` and navigating to the website in the browser (using chrome-devtools) after making UI changes to ensure the changes are working as expected. 
