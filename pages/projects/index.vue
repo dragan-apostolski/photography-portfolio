@@ -53,7 +53,7 @@
             >
               <NuxtImg
                 v-if="project.coverPhoto"
-                :src="project.coverPhoto"
+                :src="getPhotoUrl(project.coverPhoto)"
                 :alt="project.title"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
@@ -119,7 +119,7 @@ const router = useRouter()
 const selectedTag = ref<string | null>((route.query.tag as string) || null)
 
 // Composables
-const { getAllProjects, getProjectTags } = useProjects()
+const { getAllProjects, getProjectTags, getPhotoUrl } = useProjects()
 
 // Data fetching
 const { data: projects, pending, error } = await useAsyncData('projects', getAllProjects)

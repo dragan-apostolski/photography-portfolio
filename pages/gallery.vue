@@ -93,6 +93,9 @@ useHead({
   ],
 })
 
+// Get photo URL helper
+const { getPhotoUrl } = useProjects()
+
 // Fetch photo data from content file using useAsyncData for proper SSR handling
 const { data: galleryData } = await useAsyncData('gallery', async () => {
   const all = await queryCollection('content').all()
@@ -106,7 +109,12 @@ const { data: galleryData } = await useAsyncData('gallery', async () => {
 })
 
 const photos = computed<Photo[]>(() => {
-  return (galleryData.value as ContentItem)?.meta?.photos || []
+  const rawPhotos = (galleryData.value as ContentItem)?.meta?.photos || []
+  // Transform photo URLs to use CDN
+  return rawPhotos.map(photo => ({
+    ...photo,
+    src: getPhotoUrl(photo.src)
+  }))
 })
 
 // Available tags for filtering

@@ -170,7 +170,7 @@
                 >
                   <NuxtImg
                     v-if="relatedProject.coverPhoto"
-                    :src="relatedProject.coverPhoto"
+                    :src="getPhotoUrl(relatedProject.coverPhoto)"
                     :alt="relatedProject.title"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
@@ -201,7 +201,7 @@ const route = useRoute()
 const slug = route.params.slug as string
 
 // Composables
-const { getProjectWithPhotos, getAllProjects } = useProjects()
+const { getProjectWithPhotos, getAllProjects, getPhotoUrl } = useProjects()
 
 // Data fetching
 const {
@@ -248,7 +248,7 @@ const coverPhoto = computed(() => {
   // Use mobile cover photo on mobile devices if available
   if (isMobile.value && project.value.coverPhotoMobile) {
     return {
-      src: project.value.coverPhotoMobile,
+      src: getPhotoUrl(project.value.coverPhotoMobile),
       title: project.value.title,
       id: 'cover-mobile',
     }
@@ -257,7 +257,7 @@ const coverPhoto = computed(() => {
   // Use desktop cover photo from frontmatter if available
   if (project.value.coverPhoto) {
     return {
-      src: project.value.coverPhoto,
+      src: getPhotoUrl(project.value.coverPhoto),
       title: project.value.title,
       id: 'cover',
     }

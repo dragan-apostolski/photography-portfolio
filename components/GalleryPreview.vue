@@ -21,6 +21,9 @@ const navigateToGallery = () => {
   router.push('/gallery')
 }
 
+// Get photo URL helper
+const { getPhotoUrl } = useProjects()
+
 // Fetch photo data from content file using useAsyncData for proper SSR handling
 const { data: galleryPreviewData } = await useAsyncData('galleryPreview', async () => {
   const all = await queryCollection('content').all()
@@ -35,7 +38,12 @@ const { data: galleryPreviewData } = await useAsyncData('galleryPreview', async 
 })
 
 const previewPhotos = computed<GalleryPhoto[]>(() => {
-  return (galleryPreviewData.value as ContentItem)?.meta?.photos || []
+  const rawPhotos = (galleryPreviewData.value as ContentItem)?.meta?.photos || []
+  // Transform photo URLs to use CDN
+  return rawPhotos.map(photo => ({
+    ...photo,
+    src: getPhotoUrl(photo.src)
+  }))
 })
 </script>
 

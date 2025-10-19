@@ -6,6 +6,10 @@ const router = useRouter()
 const navigateToAbout = () => {
   router.push('/about')
 }
+
+// Get photo URL helper
+const { getPhotoUrl } = useProjects()
+const aboutPhotoUrl = getPhotoUrl('/photos/projects/The Red Stairs/DSC00114.jpg')
 </script>
 
 <template>
@@ -38,7 +42,7 @@ const navigateToAbout = () => {
             class="relative h-96 w-80 overflow-hidden rounded-2xl shadow-lg lg:h-[500px] lg:w-[400px]"
           >
             <NuxtImg
-              src="/photos/projects/The Red Stairs/DSC00114.jpg"
+              :src="aboutPhotoUrl"
               alt="Portrait photo"
               class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
               format="jpg"

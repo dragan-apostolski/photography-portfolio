@@ -1,8 +1,11 @@
 <script setup lang="ts">
 const { getCarouselPhotos } = useCarousel()
+const config = useRuntimeConfig()
 
 // Fetch carousel data (latest projects)
-const { data: photos } = await useAsyncData('carousel-photos', () => getCarouselPhotos())
+const { data: photos } = await useAsyncData('carousel-photos', () => 
+  getCarouselPhotos(config.public.cdnBaseUrl)
+)
 </script>
 
 <template>

@@ -7,7 +7,9 @@ export default defineNuxtConfig({
 
   // Runtime configuration
   runtimeConfig: {
-    public: {},
+    public: {
+      cdnBaseUrl: process.env.NUXT_PUBLIC_CDN_BASE_URL || '',
+    },
   },
 
   // Vercel deployment configuration
@@ -28,6 +30,7 @@ export default defineNuxtConfig({
   image: {
     quality: 80,
     format: ['avif', 'webp', 'jpg'],
+    domains: ['v1kazbs5j1o30hpf.public.blob.vercel-storage.com'],
     vercel: {
       formats: ['avif', 'webp', 'jpeg']
     },

@@ -7,6 +7,10 @@ useSeoMeta({
   description: 'Learn more about me as a landscape, travel, and portrait photographer.',
 })
 
+// Get photo URL helper
+const { getPhotoUrl } = useProjects()
+const aboutPhotoUrl = getPhotoUrl('/photos/projects/The Red Stairs/DSC00114.jpg')
+
 // Contact form state
 const isContactFormOpen = ref(false)
 
@@ -27,7 +31,7 @@ const closeContactForm = () => {
       <!-- Profile Image Section -->
       <div class="overflow-hidden rounded-lg">
         <NuxtImg
-          src="/photos/projects/The Red Stairs/DSC00114.jpg"
+          :src="aboutPhotoUrl"
           alt="Portrait photo"
           class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
           sizes="400px md:350px lg:400px xl:450px"

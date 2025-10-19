@@ -2,6 +2,21 @@ import type { Project, ProjectPhoto, ProjectWithPhotos, ProjectPhotoConfig } fro
 
 export const useProjects = () => {
   /**
+   * Convert relative photo path to CDN URL
+   */
+  const getPhotoUrl = (relativePath: string): string => {
+    if (!relativePath) return ''
+    // If already a full URL, return as-is
+    if (relativePath.startsWith('http')) return relativePath
+    
+    const config = useRuntimeConfig()
+    const cdnBase = config.public.cdnBaseUrl || ''
+    
+    // Remove leading slash if present to avoid double slashes
+    const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath
+    return cdnBase ? `${cdnBase}/${cleanPath}` : relativePath
+  }
+  /**
    * Get all projects from content
    */
   const getAllProjects = async (): Promise<Project[]> => {
@@ -83,10 +98,14 @@ export const useProjects = () => {
         return []
       }
 
+      // Get CDN base URL from runtime config
+      const config = useRuntimeConfig()
+      const cdnBase = config.public.cdnBaseUrl || ''
+
       // Transform photos array from frontmatter to ProjectPhoto format
       const photos = project.photos.map((photoConfig: ProjectPhotoConfig, index: number) => {
         const fileNameWithoutExt = photoConfig.fileName.replace(/\.[^/.]+$/, '')
-        const imagePath = `/photos/projects/${project.projectRoot}/${photoConfig.fileName}`
+        const imagePath = `${cdnBase}/photos/projects/${project.projectRoot}/${photoConfig.fileName}`
 
         return {
           id: `${projectSlug}-${fileNameWithoutExt}`,
@@ -156,5 +175,6 @@ export const useProjects = () => {
     getProjectWithPhotos,
     getProjectTags,
     getRecentProjects,
+    getPhotoUrl,
   }
 }
