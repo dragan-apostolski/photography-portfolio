@@ -210,7 +210,6 @@ const {
   error,
 } = await useAsyncData(`project-${slug}`, () => getProjectWithPhotos(slug), {
   default: () => null,
-  server: true,
   lazy: false,
 })
 

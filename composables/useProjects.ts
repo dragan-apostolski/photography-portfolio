@@ -1,6 +1,10 @@
 import type { Project, ProjectPhoto, ProjectWithPhotos, ProjectPhotoConfig } from '~/types/project'
 
 export const useProjects = () => {
+  // Get runtime config at the top level of the composable (setup context)
+  const config = useRuntimeConfig()
+  const cdnBase = config.public.cdnBaseUrl || ''
+
   /**
    * Convert relative photo path to CDN URL
    */
@@ -8,9 +12,6 @@ export const useProjects = () => {
     if (!relativePath) return ''
     // If already a full URL, return as-is
     if (relativePath.startsWith('http')) return relativePath
-    
-    const config = useRuntimeConfig()
-    const cdnBase = config.public.cdnBaseUrl || ''
     
     // Remove leading slash if present to avoid double slashes
     const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath
@@ -93,15 +94,13 @@ export const useProjects = () => {
   const loadProjectPhotos = async (projectSlug: string): Promise<ProjectPhoto[]> => {
     try {
       const project = await getProjectBySlug(projectSlug)
+      
       if (!project?.projectRoot || !project?.photos) {
         console.warn(`No project or photos found for slug: ${projectSlug}`)
         return []
       }
 
-      // Get CDN base URL from runtime config
-      const config = useRuntimeConfig()
-      const cdnBase = config.public.cdnBaseUrl || ''
-
+      // Use CDN base URL from the top-level config
       // Transform photos array from frontmatter to ProjectPhoto format
       const photos = project.photos.map((photoConfig: ProjectPhotoConfig, index: number) => {
         const fileNameWithoutExt = photoConfig.fileName.replace(/\.[^/.]+$/, '')
