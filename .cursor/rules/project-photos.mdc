@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Project photos are stored on a blob storage on vercel. In the NUXT_PUBLIC_CDN_BASE_URL env variable is stored the base url of the blob storage. No images are stored in the public directory. 

@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+This website is deployed on Vercel. You can use the vercel MCP for retreiving info regarding the deployed application.
