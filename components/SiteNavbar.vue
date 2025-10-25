@@ -49,7 +49,12 @@
             @click="toggleColorMode"
           >
             <span class="flex items-center justify-center text-xl">
-              <Icon :name="colorMode.value === 'dark' ? 'ph:moon' : 'ph:sun'" />
+              <ClientOnly>
+                <Icon :name="colorMode.value === 'dark' ? 'ph:moon' : 'ph:sun'" />
+                <template #fallback>
+                  <Icon name="ph:sun" />
+                </template>
+              </ClientOnly>
             </span>
           </button>
 
