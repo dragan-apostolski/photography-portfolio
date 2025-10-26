@@ -1,9 +1,11 @@
 <template>
   <div>
     <!-- Loading State -->
-    <div v-if="pending" class="flex h-screen items-center justify-center">
-      <p class="text-lg opacity-60">Loading project...</p>
-    </div>
+    <ProjectLoader 
+      v-if="shouldDisplayLoader" 
+      :is-loading="pending" 
+      @complete="handleLoaderComplete"
+    />
 
     <!-- Error State -->
     <div v-else-if="error || !project" class="flex h-screen items-center justify-center">
@@ -195,6 +197,7 @@
 <script setup lang="ts">
 import type { Project } from '~/types/project'
 import ScrollIncentive from '~/components/ui/ScrollIncentive.vue'
+import ProjectLoader from '~/components/ui/ProjectLoader.vue'
 
 // Route
 const route = useRoute()
@@ -203,7 +206,7 @@ const slug = route.params.slug as string
 // Composables
 const { getProjectWithPhotos, getAllProjects, getPhotoUrl } = useProjects()
 
-// Data fetching
+// Data fetching - uses SSR for better performance
 const {
   data: project,
   pending,
@@ -212,6 +215,46 @@ const {
   default: () => null,
   lazy: false,
 })
+
+// Project loader management
+const { markProjectAsLoaded } = useProjectLoader()
+
+// Start loader as true (will be updated based on sessionStorage)
+const showLoader = ref(true)
+
+// Computed property to determine if loader should be displayed
+const shouldDisplayLoader = computed(() => {
+  return import.meta.client && showLoader.value
+})
+
+// Check sessionStorage and update loader state on client mount
+onMounted(() => {
+  if (import.meta.client) {
+    const { shouldShowLoader } = useProjectLoader()
+    const shouldShow = shouldShowLoader(slug)
+    showLoader.value = shouldShow
+    
+    // If we should show loader, wait for minimum time before hiding
+    if (shouldShow) {
+      // The ProjectLoader component handles the animation timing
+      // We just need to make sure we keep showing it initially
+    } else {
+      // Project already loaded, hide immediately
+      showLoader.value = false
+    }
+  }
+})
+
+// Watch for when the loader animation completes
+const handleLoaderComplete = () => {
+  // Mark this project as loaded in the session
+  markProjectAsLoaded(slug)
+  
+  // Small delay before hiding
+  setTimeout(() => {
+    showLoader.value = false
+  }, 100)
+}
 
 // Reactive mobile detection
 const isMobile = ref(false)
