@@ -1,28 +1,11 @@
 <template>
-  <div>
-    <!-- Loading State -->
-    <ProjectLoader 
-      v-if="shouldDisplayLoader" 
-      :is-loading="pending" 
-      @complete="handleLoaderComplete"
-    />
-
-    <!-- Error State -->
-    <div v-else-if="error || !project" class="flex h-screen items-center justify-center">
-      <div class="text-center">
-        <h1 class="mb-4 text-2xl font-bold">Project Not Found</h1>
-        <p class="mb-6 text-lg opacity-60">The requested project could not be found.</p>
-        <NuxtLink
-          to="/projects"
-          class="hover:bg-opacity-90 inline-block rounded-lg bg-accent px-6 py-3 text-primary transition-colors dark:text-primary-dark"
-        >
-          Back to Projects
-        </NuxtLink>
-      </div>
-    </div>
-
-    <!-- Project Content -->
-    <div v-else>
+  <div class="relative">
+    <!-- Project Content - Always mounted when data is ready -->
+    <div 
+      v-if="project && !error"
+      class="transition-opacity duration-500"
+      :class="contentVisible ? 'opacity-100' : 'opacity-0'"
+    >
       <!-- Cover Photo Section -->
       <section class="relative h-screen w-full overflow-hidden">
         <div v-if="coverPhoto" class="h-full w-full">
@@ -191,6 +174,33 @@
         </div>
       </section>
     </div>
+
+    <!-- Error State - Layered on top -->
+    <div 
+      v-if="error || !project" 
+      class="fixed inset-0 z-40 flex items-center justify-center bg-primary dark:bg-primary-dark"
+    >
+      <div class="text-center">
+        <h1 class="mb-4 text-2xl font-bold">Project Not Found</h1>
+        <p class="mb-6 text-lg opacity-60">The requested project could not be found.</p>
+        <NuxtLink
+          to="/projects"
+          class="hover:bg-opacity-90 inline-block rounded-lg bg-accent px-6 py-3 text-primary transition-colors dark:text-primary-dark"
+        >
+          Back to Projects
+        </NuxtLink>
+      </div>
+    </div>
+
+    <!-- Loading State - Layered on top -->
+    <ClientOnly>
+      <ProjectLoader 
+        v-if="shouldDisplayLoader" 
+        :is-loading="pending" 
+        mode="viewfinder"
+        @complete="handleLoaderComplete"
+      />
+    </ClientOnly>
   </div>
 </template>
 
@@ -216,20 +226,43 @@ const {
   lazy: false,
 })
 
+// Get cover photo URL for the loader (early access)
+const coverPhotoForLoader = computed(() => {
+  if (!project.value) return null
+  if (project.value.coverPhoto) {
+    return getPhotoUrl(project.value.coverPhoto)
+  }
+  if (project.value.photos.length > 0) {
+    return project.value.photos[0].src
+  }
+  return null
+})
+
 // Project loader management
 const { markProjectAsLoaded } = useProjectLoader()
 
-// Start loader as true (will be updated based on sessionStorage)
-const showLoader = ref(true)
+// Initialize loader - don't show if there's an error
+const showLoader = ref(!error.value && project.value !== null)
+const contentVisible = ref(false)
 
 // Computed property to determine if loader should be displayed
 const shouldDisplayLoader = computed(() => {
+  // Never show loader if there's an error or no project
+  if (error.value || !project.value) {
+    return false
+  }
   return import.meta.client && showLoader.value
 })
 
 // Check sessionStorage and update loader state on client mount
 onMounted(() => {
   if (import.meta.client) {
+    // If there's an error or no project, don't show loader
+    if (error.value || !project.value) {
+      showLoader.value = false
+      return
+    }
+    
     const { shouldShowLoader } = useProjectLoader()
     const shouldShow = shouldShowLoader(slug)
     showLoader.value = shouldShow
@@ -239,21 +272,27 @@ onMounted(() => {
       // The ProjectLoader component handles the animation timing
       // We just need to make sure we keep showing it initially
     } else {
-      // Project already loaded, hide immediately
+      // Project already loaded, show content immediately
       showLoader.value = false
+      contentVisible.value = true
     }
   }
 })
 
 // Watch for when the loader animation completes
-const handleLoaderComplete = () => {
+const handleLoaderComplete = async () => {
   // Mark this project as loaded in the session
   markProjectAsLoaded(slug)
   
-  // Small delay before hiding
-  setTimeout(() => {
-    showLoader.value = false
-  }, 100)
+  // Start content fade-in BEFORE hiding loader
+  // This ensures smooth transition with overlap
+  contentVisible.value = true
+  
+  // Wait a moment for content to start fading in
+  await new Promise(resolve => setTimeout(resolve, 100))
+  
+  // Then hide the loader
+  showLoader.value = false
 }
 
 // Reactive mobile detection
@@ -276,10 +315,13 @@ onMounted(async () => {
   
   if (import.meta.client) {
     window.addEventListener('resize', updateMobileState)
-    
-    onUnmounted(() => {
-      window.removeEventListener('resize', updateMobileState)
-    })
+  }
+})
+
+// Cleanup event listener on unmount
+onUnmounted(() => {
+  if (import.meta.client) {
+    window.removeEventListener('resize', updateMobileState)
   }
 })
 

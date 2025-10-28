@@ -156,12 +156,18 @@ export function useHorizontalScroll(options: HorizontalScrollOptions) {
   }
 
   // Detect if device should use horizontal scroll
+  // Start with true to match SSR behavior, update on mount
+  const isDesktop = ref(true)
+  
   const shouldUseHorizontalScroll = computed(() => {
     if (!import.meta.client) return true
-    return window.innerWidth >= 768 // Desktop and large tablets
+    return isDesktop.value
   })
-
+  
   onMounted(() => {
+    // Update after hydration to avoid mismatch
+    isDesktop.value = window.innerWidth >= 768
+    
     const cleanup = setupIntersectionObserver()
 
     onUnmounted(() => {
