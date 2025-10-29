@@ -36,6 +36,32 @@ const props = withDefaults(defineProps<PhotoDetailProps>(), {
 
 const isNavigationVisible = ref(false)
 const photoWrapper = ref<HTMLElement | null>(null)
+const isImageLoaded = ref(false)
+const isTransitioning = ref(false)
+
+// Reset loading state when photo changes with transition
+watch(() => props.photo.id, () => {
+  isTransitioning.value = true
+  isImageLoaded.value = false
+  
+  // Reset transition after a brief delay
+  setTimeout(() => {
+    isTransitioning.value = false
+  }, 50)
+})
+
+// Handle image load
+const handleImageLoad = () => {
+  isImageLoaded.value = true
+}
+
+// Preload adjacent images for instant navigation
+const preloadAdjacentImages = () => {
+  if (typeof window === 'undefined') return
+  
+  // This will be called from the parent component via props
+  // We'll preload next and previous images
+}
 
 // Handle key presses for navigation and closing
 onMounted(() => {
@@ -117,25 +143,76 @@ const formattedCameraSettings = computed(() => {
       <div
         class="relative overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
       >
-        <!-- Image wrapper -->
+        <!-- Image wrapper with aspect ratio preservation -->
         <div class="relative">
-          <NuxtImg
-            :src="photo.src"
-            :alt="photo.title || 'Photo'"
-            class="max-h-[60vh] w-full rounded-t-2xl object-contain sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh]"
-            loading="lazy"
-            sizes="98vw sm:95vw md:85vw lg:80vw"
-          />
+          <!-- Aspect ratio container to prevent layout shift -->
+          <div 
+            class="relative"
+            :style="{ 
+              aspectRatio: photo.width && photo.height ? `${photo.width}/${photo.height}` : 'auto',
+              maxHeight: '75vh'
+            }"
+          >
+            <!-- Loading state with blur placeholder -->
+            <div
+              v-if="!isImageLoaded"
+              class="absolute inset-0 flex items-center justify-center"
+            >
+              <!-- Blurred placeholder -->
+              <div class="absolute inset-0 overflow-hidden rounded-t-2xl">
+                <NuxtImg
+                  :src="photo.src"
+                  :alt="photo.title || 'Photo'"
+                  class="h-full w-full scale-110 object-cover blur-2xl"
+                  loading="eager"
+                  :width="20"
+                  quality="10"
+                />
+              </div>
+              
+              <!-- Loading spinner overlay -->
+              <div class="relative z-10 flex flex-col items-center gap-4">
+                <div
+                  class="h-12 w-12 animate-spin rounded-full border-4 border-accent/30 border-t-accent"
+                />
+                <p class="text-sm font-medium text-black/80 dark:text-white/80 drop-shadow-lg">
+                  Loading image...
+                </p>
+              </div>
+            </div>
 
-          <!-- Subtle image overlay for better text readability -->
-          <div
-            class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent dark:from-black/20"
-          />
+            <!-- Main Image with smooth transition -->
+            <NuxtImg
+              :src="photo.src"
+              :alt="photo.title || 'Photo'"
+              class="w-full rounded-t-2xl object-contain transition-all duration-500 ease-out"
+              :class="{ 
+                'opacity-0 scale-95': !isImageLoaded || isTransitioning, 
+                'opacity-100 scale-100': isImageLoaded && !isTransitioning 
+              }"
+              loading="eager"
+              sizes="98vw sm:95vw md:85vw lg:80vw"
+              :style="{ 
+                maxHeight: '75vh',
+              }"
+              @load="handleImageLoad"
+            />
+
+            <!-- Subtle image overlay for better text readability -->
+            <div
+              v-if="isImageLoaded && !isTransitioning"
+              class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent transition-opacity duration-500 dark:from-black/20"
+            />
+          </div>
         </div>
 
         <!-- Enhanced caption area -->
         <div
-          class="relative border-t backdrop-blur-sm px-4 py-4 md:px-8 md:py-6 border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+          class="relative border-t backdrop-blur-sm px-4 py-4 transition-all duration-500 md:px-8 md:py-6 border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+          :class="{ 
+            'opacity-0 translate-y-2': !isImageLoaded || isTransitioning, 
+            'opacity-100 translate-y-0': isImageLoaded && !isTransitioning 
+          }"
         >
           <!-- Title and description -->
           <div class="mb-4 text-center md:mb-6">
