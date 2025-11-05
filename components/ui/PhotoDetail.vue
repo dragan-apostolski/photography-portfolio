@@ -130,7 +130,7 @@ const formattedCameraSettings = computed(() => {
 <template>
   <div
     ref="photoWrapper"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-2xl transition-all duration-500 ease-out dark:bg-black/80"
+    class="fixed left-0 top-0 z-50 flex h-dvh w-full items-center justify-center bg-white/80 backdrop-blur-2xl transition-all duration-500 ease-out dark:bg-black/80"
     @click="handleWrapperClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
