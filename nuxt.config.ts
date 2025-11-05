@@ -25,12 +25,14 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxtjs/color-mode',
-    '@sentry/nuxt',
+    '@sentry/nuxt/module',
   ],
 
   // Sentry configuration
   sentry: {
-    dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+    dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
+    debug: true,
+    enabled: true,
   },
 
   // Image configuration - Vercel Image Optimization
