@@ -30,7 +30,14 @@ export default defineNuxtConfig({
 
   // Sentry configuration
   sentry: {
-    dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
+    org: 'apostolski',
+    project: 'photography-portfolio',
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+  },
+
+  // Enable source maps for better error stack traces
+  sourcemap: {
+    client: 'hidden',
   },
 
   // Image configuration - Vercel Image Optimization
