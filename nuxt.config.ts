@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       cdnBaseUrl: process.env.NUXT_PUBLIC_CDN_BASE_URL || '',
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
     },
   },
 
@@ -24,7 +25,13 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxtjs/color-mode',
+    '@sentry/nuxt',
   ],
+
+  // Sentry configuration
+  sentry: {
+    dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+  },
 
   // Image configuration - Vercel Image Optimization
   image: {
