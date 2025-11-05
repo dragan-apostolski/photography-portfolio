@@ -18,24 +18,24 @@
       <!-- Use CSS columns for masonry on larger screens, flexbox on mobile -->
       <div class="flex flex-col gap-4 sm:block sm:columns-2 sm:gap-4 md:columns-3">
         <div
-          v-for="photo in filteredPhotos"
+          v-for="(photo, index) in filteredPhotos"
           :key="photo.id"
           class="inline-block w-full break-inside-avoid sm:mb-4"
         >
           <div
             class="w-full transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"
             @click="openPhotoDetail(photo)"
-            @mouseenter="preloadImage(photo.src)"
           >
             <PhotoPreview
               :photo="{
                 src: photo.src,
                 title: photo.title,
                 description: photo.description,
-                tag: photo.tag?.[0] || '',
               }"
               :aspect-ratio="photo.aspectRatio || 'square'"
               cta-link="#"
+              :loading="index < 3 ? 'eager' : 'lazy'"
+              :fetchpriority="index < 3 ? 'high' : 'auto'"
             />
           </div>
         </div>
@@ -65,6 +65,8 @@
       :on-previous="goToPreviousPhoto"
       :has-next="hasNextPhoto"
       :has-previous="hasPreviousPhoto"
+      :next-photo-src="nextPhotoSrc"
+      :previous-photo-src="previousPhotoSrc"
     />
   </div>
 </template>
@@ -160,25 +162,9 @@ const setSelectedTag = (tag: string) => {
   }
 }
 
-// Preload an image for instant display
-const preloadImage = (src: string) => {
-  if (typeof window === 'undefined') return
-  const img = new Image()
-  img.src = src
-}
-
 // Handle opening a photo in the detail view
 const openPhotoDetail = (photo: Photo) => {
   currentPhotoId.value = photo.id
-  
-  // Preload adjacent images for instant navigation
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === photo.id)
-  if (currentIndex < filteredPhotos.value.length - 1) {
-    preloadImage(filteredPhotos.value[currentIndex + 1].src)
-  }
-  if (currentIndex > 0) {
-    preloadImage(filteredPhotos.value[currentIndex - 1].src)
-  }
 }
 
 // Close the photo detail view
@@ -191,11 +177,6 @@ const goToNextPhoto = () => {
   const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
   if (currentIndex < filteredPhotos.value.length - 1) {
     currentPhotoId.value = filteredPhotos.value[currentIndex + 1].id
-    
-    // Preload the next image after this one
-    if (currentIndex + 2 < filteredPhotos.value.length) {
-      preloadImage(filteredPhotos.value[currentIndex + 2].src)
-    }
   }
 }
 
@@ -204,11 +185,6 @@ const goToPreviousPhoto = () => {
   const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
   if (currentIndex > 0) {
     currentPhotoId.value = filteredPhotos.value[currentIndex - 1].id
-    
-    // Preload the previous image before this one
-    if (currentIndex - 2 >= 0) {
-      preloadImage(filteredPhotos.value[currentIndex - 2].src)
-    }
   }
 }
 
@@ -226,6 +202,23 @@ const hasNextPhoto = computed(() => {
 const hasPreviousPhoto = computed(() => {
   const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
   return currentIndex > 0
+})
+
+// Get next and previous photo sources for preloading
+const nextPhotoSrc = computed(() => {
+  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  if (currentIndex < filteredPhotos.value.length - 1) {
+    return filteredPhotos.value[currentIndex + 1].src
+  }
+  return undefined
+})
+
+const previousPhotoSrc = computed(() => {
+  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  if (currentIndex > 0) {
+    return filteredPhotos.value[currentIndex - 1].src
+  }
+  return undefined
 })
 
 // On page load, check for tag parameter in URL

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { NuxtLink } from '#components'
+
 interface PhotoPreviewProps {
   photo: {
     src: string
@@ -8,11 +10,15 @@ interface PhotoPreviewProps {
   }
   aspectRatio?: 'square' | 'vertical' | 'horizontal'
   ctaLink?: string
+  loading?: 'lazy' | 'eager'
+  fetchpriority?: 'high' | 'low' | 'auto'
 }
 
 const props = withDefaults(defineProps<PhotoPreviewProps>(), {
   aspectRatio: 'square',
   ctaLink: '/gallery',
+  loading: 'lazy',
+  fetchpriority: 'auto',
 })
 
 const isHovered = ref(false)
@@ -29,6 +35,11 @@ const fullLink = computed(() => {
   return `${props.ctaLink}?tag=${encodeURIComponent(props.photo.tag)}`
 })
 
+// Check if we should render as a link or just a div
+const shouldRenderAsLink = computed(() => {
+  return fullLink.value && fullLink.value !== '#'
+})
+
 // Define aspect ratio classes
 const aspectRatioClass = computed(() => {
   switch (props.aspectRatio) {
@@ -43,7 +54,7 @@ const aspectRatioClass = computed(() => {
 </script>
 
 <template>
-  <NuxtLink :to="fullLink" class="block">
+  <component :is="shouldRenderAsLink ? NuxtLink : 'div'" :to="shouldRenderAsLink ? fullLink : undefined" class="block">
     <div
       class="group relative cursor-pointer overflow-hidden rounded-md"
       :class="aspectRatioClass"
@@ -56,7 +67,8 @@ const aspectRatioClass = computed(() => {
         :alt="photo.title || 'Photo'"
         class="h-full w-full object-cover transition-transform duration-300 ease-in-out"
         :class="{ 'scale-105': isHovered }"
-        loading="lazy"
+        :loading="loading"
+        :fetchpriority="fetchpriority"
         sizes="sm:100vw md:40vw lg:30vw"
       />
 
@@ -82,5 +94,5 @@ const aspectRatioClass = computed(() => {
         </p>
       </div>
     </div>
-  </NuxtLink>
+  </component>
 </template>

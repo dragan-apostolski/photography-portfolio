@@ -16,6 +16,7 @@ interface Photo {
   width?: number
   height?: number
   tag?: string | string[]
+  aspectRatio?: string
 }
 
 interface PhotoDetailProps {
@@ -25,6 +26,8 @@ interface PhotoDetailProps {
   onPrevious?: () => void
   hasNext?: boolean
   hasPrevious?: boolean
+  nextPhotoSrc?: string
+  previousPhotoSrc?: string
 }
 
 const props = withDefaults(defineProps<PhotoDetailProps>(), {
@@ -32,17 +35,30 @@ const props = withDefaults(defineProps<PhotoDetailProps>(), {
   onPrevious: undefined,
   hasNext: false,
   hasPrevious: false,
+  nextPhotoSrc: undefined,
+  previousPhotoSrc: undefined,
 })
 
 const isNavigationVisible = ref(false)
 const photoWrapper = ref<HTMLElement | null>(null)
 const isImageLoaded = ref(false)
 const isTransitioning = ref(false)
+const showLoadingState = ref(false)
+let loadingTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Reset loading state when photo changes with transition
 watch(() => props.photo.id, () => {
   isTransitioning.value = true
   isImageLoaded.value = false
+  
+  // Only show loading spinner if image takes longer than 100ms to load
+  // This prevents flash of loading state for cached images
+  if (loadingTimeout) clearTimeout(loadingTimeout)
+  loadingTimeout = setTimeout(() => {
+    if (!isImageLoaded.value) {
+      showLoadingState.value = true
+    }
+  }, 100)
   
   // Reset transition after a brief delay
   setTimeout(() => {
@@ -52,16 +68,11 @@ watch(() => props.photo.id, () => {
 
 // Handle image load
 const handleImageLoad = () => {
+  if (loadingTimeout) clearTimeout(loadingTimeout)
+  showLoadingState.value = false
   isImageLoaded.value = true
 }
 
-// Preload adjacent images for instant navigation
-const preloadAdjacentImages = () => {
-  if (typeof window === 'undefined') return
-  
-  // This will be called from the parent component via props
-  // We'll preload next and previous images
-}
 
 // Handle key presses for navigation and closing
 onMounted(() => {
@@ -143,67 +154,59 @@ const formattedCameraSettings = computed(() => {
       <div
         class="relative overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
       >
-        <!-- Image wrapper with aspect ratio preservation -->
-        <div class="relative">
-          <!-- Aspect ratio container to prevent layout shift -->
-          <div 
-            class="relative"
-            :style="{ 
-              aspectRatio: photo.width && photo.height ? `${photo.width}/${photo.height}` : 'auto',
-              maxHeight: '75vh'
-            }"
+        <!-- Image wrapper -->
+        <div class="relative w-full">
+          <!-- Loading state with blur placeholder -->
+          <div
+            v-if="showLoadingState"
+            class="absolute inset-0 flex items-center justify-center"
+            :style="{ minHeight: '40vh' }"
           >
-            <!-- Loading state with blur placeholder -->
-            <div
-              v-if="!isImageLoaded"
-              class="absolute inset-0 flex items-center justify-center"
-            >
-              <!-- Blurred placeholder -->
-              <div class="absolute inset-0 overflow-hidden rounded-t-2xl">
-                <NuxtImg
-                  :src="photo.src"
-                  :alt="photo.title || 'Photo'"
-                  class="h-full w-full scale-110 object-cover blur-2xl"
-                  loading="eager"
-                  :width="20"
-                  quality="10"
-                />
-              </div>
-              
-              <!-- Loading spinner overlay -->
-              <div class="relative z-10 flex flex-col items-center gap-4">
-                <div
-                  class="h-12 w-12 animate-spin rounded-full border-4 border-accent/30 border-t-accent"
-                />
-                <p class="text-sm font-medium text-black/80 dark:text-white/80 drop-shadow-lg">
-                  Loading image...
-                </p>
-              </div>
+            <!-- Blurred placeholder -->
+            <div class="absolute inset-0 overflow-hidden rounded-t-2xl">
+              <NuxtImg
+                :src="photo.src"
+                :alt="photo.title || 'Photo'"
+                class="h-full w-full scale-110 object-cover blur-2xl"
+                loading="eager"
+                :width="20"
+                quality="10"
+              />
             </div>
-
-            <!-- Main Image with smooth transition -->
-            <NuxtImg
-              :src="photo.src"
-              :alt="photo.title || 'Photo'"
-              class="w-full rounded-t-2xl object-contain transition-all duration-500 ease-out"
-              :class="{ 
-                'opacity-0 scale-95': !isImageLoaded || isTransitioning, 
-                'opacity-100 scale-100': isImageLoaded && !isTransitioning 
-              }"
-              loading="eager"
-              sizes="98vw sm:95vw md:85vw lg:80vw"
-              :style="{ 
-                maxHeight: '75vh',
-              }"
-              @load="handleImageLoad"
-            />
-
-            <!-- Subtle image overlay for better text readability -->
-            <div
-              v-if="isImageLoaded && !isTransitioning"
-              class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent transition-opacity duration-500 dark:from-black/20"
-            />
+            
+            <!-- Loading spinner overlay -->
+            <div class="relative z-10 flex flex-col items-center gap-4">
+              <div
+                class="h-12 w-12 animate-spin rounded-full border-4 border-accent/30 border-t-accent"
+              />
+              <p class="text-sm font-medium text-black/80 dark:text-white/80 drop-shadow-lg">
+                Loading image...
+              </p>
+            </div>
           </div>
+
+          <!-- Main Image with smooth transition -->
+          <NuxtImg
+            :src="photo.src"
+            :alt="photo.title || 'Photo'"
+            class="w-full rounded-t-2xl object-contain transition-all duration-500 ease-out"
+            :class="{ 
+              'opacity-0 scale-95': !isImageLoaded || isTransitioning, 
+              'opacity-100 scale-100': isImageLoaded && !isTransitioning 
+            }"
+            loading="eager"
+            sizes="98vw sm:95vw md:85vw lg:80vw"
+            :style="{ 
+              maxHeight: '75vh',
+            }"
+            @load="handleImageLoad"
+          />
+
+          <!-- Subtle image overlay for better text readability -->
+          <div
+            v-if="isImageLoaded && !isTransitioning"
+            class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent transition-opacity duration-500 dark:from-black/20 pointer-events-none"
+          />
         </div>
 
         <!-- Enhanced caption area -->
@@ -287,5 +290,25 @@ const formattedCameraSettings = computed(() => {
     >
       <Icon name="ph:caret-right-bold" class="h-4 w-4 md:h-6 md:w-6" />
     </button>
+
+    <!-- Hidden preload images - MUST have identical attributes to the visible image above -->
+    <div v-if="nextPhotoSrc || previousPhotoSrc" class="sr-only" aria-hidden="true">
+      <NuxtImg
+        v-if="nextPhotoSrc"
+        :src="nextPhotoSrc"
+        alt=""
+        loading="eager"
+        sizes="98vw sm:95vw md:85vw lg:80vw"
+        :style="{ maxHeight: '75vh' }"
+      />
+      <NuxtImg
+        v-if="previousPhotoSrc"
+        :src="previousPhotoSrc"
+        alt=""
+        loading="eager"
+        sizes="98vw sm:95vw md:85vw lg:80vw"
+        :style="{ maxHeight: '75vh' }"
+      />
+    </div>
   </div>
 </template>
