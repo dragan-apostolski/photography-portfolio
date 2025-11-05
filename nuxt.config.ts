@@ -31,8 +31,6 @@ export default defineNuxtConfig({
   // Sentry configuration
   sentry: {
     dsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
-    debug: true,
-    enabled: true,
   },
 
   // Image configuration - Vercel Image Optimization
