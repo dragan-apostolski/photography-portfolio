@@ -1,0 +1,107 @@
+---
+alwaysApply: false
+---
+
+# Photo Processing Pipeline
+
+This guide explains how to add new photography projects from start to finish.
+
+## Step 1: Add Original Photos
+
+Place photos in `original-photos/Projects/[Project Name]/`
+- Use descriptive folder names (e.g., "Kathmandu", "Electronic Brunch")
+- Supported formats: `.jpg`, `.jpeg` only
+- Photos can be any size; the pipeline handles optimization
+
+## Step 2: Analyze Photos (Optional)
+
+Check which photos need processing:
+```bash
+npm run analyze-photos
+```
+
+This shows:
+- Photos larger than 3MB (will be compressed)
+- Total size per folder
+- Overall statistics
+
+## Step 3: Upload & Process Photos
+
+Upload photos to Vercel Blob storage:
+```bash
+npm run upload-photos
+```
+
+**Options:**
+- `--dry-run` - Preview without uploading
+- `--overwrite` - Replace existing photos
+- `--folder="Project Name"` - Process specific folder only
+
+**What it does:**
+- Compresses images >3MB to ~2.5MB (85% quality)
+- Uploads to Vercel Blob at `photos/Projects/[Project Name]/[filename]`
+- Creates `scripts/upload-manifest.json` with upload metadata
+- Photos are accessible via `NUXT_PUBLIC_CDN_BASE_URL`
+
+## Step 4: Generate Markdown Files
+
+Create/update project markdown files:
+```bash
+npm run update-markdown
+```
+
+**What it does:**
+- Reads `scripts/upload-manifest.json`
+- Analyzes aspect ratios (vertical, horizontal, square)
+- Creates `content/projects/[slug].md` files
+- Preserves existing metadata (title, description, date, location, tags)
+- Updates photo list with correct aspect ratios
+
+## Step 5: Edit Project Metadata
+
+Manually edit the generated markdown in `content/projects/`:
+
+```yaml
+---
+title: 'Project Name'
+description: 'Project description'
+location: 'City, Country'
+date: '2025-01-15'  # Single date
+# OR use date range:
+# startDate: '2025-01-15'
+# endDate: '2025-01-20'
+tags: ['travel', 'portrait']  # Available: travel, portrait, landscape, event, etc.
+coverPhoto: '/photos/Projects/Project Name/cover.jpg'  # Desktop
+coverPhotoMobile: '/photos/Projects/Project Name/mobile.jpg'  # Mobile (optional)
+projectRoot: 'Project Name'
+photos:
+  - fileName: 'photo1.jpg'
+    aspectRatio: 'vertical'  # Auto-generated, can adjust if needed
+---
+```
+
+## Step 6: Test Locally
+
+```bash
+npm run dev
+```
+
+Navigate to `/projects/[slug]` to verify.
+
+## Step 7: Deploy
+
+Commit and push to trigger Vercel deployment:
+```bash
+git add .
+git commit -m "Add new project: [Project Name]"
+git push
+```
+
+## Important Notes
+
+- **Don't commit** `original-photos/` folder (gitignored)
+- **Don't commit** `scripts/upload-manifest.json` (gitignored)
+- Photos are served from Vercel Blob, not from the repo
+- The `NUXT_PUBLIC_CDN_BASE_URL` env variable must be set in Vercel
+- Date format: `YYYY-MM-DD` (ISO 8601)
+- Aspect ratio threshold: ±0.1 of 1:1 ratio = square

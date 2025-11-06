@@ -42,7 +42,7 @@
                 </div>
                 <div class="flex items-center">
                   <Icon name="heroicons:calendar" class="mr-1 h-4 w-4" />
-                  {{ formatDate(project.date) }}
+                  {{ formatProjectDate(project) }}
                 </div>
                 <div class="hidden md:flex items-center">
                   <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
@@ -386,13 +386,6 @@ useSeoMeta({
   description: () => project.value?.description || 'Photography project',
 })
 
-// Utilities
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+// Date formatting
+const { formatProjectDate } = useProjectDate()
 </script>

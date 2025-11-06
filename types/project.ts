@@ -20,7 +20,9 @@ export interface Project {
   description: string
   location?: string
   tags: string[]
-  date: string
+  date?: string // Single date
+  startDate?: string // Start of date range
+  endDate?: string // End of date range
   coverPhoto: string
   coverPhotoMobile?: string
   projectRoot: string

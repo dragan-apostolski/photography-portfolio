@@ -9,7 +9,7 @@ useSeoMeta({
 
 // Get photo URL helper
 const { getPhotoUrl } = useProjects()
-const aboutPhotoUrl = getPhotoUrl('/photos/projects/The Red Stairs/DSC00114.jpg')
+const aboutPhotoUrl = getPhotoUrl('/photos/Projects/The Red Stairs/DSC00114.jpg')
 
 // Contact form state
 const isContactFormOpen = ref(false)

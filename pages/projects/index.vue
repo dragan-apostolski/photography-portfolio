@@ -77,7 +77,7 @@
               </p>
               <div class="flex items-center justify-between text-sm opacity-60">
                 <span v-if="project.location">{{ project.location }}</span>
-                <time :datetime="project.date">{{ formatDate(project.date) }}</time>
+                <time :datetime="getDateTimeAttr(project)">{{ formatProjectDate(project) }}</time>
               </div>
               <div class="flex flex-wrap gap-1">
                 <span
@@ -130,8 +130,25 @@ const { data: availableTags } = await useAsyncData('project-tags', getProjectTag
 // Computed
 const filteredProjects = computed((): Project[] => {
   if (!projects.value) return []
-  if (!selectedTag.value) return projects.value
-  return projects.value.filter((project) => project.tags?.includes(selectedTag.value!))
+  
+  let result = projects.value
+  
+  // Filter by tag if selected
+  if (selectedTag.value) {
+    result = result.filter((project) => project.tags?.includes(selectedTag.value!))
+  }
+  
+  // Sort by date, newest first
+  return result.sort((a, b) => {
+    const dateA = a.endDate || a.date
+    const dateB = b.endDate || b.date
+    
+    if (!dateA && !dateB) return 0
+    if (!dateA) return 1
+    if (!dateB) return -1
+    
+    return new Date(dateB).getTime() - new Date(dateA).getTime()
+  })
 })
 
 // Tag selection handler
@@ -143,13 +160,6 @@ const selectTag = (tag: string | null) => {
   })
 }
 
-// Utilities
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+// Date formatting
+const { formatProjectDate, getDateTimeAttr } = useProjectDate()
 </script>

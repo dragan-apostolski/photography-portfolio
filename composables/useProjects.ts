@@ -34,7 +34,9 @@ export const useProjects = () => {
         description: projectData.description || '',
         location: meta.location || projectData.location,
         tags: meta.tags || meta.tag || projectData.tags || projectData.tag || [],
-        date: meta.date || projectData.date || '',
+        date: meta.date || projectData.date,
+        startDate: meta.startDate || projectData.startDate,
+        endDate: meta.endDate || projectData.endDate,
         coverPhoto: meta.coverPhoto || projectData.coverPhoto || '',
         coverPhotoMobile: meta.coverPhotoMobile || projectData.coverPhotoMobile || '',
         projectRoot: meta.projectRoot || projectData.projectRoot || '',
@@ -63,7 +65,9 @@ export const useProjects = () => {
       description: projectData.description || '',
       location: meta.location || projectData.location,
       tags: meta.tags || meta.tag || projectData.tags || projectData.tag || [],
-      date: meta.date || projectData.date || '',
+      date: meta.date || projectData.date,
+      startDate: meta.startDate || projectData.startDate,
+      endDate: meta.endDate || projectData.endDate,
       coverPhoto: meta.coverPhoto || projectData.coverPhoto || '',
       coverPhotoMobile: meta.coverPhotoMobile || projectData.coverPhotoMobile || '',
       projectRoot: meta.projectRoot || projectData.projectRoot || '',
@@ -104,7 +108,7 @@ export const useProjects = () => {
       // Transform photos array from frontmatter to ProjectPhoto format
       const photos = project.photos.map((photoConfig: ProjectPhotoConfig, index: number) => {
         const fileNameWithoutExt = photoConfig.fileName.replace(/\.[^/.]+$/, '')
-        const imagePath = `${cdnBase}/photos/projects/${project.projectRoot}/${photoConfig.fileName}`
+        const imagePath = `${cdnBase}/photos/Projects/${project.projectRoot}/${photoConfig.fileName}`
 
         return {
           id: `${projectSlug}-${fileNameWithoutExt}`,
@@ -113,7 +117,7 @@ export const useProjects = () => {
           description: photoConfig.description || `Photo ${index + 1} from ${project.title}`,
           aspectRatio: photoConfig.aspectRatio,
           location: project.location,
-          timestamp: project.date,
+          timestamp: project.endDate || project.date,
         } as ProjectPhoto
       })
 
@@ -158,9 +162,17 @@ export const useProjects = () => {
    */
   const getRecentProjects = async (limit?: number): Promise<Project[]> => {
     const projects = await getAllProjects()
-    const sortedProjects = projects.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    )
+    const sortedProjects = projects.sort((a, b) => {
+      // Use endDate if available, otherwise use date
+      const dateA = a.endDate || a.date
+      const dateB = b.endDate || b.date
+      
+      if (!dateA && !dateB) return 0
+      if (!dateA) return 1
+      if (!dateB) return -1
+      
+      return new Date(dateB).getTime() - new Date(dateA).getTime()
+    })
 
     return limit ? sortedProjects.slice(0, limit) : sortedProjects
   }

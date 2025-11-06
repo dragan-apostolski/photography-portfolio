@@ -56,7 +56,7 @@ function processImagesInFolder(folderPath) {
   const files = fs.readdirSync(folderPath)
 
   // Filter for image files
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.tiff']
+  const imageExtensions = ['.jpg', '.jpeg']
   const imageFiles = files.filter((file) => {
     const ext = path.extname(file).toLowerCase()
     return imageExtensions.includes(ext)

@@ -107,7 +107,7 @@ const { data: galleryData } = await useAsyncData('gallery', async () => {
   return (
     all.find((item) => item.path === '/gallery') ||
     all.find((item) => item.title === 'Photo Gallery Collection') ||
-    null
+    { meta: { photos: [] } }
   )
 })
 

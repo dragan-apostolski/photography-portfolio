@@ -12,7 +12,10 @@
     "lint:fix": "eslint . --ext .ts,.js,.vue --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "process-images": "tsx scripts/processImages.ts"
+    "process-images": "tsx scripts/processImages.ts",
+    "analyze-photos": "tsx scripts/analyzePhotos.ts",
+    "upload-photos": "tsx --env-file=.env scripts/uploadPhotos.ts",
+    "update-markdown": "tsx --env-file=.env scripts/updateMarkdown.ts"
   },
   "dependencies": {
     "@nuxt/content": "^3.5.1",
@@ -21,6 +24,7 @@
     "@nuxt/image": "^1.10.0",
     "@sentry/nuxt": "^10.23.0",
     "@tailwindcss/vite": "^4.1.5",
+    "@vercel/blob": "^2.0.0",
     "better-sqlite3": "^12.2.0",
     "image-size": "^2.0.2",
     "nuxt": "^3.17.1",
