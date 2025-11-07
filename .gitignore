@@ -29,3 +29,4 @@ logs
 # other
 .windsurfrules
 original-photos/
+scripts/upload-manifest.json

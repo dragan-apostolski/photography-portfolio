@@ -1,6 +1,6 @@
 ---
 title: 'Alter Ego'
-description: 'Photography project: Alter Ego'
+description: "Sinergia's annual costume party"
 location: 'Ljubljana, Slovenia'
 date: '2024-10-31'
 tags: ['event', 'music', 'client']

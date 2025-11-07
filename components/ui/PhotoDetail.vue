@@ -17,6 +17,7 @@ interface Photo {
   height?: number
   tag?: string | string[]
   aspectRatio?: string
+  projectSlug?: string
 }
 
 interface PhotoDetailProps {
@@ -125,6 +126,20 @@ const formattedCameraSettings = computed(() => {
 
   return settings.join(' • ')
 })
+
+// Fetch project title if projectSlug exists
+const { getProjectBySlug } = useProjects()
+const { data: project } = await useAsyncData(
+  () => `project-${props.photo.projectSlug || 'none'}`,
+  async () => {
+    if (!props.photo.projectSlug) return null
+    return await getProjectBySlug(props.photo.projectSlug)
+  },
+  {
+    default: () => null,
+    watch: [() => props.photo.projectSlug],
+  }
+)
 </script>
 
 <template>
@@ -266,6 +281,27 @@ const formattedCameraSettings = computed(() => {
               <Icon name="ph:camera-fill" class="h-3 w-3 flex-shrink-0 text-accent md:h-4 md:w-4" />
               <span class="text-xs font-medium md:text-sm">{{ formattedCameraSettings }}</span>
             </div>
+          </div>
+
+          <!-- Project reference badge - separate from metadata -->
+          <div
+            v-if="photo.projectSlug && project"
+            class="mt-4 flex items-center justify-center"
+          >
+            <NuxtLink
+              :to="`/projects/${photo.projectSlug}`"
+              class="group flex items-center gap-2 rounded-full border backdrop-blur-sm px-3 py-2 text-xs transition-all md:gap-2.5 md:px-4 md:py-2.5 md:text-sm border-black/20 bg-black/10 hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:hover:bg-white/20 cursor-pointer text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+            >
+              <Icon
+                name="ph:folder-fill"
+                class="h-3.5 w-3.5 flex-shrink-0 text-accent md:h-4 md:w-4"
+              />
+              <span class="font-medium">Part of {{ project.title }} project</span>
+              <Icon
+                name="ph:arrow-right-bold"
+                class="h-3 w-3 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1 md:h-3.5 md:w-3.5"
+              />
+            </NuxtLink>
           </div>
         </div>
       </div>

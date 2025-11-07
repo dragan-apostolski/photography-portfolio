@@ -19,4 +19,5 @@ export interface Photo {
   tag: string[]
   alt?: string
   buttonTitle?: string
+  projectSlug?: string
 }

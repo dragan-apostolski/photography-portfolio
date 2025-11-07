@@ -77,6 +77,7 @@ import PhotoPreview from '~/components/ui/PhotoPreview.vue'
 import PhotoDetail from '~/components/ui/PhotoDetail.vue'
 import Tag from '~/components/ui/Tag.vue'
 import type { Photo } from '~/types/photo'
+import { generatePhotoId } from '~/utils/photoUtils'
 
 interface ContentItem {
   meta?: {
@@ -113,9 +114,10 @@ const { data: galleryData } = await useAsyncData('gallery', async () => {
 
 const photos = computed<Photo[]>(() => {
   const rawPhotos = (galleryData.value as ContentItem)?.meta?.photos || []
-  // Transform photo URLs to use CDN
+  // Transform photo URLs to use CDN and auto-generate IDs if missing
   return rawPhotos.map(photo => ({
     ...photo,
+    id: photo.id || generatePhotoId(photo.src),
     src: getPhotoUrl(photo.src)
   }))
 })

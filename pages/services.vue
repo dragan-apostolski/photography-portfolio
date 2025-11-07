@@ -37,7 +37,7 @@ const services = ref<Service[]>([
     title: 'Hospitality',
     description:
       "Creating content for camps, resorts, airbnb's and other accommodations in nature. Showcase your property with stunning photographs that highlight its unique features and surroundings.",
-    imageUrl: getPhotoUrl('/photos/projects/Eko Kamp Rinčica/DSC02308.jpg'),
+    imageUrl: getPhotoUrl('/photos/Projects/Eco Camp Rincica/DSC02308.jpg'),
     buttonText: 'See Hospitality Projects',
     link: '/projects?tag=hospitality',
   },
@@ -46,7 +46,7 @@ const services = ref<Service[]>([
     title: 'Portraits',
     description:
       'Professional portrait photography for individuals and groups. Capture your personality and create memories that will last a lifetime.',
-    imageUrl: getPhotoUrl('/photos/projects/The Red Stairs/DSC00085.jpg'),
+    imageUrl: getPhotoUrl('/photos/Projects/The Red Stairs/DSC00085.jpg'),
     buttonText: 'See Portrait Projects',
     link: '/projects?tag=portrait',
   },
@@ -55,7 +55,7 @@ const services = ref<Service[]>([
     title: 'Events',
     description:
       "Comprehensive event photography covering conferences, celebrations, corporate events, and more. Don't miss a moment of your special occasion.",
-    imageUrl: getPhotoUrl('/photos/projects/Electronic Brunch/DSC09448.jpg'),
+    imageUrl: getPhotoUrl('/photos/Projects/Electronic Brunch/DSC09448.jpg'),
     buttonText: 'See Event Projects',
     link: '/projects?tag=event',
   },
