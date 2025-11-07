@@ -8,6 +8,7 @@ photos:
       description: 'A cabin in the woods of the Jezersko region, Slovenia'
       location: 'Jezersko, Slovenia'
       tag: ['landscape', 'forest']
+      rating: 5
 
     - src: '/photos/Other/DSC03559.jpg'
       title: 'Luxury seascape'
@@ -15,6 +16,7 @@ photos:
       description: 'Sometimes the drama is on the other side of the sunset'
       location: 'Ugljan, Croatia'
       tag: ['landscape', 'sea']
+      rating: 3
 
     - src: '/photos/Other/DSC01839.jpg'
       title: 'Storžič'
@@ -22,6 +24,7 @@ photos:
       description: 'Spring has blossomed in the foot of the Storžič mountain, Slovenia'
       location: 'Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 3
 
     - src: '/photos/Projects/Emilija/DSC00234.jpg'
       title: 'Connection'
@@ -29,6 +32,7 @@ photos:
       description: 'Connection between a mother and her baby'
       location: 'Slovenia'
       tag: ['portrait', 'family']
+      rating: 4
 
     - src: '/photos/Other/DSC02522.jpg'
       title: 'Mighty Julian Alps'
@@ -36,6 +40,7 @@ photos:
       description: 'The mighty Julian Alps in Slovenia'
       location: 'Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 2
 
     - src: '/photos/Other/DSC02565.jpg'
       title: 'Liquid green'
@@ -43,6 +48,7 @@ photos:
       description: 'The perfect liquid green scenery in the Italian Julian Alps'
       location: 'Laghi di Fusine, Italy'
       tag: ['landscape', 'mountains', 'lake']
+      rating: 1
 
     - src: '/photos/Projects/Kathmandu/DSC07991.jpg'
       title: 'Market on wheels'
@@ -51,6 +57,7 @@ photos:
       location: 'Kathmandu, Nepal'
       projectSlug: 'kathmandu'
       tag: ['travel', 'street']
+      rating: 5
 
     - src: '/photos/Other/DSC03602-Enhanced-NR.jpg'
       title: 'The city of Zadar'
@@ -58,6 +65,7 @@ photos:
       description: 'Evening view of the city of Zadar, Croatia'
       location: 'Zadar, Croatia'
       tag: ['landscape', 'city', 'sea']
+      rating: 4
 
     - src: '/photos/Other/DSC04141.jpg'
       title: 'Lake Krn'
@@ -65,6 +73,7 @@ photos:
       description: 'Lake Krn, in the heart of the Julian Alps'
       location: 'Julian Alps, Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 2
 
     - src: '/photos/Projects/Istanbul%20/DSC08504.jpg'
       description: 'Early morning sunlight hits behind the Sultan Mehmet mosque.'
@@ -73,6 +82,7 @@ photos:
       location: 'Istanbul, Turkey'
       projectSlug: 'istanbul'
       tag: ['travel', 'architecture']
+      rating: 3
 
     - src: '/photos/Other/DSC04477.jpg'
       title: 'The campfire'
@@ -80,6 +90,7 @@ photos:
       description: 'A campfire under a starry sky beside the Kolpa river in Slovenia'
       location: 'Bela Krajina, Slovenia'
       tag: ['landscape', 'river', 'night']
+      rating: 4
 
     - src: '/photos/Projects/Electronic%20Brunch/DSC09448.jpg'
       title: 'Electronic Brunch'
@@ -88,6 +99,7 @@ photos:
       location: 'Neubar, Ljubljana, Slovenia'
       projectSlug: 'electronic-brunch'
       tag: ['events', 'music']
+      rating: 3
 
     - src: '/photos/Other/DSC06281.jpg'
       title: 'Mount Jalovec'
@@ -95,6 +107,7 @@ photos:
       description: 'The king of the Julian Alps, as seen from the Karawanks.'
       location: 'Julian Alps, Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 1
 
     - src: '/photos/Other/DSC06290.jpg'
       title: 'Mount Mangart'
@@ -102,6 +115,7 @@ photos:
       description: 'The Mangart peak, as seen from the Karavanke mountain ridge.'
       location: 'Julian Alps, Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 1
 
     - src: '/photos/Other/DSC06466.jpg'
       title: 'A dot in the snow'
@@ -109,6 +123,7 @@ photos:
       description: 'My friend Anže flying his drone in the Jezersko region, Slovenia'
       location: 'Jezersko, Slovenia'
       tag: ['landscape', 'forest']
+      rating: 1
 
     - src: '/photos/Other/DSC06518-HDR-2.jpg'
       title: 'Sunset from Goli Vrh'
@@ -116,6 +131,7 @@ photos:
       description: 'A sunset scenery as seen from the Goli Vrh mountain, Slovenia'
       location: 'Goli Vrh, Slovenia'
       tag: ['landscape', 'sunset']
+      rating: 2
 
     - src: '/photos/Other/DSC06542.jpg'
       title: 'Blue hour'
@@ -123,6 +139,7 @@ photos:
       description: 'A fairytale scenery in the Slovenian mountains'
       location: 'Kamnik-Savinja Alps, Slovenia'
       tag: ['landscape', 'mountains']
+      rating: 2
 
     - src: '/photos/Other/far-away.jpg'
       title: 'Far away'
@@ -130,18 +147,21 @@ photos:
       description: 'Springtime in the Šar Mountains'
       location: 'Šar Mountains, Macedonia'
       tag: ['landscape', 'mountains']
+      rating: 3
 
     - src: '/photos/Other/Lina.jpg'
       title: 'Orange fashion'
       aspectRatio: 'vertical'
       location: 'Ljubljana, Slovenia'
       tag: ['portrait', 'fashion']
+      rating: 3
 
     - src: '/photos/Other/natt.jpg'
       title: 'Nathali'
       aspectRatio: 'vertical'
       location: 'Skopje, Macedonia'
       tag: ['fashion', 'portrait']
+      rating: 3
 
     - src: '/photos/Other/DSC09521.jpg'
       title: 'Peričnik waterfall'
@@ -149,6 +169,7 @@ photos:
       description: 'One of the most beatiful waterfalls in the Trigav national park, in spring atmosphere.'
       location: Peričnik waterfall, Slovenia.
       tag: ['landscape', 'waterfall']
+      rating: 2
 
     - src: '/photos/Other/budapest.jpg'
       title: 'Budapest'
@@ -156,6 +177,7 @@ photos:
       description: 'Cityscape view of Budapest'
       location: 'Budapest, Hungary'
       tag: ['travel', 'city', 'architecture']
+      rating: 1
 
     - src: '/photos/Projects/The%20Red%20Stairs/DSC00088.jpg'
       description: 'Moody portrait in the red ambient of the Cukrarna museum'
@@ -164,6 +186,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'the-red-stairs'
       tag: ['portrait', 'art']
+      rating: 5
 
     - src: '/photos/Projects/Kathmandu/DSC08494.jpg'
       title: 'Children of Kathmandu'
@@ -172,6 +195,7 @@ photos:
       location: 'Kathmandu, Nepal'
       projectSlug: 'kathmandu'
       tag: ['travel', 'street']
+      rating: 4
 
     - src: '/photos/Projects/Annapurna%20Base%20Camp/DSC08095.jpg'
       title: 'Himalayan girl'
@@ -180,6 +204,7 @@ photos:
       location: 'Annapurna region, Nepal'
       projectSlug: 'annapurna-base-camp'
       tag: ['travel', 'portrait']
+      rating: 4
 
     - src: '/photos/Projects/Annapurna%20Base%20Camp/DSC08336.jpg'
       title: 'Annapurna Base Camp'
@@ -188,6 +213,7 @@ photos:
       location: 'Annapurna region, Nepal'
       projectSlug: 'annapurna-base-camp'
       tag: ['landscape', 'mountains', 'night']
+      rating: 5
 
     - src: '/photos/Projects/Sri%20Lanka/DSC07278.jpg'
       title: 'Sunset silhoute'
@@ -195,6 +221,7 @@ photos:
       location: 'Sri Lanka'
       projectSlug: 'sri-lanka'
       tag: ['travel']
+      rating: 4
 
     - src: '/photos/Projects/Sri%20Lanka/DSC07377.jpg'
       title: 'Sri Lanka sunset'
@@ -202,6 +229,7 @@ photos:
       location: 'Sri Lanka'
       projectSlug: 'sri-lanka'
       tag: ['landscape', 'sea']
+      rating: 5
 
     - src: '/photos/Projects/Alter%20Ego/AlterEgo-Dragan-01.jpg'
       title: 'Alter Ego'
@@ -209,6 +237,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'alter-ego'
       tag: ['events', 'music', ]
+      rating: 2
 
     - src: '/photos/Projects/The%20Laser%20Experiment/DSC03899.jpg'
       title: 'The Laser Experiment'
@@ -216,6 +245,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'the-laser-experiment'
       tag: ['portrait', 'art']
+      rating: 5
 
     - src: '/photos/Projects/The%20Laser%20Experiment/DSC03935.jpg'
       title: 'Laser lines'
@@ -223,6 +253,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'the-laser-experiment'
       tag: ['portrait', 'art']
+      rating: 3
 
     - src: '/photos/Projects/Sodevska%20Stena/DSC02246.jpg'
       title: 'Adventure time'
@@ -230,6 +261,7 @@ photos:
       location: 'Bela Krajina, Slovenia'
       projectSlug: 'sodevska-stena'
       tag: ['landscape']
+      rating: 4
 
     - src: '/photos/Projects/Sodevska%20Stena/DSC02259.jpg'
       title: 'Sodevska Stena'
@@ -238,6 +270,7 @@ photos:
       location: 'Bela Krajina, Slovenia'
       projectSlug: 'sodevska-stena'
       tag: ['landscape', 'river']
+      rating: 5
 
     - src: '/photos/Projects/Feeling%20Blue/DSC_1949.jpg'
       title: 'Feeling Blue'
@@ -245,6 +278,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'feeling-blue'
       tag: ['portrait']
+      rating: 2
 
     - src: '/photos/Projects/Behind/DSC03716.jpg'
       title: 'Behind'
@@ -252,6 +286,7 @@ photos:
       location: 'Ljubljana, Slovenia'
       projectSlug: 'behind'
       tag: ['portrait', 'art']
+      rating: 2
 ---
 
 # Photo Gallery Collection

@@ -13,6 +13,8 @@ photos:
     aspectRatio: 'horizontal'
   - fileName: 'DJI_20250205022430_0127_D-Enhanced-NR.jpg'
     aspectRatio: 'horizontal'
+  - fileName: 'DSC07944.jpg'
+    aspectRatio: 'horizontal'
   - fileName: 'DSC07269.jpg'
     aspectRatio: 'vertical'
   - fileName: 'DSC07278.jpg'

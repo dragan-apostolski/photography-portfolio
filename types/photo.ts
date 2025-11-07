@@ -20,4 +20,6 @@ export interface Photo {
   alt?: string
   buttonTitle?: string
   projectSlug?: string
+  rating?: number
+  originalIndex?: number
 }

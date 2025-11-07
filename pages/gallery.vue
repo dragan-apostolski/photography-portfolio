@@ -13,17 +13,41 @@
       />
     </div>
 
-    <!-- Photo grid - Masonry layout -->
+    <!-- Photo grid - Manual columns with round-robin distribution -->
     <div v-if="filteredPhotos.length > 0">
-      <!-- Use CSS columns for masonry on larger screens, flexbox on mobile -->
-      <div class="flex flex-col gap-4 sm:block sm:columns-2 sm:gap-4 md:columns-3">
+      <!-- Mobile: 1 column -->
+      <div class="flex flex-col gap-4 sm:hidden">
         <div
-          v-for="(photo, index) in filteredPhotos"
+          v-for="(photo, index) in photoColumns.mobile[0]"
           :key="photo.id"
-          class="inline-block w-full break-inside-avoid sm:mb-4"
+          class="transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"
+          @click="openPhotoDetail(photo)"
+        >
+          <PhotoPreview
+            :photo="{
+              src: photo.src,
+              title: photo.title,
+              description: photo.description,
+            }"
+            :aspect-ratio="photo.aspectRatio || 'square'"
+            cta-link="#"
+            :loading="index < 3 ? 'eager' : 'lazy'"
+            :fetchpriority="index < 3 ? 'high' : 'auto'"
+          />
+        </div>
+      </div>
+
+      <!-- Tablet: 2 columns -->
+      <div class="hidden gap-4 sm:flex md:hidden">
+        <div
+          v-for="(column, colIndex) in photoColumns.tablet"
+          :key="`tablet-col-${colIndex}`"
+          class="flex flex-1 flex-col gap-4"
         >
           <div
-            class="w-full transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"
+            v-for="(photo, photoIndex) in column"
+            :key="photo.id"
+            class="transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"
             @click="openPhotoDetail(photo)"
           >
             <PhotoPreview
@@ -34,8 +58,36 @@
               }"
               :aspect-ratio="photo.aspectRatio || 'square'"
               cta-link="#"
-              :loading="index < 3 ? 'eager' : 'lazy'"
-              :fetchpriority="index < 3 ? 'high' : 'auto'"
+              :loading="colIndex < 2 && photoIndex === 0 ? 'eager' : 'lazy'"
+              :fetchpriority="colIndex < 2 && photoIndex === 0 ? 'high' : 'auto'"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop: 3 columns -->
+      <div class="hidden gap-4 md:flex">
+        <div
+          v-for="(column, colIndex) in photoColumns.desktop"
+          :key="`desktop-col-${colIndex}`"
+          class="flex flex-1 flex-col gap-4"
+        >
+          <div
+            v-for="(photo, photoIndex) in column"
+            :key="photo.id"
+            class="transform cursor-pointer transition duration-300 ease-in-out hover:scale-[1.01]"
+            @click="openPhotoDetail(photo)"
+          >
+            <PhotoPreview
+              :photo="{
+                src: photo.src,
+                title: photo.title,
+                description: photo.description,
+              }"
+              :aspect-ratio="photo.aspectRatio || 'square'"
+              cta-link="#"
+              :loading="colIndex < 3 && photoIndex === 0 ? 'eager' : 'lazy'"
+              :fetchpriority="colIndex < 3 && photoIndex === 0 ? 'high' : 'auto'"
             />
           </div>
         </div>
@@ -115,12 +167,18 @@ const { data: galleryData } = await useAsyncData('gallery', async () => {
 const photos = computed<Photo[]>(() => {
   const rawPhotos = (galleryData.value as ContentItem)?.meta?.photos || []
   // Transform photo URLs to use CDN and auto-generate IDs if missing
-  return rawPhotos.map(photo => ({
+  return rawPhotos.map((photo, index) => ({
     ...photo,
     id: photo.id || generatePhotoId(photo.src),
-    src: getPhotoUrl(photo.src)
+    src: getPhotoUrl(photo.src),
+    rating: photo.rating || 3, // Default rating of 3 if not specified
+    originalIndex: index // Keep track of original order
   }))
 })
+
+// State
+const selectedTag = ref('')
+const currentPhotoId = ref('')
 
 // Available tags for filtering
 const availableTags = computed(() => {
@@ -131,29 +189,39 @@ const availableTags = computed(() => {
   return Array.from(tagSet).sort()
 })
 
-// Get all photos
-const getAllPhotos = () => photos.value
-
-// Filter photos by tag
-const getPhotosByTag = (tag: string) => {
-  return photos.value.filter((photo) => photo.tag.includes(tag))
-}
-
-// Track the current tag filter
-const selectedTag = ref('')
-// Track the currently viewed photo
-const currentPhotoId = ref('')
-// No need for isMobile variable - we'll handle responsiveness with Tailwind CSS
-
-// Filter photos based on the selected tag
+// Filter and sort photos by rating (highest first)
 const filteredPhotos = computed(() => {
-  if (!selectedTag.value) {
-    return getAllPhotos()
-  }
-  return getPhotosByTag(selectedTag.value)
+  const filtered = selectedTag.value
+    ? photos.value.filter((photo) => photo.tag.includes(selectedTag.value))
+    : photos.value
+  
+  return [...filtered].sort((a, b) => {
+    const ratingDiff = (b.rating || 3) - (a.rating || 3)
+    if (ratingDiff !== 0) return ratingDiff
+    return (a.originalIndex || 0) - (b.originalIndex || 0)
+  })
 })
 
-// Update the selected tag and reset the URL if needed
+// Distribute photos into columns using round-robin for better visual hierarchy
+const photoColumns = computed(() => {
+  const photos = filteredPhotos.value
+  
+  const distributeIntoColumns = (photoList: Photo[], numColumns: number) => {
+    const cols: Photo[][] = Array.from({ length: numColumns }, () => [])
+    photoList.forEach((photo, index) => {
+      cols[index % numColumns].push(photo)
+    })
+    return cols
+  }
+  
+  return {
+    mobile: distributeIntoColumns(photos, 1),
+    tablet: distributeIntoColumns(photos, 2),
+    desktop: distributeIntoColumns(photos, 3)
+  }
+})
+
+// Tag filtering
 const setSelectedTag = (tag: string) => {
   if (selectedTag.value === tag) {
     selectedTag.value = ''
@@ -164,51 +232,50 @@ const setSelectedTag = (tag: string) => {
   }
 }
 
-// Handle opening a photo in the detail view
+// Photo detail modal handlers
 const openPhotoDetail = (photo: Photo) => {
   currentPhotoId.value = photo.id
 }
 
-// Close the photo detail view
 const closePhotoDetail = () => {
   currentPhotoId.value = ''
 }
 
-// Navigate to the next photo
+// Helper to get current photo index
+const getCurrentPhotoIndex = () => {
+  return filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+}
+
 const goToNextPhoto = () => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   if (currentIndex < filteredPhotos.value.length - 1) {
     currentPhotoId.value = filteredPhotos.value[currentIndex + 1].id
   }
 }
 
-// Navigate to the previous photo
 const goToPreviousPhoto = () => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   if (currentIndex > 0) {
     currentPhotoId.value = filteredPhotos.value[currentIndex - 1].id
   }
 }
 
-// Get the current photo details
 const currentPhoto = computed(() => {
   return filteredPhotos.value.find((photo) => photo.id === currentPhotoId.value)
 })
 
-// Check if we have next/previous photos
 const hasNextPhoto = computed(() => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   return currentIndex < filteredPhotos.value.length - 1
 })
 
 const hasPreviousPhoto = computed(() => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   return currentIndex > 0
 })
 
-// Get next and previous photo sources for preloading
 const nextPhotoSrc = computed(() => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   if (currentIndex < filteredPhotos.value.length - 1) {
     return filteredPhotos.value[currentIndex + 1].src
   }
@@ -216,7 +283,7 @@ const nextPhotoSrc = computed(() => {
 })
 
 const previousPhotoSrc = computed(() => {
-  const currentIndex = filteredPhotos.value.findIndex((p) => p.id === currentPhotoId.value)
+  const currentIndex = getCurrentPhotoIndex()
   if (currentIndex > 0) {
     return filteredPhotos.value[currentIndex - 1].src
   }
