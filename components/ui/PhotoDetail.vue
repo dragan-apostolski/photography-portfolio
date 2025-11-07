@@ -163,14 +163,14 @@ const { data: project } = await useAsyncData(
 
     <!-- Main modal container -->
     <div
-      class="relative z-10 mx-2 max-h-[98vh] max-w-[98vw] md:mx-4 md:max-h-[95vh] md:max-w-[85vw] lg:max-w-[80vw]"
+      class="relative z-10 mx-2 flex max-h-[98vh] max-w-[98vw] flex-col md:mx-4 md:max-h-[95vh] md:max-w-[85vw] lg:max-w-[80vw]"
     >
       <!-- Image container with enhanced styling -->
       <div
-        class="relative overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+        class="relative flex w-fit flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
       >
         <!-- Image wrapper -->
-        <div class="relative w-full">
+        <div class="relative flex-shrink-0">
           <!-- Loading state with blur placeholder -->
           <div
             v-if="showLoadingState"
@@ -182,7 +182,7 @@ const { data: project } = await useAsyncData(
               <NuxtImg
                 :src="photo.src"
                 :alt="photo.title || 'Photo'"
-                class="h-full w-full scale-110 object-cover blur-2xl"
+                class="h-full scale-110 object-cover blur-2xl"
                 loading="eager"
                 :width="20"
                 quality="10"
@@ -204,7 +204,7 @@ const { data: project } = await useAsyncData(
           <NuxtImg
             :src="photo.src"
             :alt="photo.title || 'Photo'"
-            class="w-full rounded-t-2xl object-contain transition-all duration-500 ease-out"
+            class="rounded-t-2xl object-contain transition-all duration-500 ease-out"
             :class="{ 
               'opacity-0 scale-95': !isImageLoaded || isTransitioning, 
               'opacity-100 scale-100': isImageLoaded && !isTransitioning 
@@ -212,7 +212,7 @@ const { data: project } = await useAsyncData(
             loading="eager"
             sizes="98vw sm:95vw md:85vw lg:80vw"
             :style="{ 
-              maxHeight: '75vh',
+              maxHeight: '70vh',
             }"
             @load="handleImageLoad"
           />
@@ -226,7 +226,7 @@ const { data: project } = await useAsyncData(
 
         <!-- Enhanced caption area -->
         <div
-          class="relative border-t backdrop-blur-sm px-4 py-4 transition-all duration-500 md:px-8 md:py-6 border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+          class="relative flex-shrink-0 border-t backdrop-blur-sm px-4 py-4 transition-all duration-500 md:px-8 md:py-6 border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
           :class="{ 
             'opacity-0 translate-y-2': !isImageLoaded || isTransitioning, 
             'opacity-100 translate-y-0': isImageLoaded && !isTransitioning 

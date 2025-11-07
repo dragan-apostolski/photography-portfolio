@@ -32,12 +32,12 @@ const handleClick = () => {
 
 <template>
   <button
-    class="inline-flex items-center rounded-full font-medium uppercase transition-all duration-300 ease-in-out hover:cursor-pointer focus:outline-none"
+    class="inline-flex items-center rounded-full font-medium uppercase text-primary transition-all duration-300 ease-in-out hover:cursor-pointer focus:outline-none"
     :class="[
       sizeClasses,
       active
-        ? 'bg-accent text-primary shadow-sm'
-        : 'bg-secondary-200 text-primary hover:bg-secondary-300 dark:bg-secondary-800 dark:hover:bg-secondary-700',
+        ? 'bg-accent shadow-sm'
+        : 'bg-secondary-200 hover:bg-secondary-300 dark:bg-secondary-800 dark:text-secondary-100 dark:hover:bg-secondary-700',
     ]"
     @click="handleClick"
   >
