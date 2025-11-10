@@ -45,7 +45,7 @@ const services = ref<Service[]>([
     id: 2,
     title: 'Portraits',
     description:
-      'Professional portrait photography for individuals and groups. Capture your personality and create memories that will last a lifetime.',
+      "Portrait photography for individuals. I can help you with photos for social media, dating profiles, press photos, or I can just capture special moments in your life, at your request.",
     imageUrl: getPhotoUrl('/photos/Projects/The Red Stairs/DSC00085.jpg'),
     buttonText: 'See Portrait Projects',
     link: '/projects?tag=portrait',
@@ -54,7 +54,7 @@ const services = ref<Service[]>([
     id: 3,
     title: 'Events',
     description:
-      "Comprehensive event photography covering conferences, celebrations, corporate events, and more. Don't miss a moment of your special occasion.",
+      "Comprehensive event photography covering celebrations, events, parties. Don't miss a moment of your special occasion.",
     imageUrl: getPhotoUrl('/photos/Projects/Electronic Brunch/DSC09448.jpg'),
     buttonText: 'See Event Projects',
     link: '/projects?tag=event',
@@ -68,7 +68,7 @@ const services = ref<Service[]>([
 
     <p class="mb-12 max-w-3xl text-lg">
       I offer a range of photography services tailored to your needs. Whether you need content for
-      your accommodation business, professional portraits, or event coverage, I can help you capture
+      your accommodation business, artistic and casual portraits, or event coverage, I can help you capture
       those special moments.
     </p>
 

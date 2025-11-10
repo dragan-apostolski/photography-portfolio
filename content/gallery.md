@@ -167,7 +167,7 @@ photos:
       title: 'Peričnik waterfall'
       aspectRatio: 'vertical'
       description: 'One of the most beatiful waterfalls in the Trigav national park, in spring atmosphere.'
-      location: Peričnik waterfall, Slovenia.
+      location: Peričnik waterfall, Slovenia
       tag: ['landscape', 'waterfall']
       rating: 2
 

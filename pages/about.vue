@@ -46,15 +46,22 @@ const closeContactForm = () => {
         <h2 class="mb-4 text-2xl font-semibold">Dragan Apostolski</h2>
 
         <p class="mb-4">
-          I am a landscape & travel photographer, with a passion for capturing the beauty of nature, and interesting moments from my journeys.
-           My style encompasses stunning landscapes from beautiful locations,
-          artistic portraits, and candid moments from everyday life.
+          I am a landscape & travel photographer, with a passion for capturing the beauty of nature, and inspiring moments from my journeys and everyday life.
+           My style encompasses stunning landscapes from beautiful locations, artistic portraits, and candid moments from everyday life.
         </p>
 
         <p class="mb-4">
-          My journey in photography began when I first picked up a camera during a trip to the
-          mountains. Since then, I've been captivated by the ability to freeze a moment in time and
-          share the world as I see it.
+          My journey in photography began in the childhood days, when I started playing with my father's analog Zenit 12 camera. 
+          Since it was a film camera, I was always taught to take my time and compose the photo carefully before shooting, because there is a limited number of shots on a film.
+          I then continued playing with my uncle's digital camera, when he started taking me along on hiking trips in the local Šar Mountains in Macedonia. 
+          I started discovering the mesmerizing beauty of nature, and I wanted to capture these moments so that I could show them to my friends and family.
+          I then discovered my passion for photography, and I soon got my first DSLR camera, the Nikon D3100, which just opened a whole new world for me.
+        </p>
+
+        <p class="mb-4">
+          Today, I still have the same passion for photography, and I cannot imagine going on a travel or hiking trip without my camera. 
+          Going out into the world and exploring is still something that is my main driver, and the way I present what I see is something unique to me, I believe. 
+          Well, it is in fact unique to each and everyone of us. 
         </p>
 
         <p class="mb-4">
@@ -62,18 +69,11 @@ const closeContactForm = () => {
           of a mountain range, the intimacy of a portrait, or the spontaneity of street photography,
           I aim to capture authentic moments that resonate with viewers.
         </p>
-
-        <h3 class="mt-8 mb-3 text-xl font-semibold">My Approach</h3>
-        <p class="mb-4">
-          I believe in a minimalist approach to photography, focusing on composition, light, and
-          emotion rather than heavy post-processing. I prefer to capture the essence of a scene
-          in-camera, using natural light whenever possible.
-        </p>
       </div>
     </div>
 
     <!-- Equipment Section -->
-    <div class="mt-16">
+    <div class="hidden mt-16">
       <h2 class="mb-6 text-2xl font-semibold">Equipment</h2>
 
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
