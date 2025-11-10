@@ -1,7 +1,7 @@
 ---
+description: Rule describes the photo processing pipeline: from preprocessing photos, to uploading them to a CDN. Use it when your task involves any of these operations.
 alwaysApply: false
 ---
-
 # Photo Processing Pipeline
 
 This guide explains how to add new photography projects from start to finish.
@@ -27,21 +27,32 @@ This shows:
 
 ## Step 3: Upload & Process Photos
 
-Upload photos to Vercel Blob storage:
+### Option A: Upload to Vercel Blob (Default)
 ```bash
 npm run upload-photos
 ```
 
-**Options:**
+### Option B: Upload to Cloudflare R2 (Recommended)
+```bash
+npm run upload-to-r2
+```
+
+**Options (both storage backends):**
 - `--dry-run` - Preview without uploading
 - `--overwrite` - Replace existing photos
 - `--folder="Project Name"` - Process specific folder only
 
 **What it does:**
 - Compresses images >3MB to ~2.5MB (85% quality)
-- Uploads to Vercel Blob at `photos/Projects/[Project Name]/[filename]`
-- Creates `scripts/upload-manifest.json` with upload metadata
+- Uploads to storage at `photos/Projects/[Project Name]/[filename]`
+- Creates manifest file:
+  - `scripts/upload-manifest.json` for Vercel Blob
+  - `scripts/r2-upload-manifest.json` for R2
 - Photos are accessible via `NUXT_PUBLIC_CDN_BASE_URL`
+
+**Storage Backend Comparison:**
+- **R2**: Better performance, lower costs, custom domains
+- **Vercel Blob**: Simpler setup, integrated with Vercel platform
 
 ## Step 4: Generate Markdown Files
 
@@ -51,7 +62,7 @@ npm run update-markdown
 ```
 
 **What it does:**
-- Reads `scripts/upload-manifest.json`
+- Reads manifest file (`upload-manifest.json` or `r2-upload-manifest.json`)
 - Analyzes aspect ratios (vertical, horizontal, square)
 - Creates `content/projects/[slug].md` files
 - Preserves existing metadata (title, description, date, location, tags)
@@ -100,8 +111,25 @@ git push
 ## Important Notes
 
 - **Don't commit** `original-photos/` folder (gitignored)
-- **Don't commit** `scripts/upload-manifest.json` (gitignored)
-- Photos are served from Vercel Blob, not from the repo
-- The `NUXT_PUBLIC_CDN_BASE_URL` env variable must be set in Vercel
+- **Don't commit** manifest files: `scripts/upload-manifest.json` or `scripts/r2-upload-manifest.json` (gitignored)
+- Photos are served from CDN storage (Vercel Blob or R2), not from the repo
 - Date format: `YYYY-MM-DD` (ISO 8601)
 - Aspect ratio threshold: ±0.1 of 1:1 ratio = square
+
+## Environment Variables
+
+### For Vercel Blob:
+```bash
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+NUXT_PUBLIC_CDN_BASE_URL=https://your-blob-url.public.blob.vercel-storage.com
+```
+
+### For Cloudflare R2:
+```bash
+R2_ACCOUNT_ID=your_r2_account_id
+R2_ACCESS_KEY_ID=your_r2_access_key
+R2_SECRET_ACCESS_KEY=your_r2_secret_key
+R2_BUCKET_NAME=photography-portfolio
+R2_PUBLIC_URL=https://your-custom-domain.com  # Optional, defaults to <bucket>.r2.dev
+NUXT_PUBLIC_CDN_BASE_URL=https://photography-portfolio.r2.dev  # Or your custom domain
+```

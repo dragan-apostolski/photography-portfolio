@@ -1,7 +1,14 @@
 import fs from 'fs'
 import path from 'path'
+import { S3Client } from '@aws-sdk/client-s3'
 import { processImage, formatBytes } from './utils/imageProcessor'
 import { uploadToBlob, generateBlobPathname, validateBlobToken } from './utils/blobUploader'
+import {
+  uploadToR2,
+  generateR2Pathname,
+  validateR2Credentials,
+  getR2Client,
+} from './utils/r2Uploader'
 
 interface UploadManifestEntry {
   originalPath: string
@@ -15,6 +22,7 @@ interface UploadManifestEntry {
   wasProcessed: boolean
   dimensions: { width: number; height: number }
   uploadedAt: string
+  storage?: 'blob' | 'r2'
 }
 
 interface UploadStats {
@@ -31,6 +39,13 @@ const isDryRun = process.argv.includes('--dry-run')
 const allowOverwrite = process.argv.includes('--overwrite')
 const folderArg = process.argv.find((arg) => arg.startsWith('--folder='))
 const specificFolder = folderArg ? folderArg.split('=')[1] : null
+const storageArg = process.argv.find((arg) => arg.startsWith('--storage='))
+const storageType = (storageArg ? storageArg.split('=')[1] : 'blob') as 'blob' | 'r2'
+
+// R2 specific vars
+let r2Client: S3Client | null = null
+let r2BucketName: string | null = null
+let r2PublicUrl: string | null = null
 
 const manifest: UploadManifestEntry[] = []
 const stats: UploadStats = {
@@ -68,32 +83,66 @@ async function uploadPhoto(
       console.log(`   ⏭️  Skipped processing (already optimized): ${formatBytes(processed.originalSize)}`)
     }
 
-    // Generate blob pathname
-    const blobPathname = generateBlobPathname(category, folderName, fileName)
+    // Generate pathname based on storage type
+    const pathname =
+      storageType === 'r2'
+        ? generateR2Pathname(category, folderName, fileName)
+        : generateBlobPathname(category, folderName, fileName)
     
     if (isDryRun) {
-      console.log(`   🔍 [DRY RUN] Would upload to: ${blobPathname}`)
+      console.log(`   🔍 [DRY RUN] Would upload to ${storageType.toUpperCase()}: ${pathname}`)
       stats.uploadedPhotos++
     } else {
-      // Upload to blob
-      console.log(`   ⬆️  Uploading to blob...`)
-      const result = await uploadToBlob(processed.buffer, blobPathname, fileName, allowOverwrite)
-      console.log(`   ✅ Uploaded: ${result.url}`)
-      
-      // Add to manifest
-      manifest.push({
-        originalPath: filePath,
-        fileName,
-        blobUrl: result.url,
-        blobPathname: result.pathname,
-        category,
-        folderName,
-        originalSize: processed.originalSize,
-        uploadedSize: processed.processedSize,
-        wasProcessed: processed.wasProcessed,
-        dimensions: processed.dimensions,
-        uploadedAt: result.uploadedAt.toISOString(),
-      })
+      // Upload based on storage type
+      if (storageType === 'r2') {
+        console.log(`   ⬆️  Uploading to R2...`)
+        const result = await uploadToR2(
+          r2Client!,
+          r2BucketName!,
+          processed.buffer,
+          pathname,
+          fileName,
+          allowOverwrite,
+          r2PublicUrl || undefined,
+        )
+        console.log(`   ✅ Uploaded: ${result.url}`)
+        
+        // Add to manifest
+        manifest.push({
+          originalPath: filePath,
+          fileName,
+          blobUrl: result.url,
+          blobPathname: result.pathname,
+          category,
+          folderName,
+          originalSize: processed.originalSize,
+          uploadedSize: processed.processedSize,
+          wasProcessed: processed.wasProcessed,
+          dimensions: processed.dimensions,
+          uploadedAt: result.uploadedAt.toISOString(),
+          storage: 'r2',
+        })
+      } else {
+        console.log(`   ⬆️  Uploading to Vercel Blob...`)
+        const result = await uploadToBlob(processed.buffer, pathname, fileName, allowOverwrite)
+        console.log(`   ✅ Uploaded: ${result.url}`)
+        
+        // Add to manifest
+        manifest.push({
+          originalPath: filePath,
+          fileName,
+          blobUrl: result.url,
+          blobPathname: result.pathname,
+          category,
+          folderName,
+          originalSize: processed.originalSize,
+          uploadedSize: processed.processedSize,
+          wasProcessed: processed.wasProcessed,
+          dimensions: processed.dimensions,
+          uploadedAt: result.uploadedAt.toISOString(),
+          storage: 'blob',
+        })
+      }
       
       stats.uploadedPhotos++
     }
@@ -146,7 +195,9 @@ async function uploadOtherFolder(otherPath: string): Promise<void> {
 }
 
 async function saveManifest(): Promise<void> {
-  const manifestPath = path.join(process.cwd(), 'scripts', 'upload-manifest.json')
+  const manifestFileName =
+    storageType === 'r2' ? 'r2-upload-manifest.json' : 'upload-manifest.json'
+  const manifestPath = path.join(process.cwd(), 'scripts', manifestFileName)
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2))
   console.log(`\n📄 Upload manifest saved to: ${manifestPath}`)
 }
@@ -169,16 +220,30 @@ function printSummary(): void {
 }
 
 async function main() {
-  console.log(`\n🚀 Starting photo upload pipeline ${isDryRun ? '[DRY RUN MODE]' : ''}`)
+  console.log(
+    `\n🚀 Starting photo upload pipeline to ${storageType.toUpperCase()} ${isDryRun ? '[DRY RUN MODE]' : ''}`,
+  )
   if (specificFolder) {
     console.log(`📂 Processing specific folder: ${specificFolder}`)
   }
   
   if (!isDryRun) {
-    // Validate blob token
+    // Validate credentials based on storage type
     try {
-      validateBlobToken()
-      console.log('✅ Blob token validated')
+      if (storageType === 'r2') {
+        validateR2Credentials()
+        r2Client = getR2Client()
+        r2BucketName = process.env.R2_BUCKET_NAME || null
+        r2PublicUrl = process.env.R2_PUBLIC_URL || null
+        console.log(`✅ R2 credentials validated`)
+        console.log(`📦 Bucket: ${r2BucketName}`)
+        if (r2PublicUrl) {
+          console.log(`🌐 Public URL: ${r2PublicUrl}`)
+        }
+      } else {
+        validateBlobToken()
+        console.log('✅ Blob token validated')
+      }
     } catch (error) {
       console.error(`❌ ${error}`)
       process.exit(1)
@@ -219,6 +284,10 @@ async function main() {
     console.log('💡 Run without --dry-run flag to perform actual upload.\n')
   } else {
     console.log('✅ Upload complete!')
+    if (storageType === 'r2') {
+      console.log('💡 Photos uploaded to R2 bucket.')
+      console.log(`💡 Update NUXT_PUBLIC_CDN_BASE_URL to: ${r2PublicUrl || `https://${r2BucketName}.r2.dev`}`)
+    }
     console.log('💡 Run `npm run update-markdown` to generate/update markdown files.\n')
   }
 }

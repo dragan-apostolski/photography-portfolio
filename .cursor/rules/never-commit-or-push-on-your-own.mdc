@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Never execute a git commit or git push command on your own. Always ask for permission
