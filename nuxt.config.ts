@@ -44,7 +44,7 @@ export default defineNuxtConfig({
   image: {
     quality: 80,
     format: ['avif', 'webp', 'jpg'],
-    domains: ['v1kazbs5j1o30hpf.public.blob.vercel-storage.com'],
+    domains: ['pub-0b149fd1ae38450596d80f7a631036cc.r2.dev'],
     vercel: {
       formats: ['avif', 'webp', 'jpeg']
     },
