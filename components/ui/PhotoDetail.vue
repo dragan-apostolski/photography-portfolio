@@ -236,13 +236,13 @@ const { data: project } = await useAsyncData(
           <div class="mb-4 text-center md:mb-6">
             <h3
               v-if="photo.title"
-              class="mb-2 text-xl leading-tight font-semibold tracking-tight md:mb-3 md:text-2xl lg:text-3xl text-black dark:text-white"
+              class="mb-2 text-xl leading-tight tracking-tight md:mb-3 md:text-2xl lg:text-3xl text-black dark:text-white"
             >
               {{ photo.title }}
             </h3>
             <p
               v-if="photo.description"
-              class="mx-auto max-w-2xl px-2 text-sm leading-relaxed md:text-base lg:text-md text-black/80 dark:text-white/80"
+              class="mx-auto px-2 text-xs leading-relaxed md:text-base lg:text-md text-black/80 dark:text-white/80"
             >
               {{ photo.description }}
             </p>

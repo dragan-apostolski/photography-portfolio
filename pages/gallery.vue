@@ -16,7 +16,7 @@
     <!-- Photo grid - Manual columns with round-robin distribution -->
     <div v-if="filteredPhotos.length > 0">
       <!-- Mobile: 1 column -->
-      <div class="flex flex-col gap-4 sm:hidden">
+      <div class="flex flex-col gap-4 md:hidden">
         <div
           v-for="(photo, index) in photoColumns.mobile[0]"
           :key="photo.id"
@@ -38,7 +38,7 @@
       </div>
 
       <!-- Tablet: 2 columns -->
-      <div class="hidden gap-4 sm:flex md:hidden">
+      <div class="hidden gap-4 md:flex lg:hidden">
         <div
           v-for="(column, colIndex) in photoColumns.tablet"
           :key="`tablet-col-${colIndex}`"
@@ -66,7 +66,7 @@
       </div>
 
       <!-- Desktop: 3 columns -->
-      <div class="hidden gap-4 md:flex">
+      <div class="hidden gap-4 lg:flex">
         <div
           v-for="(column, colIndex) in photoColumns.desktop"
           :key="`desktop-col-${colIndex}`"

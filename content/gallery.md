@@ -37,7 +37,6 @@ photos:
     - src: '/photos/Other/DSC02522.jpg'
       title: 'Mighty Julian Alps'
       aspectRatio: 'horizontal'
-      description: 'The mighty Julian Alps in Slovenia'
       location: 'Slovenia'
       tag: ['landscape', 'mountains']
       rating: 2
@@ -52,7 +51,7 @@ photos:
 
     - src: '/photos/Projects/Kathmandu/DSC07991.jpg'
       title: 'Market on wheels'
-      description: 'One bicycle and a will to survive.'
+      description: 'This Nepali man needs just a bicycle in order to sell his goods'
       aspectRatio: 'vertical'
       location: 'Kathmandu, Nepal'
       projectSlug: 'kathmandu'
@@ -62,7 +61,7 @@ photos:
     - src: '/photos/Other/DSC03602-Enhanced-NR.jpg'
       title: 'The city of Zadar'
       aspectRatio: 'horizontal'
-      description: 'Evening view of the city of Zadar, Croatia'
+      description: 'The city of Zadar as seen from the Ugljan island'
       location: 'Zadar, Croatia'
       tag: ['landscape', 'city', 'sea']
       rating: 4
@@ -98,7 +97,7 @@ photos:
       aspectRatio: 'horizontal'
       location: 'Neubar, Ljubljana, Slovenia'
       projectSlug: 'electronic-brunch'
-      tag: ['events', 'music']
+      tag: ['event', 'music']
       rating: 3
 
     - src: '/photos/Other/DSC06281.jpg'
@@ -166,7 +165,6 @@ photos:
     - src: '/photos/Other/DSC09521.jpg'
       title: 'Peričnik waterfall'
       aspectRatio: 'vertical'
-      description: 'One of the most beatiful waterfalls in the Trigav national park, in spring atmosphere.'
       location: Peričnik waterfall, Slovenia
       tag: ['landscape', 'waterfall']
       rating: 2
@@ -190,7 +188,7 @@ photos:
 
     - src: '/photos/Projects/Kathmandu/DSC08494.jpg'
       title: 'Children of Kathmandu'
-      description: 'These children were so happy to pose for me.'
+      description: 'These children were so happy to pose for me'
       aspectRatio: 'vertical'
       location: 'Kathmandu, Nepal'
       projectSlug: 'kathmandu'
@@ -207,8 +205,7 @@ photos:
       rating: 4
 
     - src: '/photos/Projects/Annapurna%20Base%20Camp/DSC08336.jpg'
-      title: 'Annapurna Base Camp'
-      description: 'The mighty mountain Annapurna South, posing below a sky full'
+      title: 'Annapurna South'
       aspectRatio: 'vertical'
       location: 'Annapurna region, Nepal'
       projectSlug: 'annapurna-base-camp'
@@ -236,7 +233,7 @@ photos:
       aspectRatio: 'horizontal'
       location: 'Ljubljana, Slovenia'
       projectSlug: 'alter-ego'
-      tag: ['events', 'music', ]
+      tag: ['event', 'music', ]
       rating: 2
 
     - src: '/photos/Projects/The%20Laser%20Experiment/DSC03899.jpg'
@@ -287,6 +284,21 @@ photos:
       projectSlug: 'behind'
       tag: ['portrait', 'art']
       rating: 2
+
+    - src: '/photos/Other/Venice.jpg'
+      title: 'Venice'
+      description: 'Soft sunset light falls upon one of many canals in Venice'
+      aspectRatio: 'vertical'
+      location: 'Venice, Italy'
+      tag: ['travel']
+      rating: 3
+
+    - src: '/photos/Other/Prisojnik.jpg'
+      title: 'Prisojnik'
+      aspectRatio: 'horizontal'
+      location: 'Julian Alps, Slovenia'
+      tag: ['landscape', 'mountains']
+      rating: 3
 ---
 
 # Photo Gallery Collection

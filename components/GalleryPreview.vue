@@ -42,13 +42,14 @@ const previewPhotos = computed<GalleryPhoto[]>(() => {
   // Transform photo URLs to use CDN
   return rawPhotos.map(photo => ({
     ...photo,
+    title: `Explore ${photo.tag} gallery`,
     src: getPhotoUrl(photo.src)
   }))
 })
 </script>
 
 <template>
-  <section class="py-16">
+  <section class="border-t border-secondary-200 py-16 transition-colors duration-300 dark:border-secondary-800">
     <div class="container mx-auto px-4">
       <h2 class="mb-8 text-center text-3xl font-semibold">Gallery Preview</h2>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

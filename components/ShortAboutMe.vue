@@ -13,7 +13,7 @@ const aboutPhotoUrl = getPhotoUrl('/photos/Projects/The Red Stairs/DSC00114.jpg'
 </script>
 
 <template>
-  <section class="px-4 py-24 transition-colors duration-300 md:px-8 md:py-32 lg:px-16 lg:py-40">
+  <section class="border-t border-secondary-200 px-4 py-24 transition-colors duration-300 dark:border-secondary-800 md:px-8 md:py-32 lg:px-16 lg:py-40">
     <div class="container mx-auto">
       <div
         class="flex flex-col space-y-12 md:flex-row md:items-center md:space-y-0 md:space-x-16 lg:space-x-24"

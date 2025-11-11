@@ -39,6 +39,14 @@ const isDryRun = process.argv.includes('--dry-run')
 const allowOverwrite = process.argv.includes('--overwrite')
 const folderArg = process.argv.find((arg) => arg.startsWith('--folder='))
 const specificFolder = folderArg ? folderArg.split('=')[1] : null
+const filesArg = process.argv.find((arg) => arg.startsWith('--files='))
+const specificFiles = filesArg
+  ? filesArg
+      .split('=')[1]
+      .split(',')
+      .map((f) => f.trim())
+      .filter((f) => f.length > 0)
+  : null
 const storageArg = process.argv.find((arg) => arg.startsWith('--storage='))
 const storageType = (storageArg ? storageArg.split('=')[1] : 'blob') as 'blob' | 'r2'
 
@@ -194,11 +202,93 @@ async function uploadOtherFolder(otherPath: string): Promise<void> {
   }
 }
 
+function determineCategoryAndFolder(filePath: string): {
+  category: 'Projects' | 'Other'
+  folderName: string
+} {
+  const normalizedPath = path.normalize(filePath)
+  
+  if (normalizedPath.includes('/Other/') || normalizedPath.includes('\\Other\\')) {
+    return { category: 'Other', folderName: '' }
+  }
+  
+  if (normalizedPath.includes('/Projects/') || normalizedPath.includes('\\Projects\\')) {
+    // Extract project folder name
+    const projectsIndex = normalizedPath.indexOf('/Projects/')
+    const afterProjects = normalizedPath.substring(projectsIndex + '/Projects/'.length)
+    const folderName = afterProjects.split(path.sep)[0]
+    return { category: 'Projects', folderName }
+  }
+  
+  // Default to Other if path structure is unclear
+  return { category: 'Other', folderName: '' }
+}
+
+async function uploadSpecificFiles(filePaths: string[]): Promise<void> {
+  console.log(`\n${'='.repeat(80)}`)
+  console.log(`📸 Processing ${filePaths.length} specific file(s)`)
+  console.log('='.repeat(80))
+  
+  for (const filePath of filePaths) {
+    const absolutePath = path.isAbsolute(filePath)
+      ? filePath
+      : path.join(process.cwd(), filePath)
+    
+    if (!fs.existsSync(absolutePath)) {
+      console.error(`\n❌ File not found: ${absolutePath}`)
+      stats.failedPhotos++
+      continue
+    }
+    
+    const fileName = path.basename(absolutePath)
+    const { category, folderName } = determineCategoryAndFolder(absolutePath)
+    
+    await uploadPhoto(absolutePath, fileName, category, folderName)
+  }
+}
+
+async function loadManifest(): Promise<UploadManifestEntry[]> {
+  const manifestFileName =
+    storageType === 'r2' ? 'r2-upload-manifest.json' : 'upload-manifest.json'
+  const manifestPath = path.join(process.cwd(), 'scripts', manifestFileName)
+  
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const content = fs.readFileSync(manifestPath, 'utf-8')
+      return JSON.parse(content)
+    } catch (error) {
+      console.warn(`⚠️  Could not load existing manifest: ${error}`)
+      return []
+    }
+  }
+  
+  return []
+}
+
 async function saveManifest(): Promise<void> {
   const manifestFileName =
     storageType === 'r2' ? 'r2-upload-manifest.json' : 'upload-manifest.json'
   const manifestPath = path.join(process.cwd(), 'scripts', manifestFileName)
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2))
+  
+  // Load existing manifest and merge
+  const existingManifest = await loadManifest()
+  
+  // Create a map of existing entries by fileName + category
+  const existingMap = new Map<string, UploadManifestEntry>()
+  for (const entry of existingManifest) {
+    const key = `${entry.fileName}:${entry.category}:${entry.folderName}`
+    existingMap.set(key, entry)
+  }
+  
+  // Update or add new entries
+  for (const entry of manifest) {
+    const key = `${entry.fileName}:${entry.category}:${entry.folderName}`
+    existingMap.set(key, entry)
+  }
+  
+  // Convert back to array and save
+  const mergedManifest = Array.from(existingMap.values())
+  fs.writeFileSync(manifestPath, JSON.stringify(mergedManifest, null, 2))
   console.log(`\n📄 Upload manifest saved to: ${manifestPath}`)
 }
 
@@ -226,6 +316,9 @@ async function main() {
   if (specificFolder) {
     console.log(`📂 Processing specific folder: ${specificFolder}`)
   }
+  if (specificFiles) {
+    console.log(`📸 Processing specific files: ${specificFiles.length} file(s)`)
+  }
   
   if (!isDryRun) {
     // Validate credentials based on storage type
@@ -250,26 +343,32 @@ async function main() {
     }
   }
   
-  const originalPhotosPath = path.join(process.cwd(), 'original-photos')
-  const projectsPath = path.join(originalPhotosPath, 'Projects')
-  const otherPath = path.join(originalPhotosPath, 'Other')
-  
-  // Upload project folders
-  if (fs.existsSync(projectsPath)) {
-    const projectFolders = fs.readdirSync(projectsPath, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .filter((name) => !specificFolder || name === specificFolder)
+  // If specific files are provided, upload only those
+  if (specificFiles && specificFiles.length > 0) {
+    await uploadSpecificFiles(specificFiles)
+  } else {
+    // Otherwise, process folders as before
+    const originalPhotosPath = path.join(process.cwd(), 'original-photos')
+    const projectsPath = path.join(originalPhotosPath, 'Projects')
+    const otherPath = path.join(originalPhotosPath, 'Other')
     
-    for (const projectName of projectFolders) {
-      const projectPath = path.join(projectsPath, projectName)
-      await uploadProjectFolder(projectPath, projectName)
+    // Upload project folders
+    if (fs.existsSync(projectsPath)) {
+      const projectFolders = fs.readdirSync(projectsPath, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) => !specificFolder || name === specificFolder)
+      
+      for (const projectName of projectFolders) {
+        const projectPath = path.join(projectsPath, projectName)
+        await uploadProjectFolder(projectPath, projectName)
+      }
     }
-  }
-  
-  // Upload Other folder (only if no specific folder is specified or if "Other" is specified)
-  if (fs.existsSync(otherPath) && (!specificFolder || specificFolder === 'Other')) {
-    await uploadOtherFolder(otherPath)
+    
+    // Upload Other folder (only if no specific folder is specified or if "Other" is specified)
+    if (fs.existsSync(otherPath) && (!specificFolder || specificFolder === 'Other')) {
+      await uploadOtherFolder(otherPath)
+    }
   }
   
   // Save manifest (only in real mode)
@@ -286,9 +385,8 @@ async function main() {
     console.log('✅ Upload complete!')
     if (storageType === 'r2') {
       console.log('💡 Photos uploaded to R2 bucket.')
-      console.log(`💡 Update NUXT_PUBLIC_CDN_BASE_URL to: ${r2PublicUrl || `https://${r2BucketName}.r2.dev`}`)
     }
-    console.log('💡 Run `npm run update-markdown` to generate/update markdown files.\n')
+    console.log('💡 If added new projects, run `npm run update-markdown` to generate/update markdown files.\n')
   }
 }
 

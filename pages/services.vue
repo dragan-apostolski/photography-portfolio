@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Button from '~/components/ui/Button.vue'
-import ContactForm from '~/components/ContactForm.vue'
+import ContactCTA from '~/components/ContactCTA.vue'
 
 useSeoMeta({
   title: 'Services | Photography Portfolio',
@@ -9,17 +9,6 @@ useSeoMeta({
 
 // Get photo URL helper
 const { getPhotoUrl } = useProjects()
-
-// Contact form state
-const isContactFormOpen = ref(false)
-
-const openContactForm = () => {
-  isContactFormOpen.value = true
-}
-
-const closeContactForm = () => {
-  isContactFormOpen.value = false
-}
 
 interface Service {
   id: number
@@ -106,16 +95,6 @@ const services = ref<Service[]>([
     </div>
 
     <!-- Contact CTA -->
-    <div class="mt-16 rounded-lg bg-secondary-100 p-8 text-center dark:bg-secondary-900">
-      <h2 class="mb-4 text-2xl font-semibold">Interested in working together?</h2>
-      <p class="mx-auto mb-6 max-w-2xl">
-        Let's discuss how I can help you with your photography needs. Get in touch to discuss rates,
-        availability, and custom packages.
-      </p>
-      <Button @click="openContactForm">Contact Me</Button>
-    </div>
-
-    <!-- Contact Form Modal -->
-    <ContactForm :is-open="isContactFormOpen" @close="closeContactForm" />
+    <ContactCTA variant="compact" />
   </div>
 </template>
