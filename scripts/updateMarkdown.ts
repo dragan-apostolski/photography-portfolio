@@ -166,10 +166,17 @@ function generateProjectMarkdown(
  * Update or create markdown files for all projects
  */
 async function updateMarkdownFiles() {
-  const manifestPath = path.join(process.cwd(), 'scripts', 'upload-manifest.json')
+  const manifestsDir = path.join(process.cwd(), 'scripts', 'manifests')
+  
+  // Try to find manifest file (prefer R2, fallback to blob)
+  let manifestPath = path.join(manifestsDir, 'uploadPhotos.json')
+  if (!fs.existsSync(manifestPath)) {
+    manifestPath = path.join(manifestsDir, 'uploadPhotos-blob.json')
+  }
   
   if (!fs.existsSync(manifestPath)) {
     console.error('❌ Upload manifest not found. Please run upload script first.')
+    console.error(`   Expected location: ${manifestsDir}/uploadPhotos.json or uploadPhotos-blob.json`)
     process.exit(1)
   }
   

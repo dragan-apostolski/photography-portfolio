@@ -27,17 +27,18 @@ This shows:
 
 ## Step 3: Upload & Process Photos
 
-### Option A: Upload to Vercel Blob (Default)
+Upload to Cloudflare R2 (default):
 ```bash
 npm run upload-photos
 ```
 
-### Option B: Upload to Cloudflare R2 (Recommended)
+Upload to Vercel Blob (optional):
 ```bash
-npm run upload-to-r2
+npm run upload-photos -- --storage=blob
 ```
 
-**Options (both storage backends):**
+**Options:**
+- `--storage=r2` or `--storage=blob` - Choose storage backend (default: r2)
 - `--dry-run` - Preview without uploading
 - `--overwrite` - Replace existing photos
 - `--folder="Project Name"` - Process specific folder only
@@ -46,8 +47,8 @@ npm run upload-to-r2
 - Compresses images >3MB to ~2.5MB (85% quality)
 - Uploads to storage at `photos/Projects/[Project Name]/[filename]`
 - Creates manifest file:
-  - `scripts/upload-manifest.json` for Vercel Blob
-  - `scripts/r2-upload-manifest.json` for R2
+  - `scripts/manifests/uploadPhotos.json` for R2 (default)
+  - `scripts/manifests/uploadPhotos-blob.json` for Vercel Blob
 - Photos are accessible via `NUXT_PUBLIC_CDN_BASE_URL`
 
 **Storage Backend Comparison:**
@@ -62,7 +63,7 @@ npm run update-markdown
 ```
 
 **What it does:**
-- Reads manifest file (`upload-manifest.json` or `r2-upload-manifest.json`)
+- Reads manifest file from `scripts/manifests/uploadPhotos.json` (or `uploadPhotos-blob.json`)
 - Analyzes aspect ratios (vertical, horizontal, square)
 - Creates `content/projects/[slug].md` files
 - Preserves existing metadata (title, description, date, location, tags)
@@ -111,7 +112,7 @@ git push
 ## Important Notes
 
 - **Don't commit** `original-photos/` folder (gitignored)
-- **Don't commit** manifest files: `scripts/upload-manifest.json` or `scripts/r2-upload-manifest.json` (gitignored)
+- **Don't commit** manifest files: `scripts/manifests/` directory (gitignored)
 - Photos are served from CDN storage (Vercel Blob or R2), not from the repo
 - Date format: `YYYY-MM-DD` (ISO 8601)
 - Aspect ratio threshold: ±0.1 of 1:1 ratio = square

@@ -66,7 +66,7 @@ const services = ref<Service[]>([
       <div
         v-for="service in services"
         :key="service.id"
-        class="overflow-hidden rounded-lg bg-secondary-100 shadow-md transition-all duration-300 hover:shadow-xl dark:bg-secondary-900"
+        class="flex flex-col overflow-hidden rounded-lg bg-secondary-100 shadow-md transition-all duration-300 hover:shadow-xl dark:bg-secondary-900"
       >
         <!-- Service Image -->
         <div class="relative aspect-video overflow-hidden">
@@ -81,12 +81,12 @@ const services = ref<Service[]>([
         </div>
 
         <!-- Content -->
-        <div class="p-6">
+        <div class="flex flex-grow flex-col p-6">
           <h3 class="mb-3 text-2xl font-semibold">{{ service.title }}</h3>
-          <p>{{ service.description }}</p>
+          <p class="flex-grow">{{ service.description }}</p>
 
-          <NuxtLink :to="service.link" class="flex justify-center">
-            <Button custom-classes="mt-6 w-full lg:w-auto lg:!px-4 lg:!py-2 lg:!text-base">
+          <NuxtLink :to="service.link" class="mt-6 flex justify-center">
+            <Button custom-classes="w-full lg:w-auto lg:!px-4 lg:!py-2 lg:!text-base">
               {{ service.buttonText }}
             </Button>
           </NuxtLink>

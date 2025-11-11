@@ -48,7 +48,7 @@ const specificFiles = filesArg
       .filter((f) => f.length > 0)
   : null
 const storageArg = process.argv.find((arg) => arg.startsWith('--storage='))
-const storageType = (storageArg ? storageArg.split('=')[1] : 'blob') as 'blob' | 'r2'
+const storageType = (storageArg ? storageArg.split('=')[1] : 'r2') as 'blob' | 'r2'
 
 // R2 specific vars
 let r2Client: S3Client | null = null
@@ -249,8 +249,9 @@ async function uploadSpecificFiles(filePaths: string[]): Promise<void> {
 
 async function loadManifest(): Promise<UploadManifestEntry[]> {
   const manifestFileName =
-    storageType === 'r2' ? 'r2-upload-manifest.json' : 'upload-manifest.json'
-  const manifestPath = path.join(process.cwd(), 'scripts', manifestFileName)
+    storageType === 'r2' ? 'uploadPhotos.json' : 'uploadPhotos-blob.json'
+  const manifestsDir = path.join(process.cwd(), 'scripts', 'manifests')
+  const manifestPath = path.join(manifestsDir, manifestFileName)
   
   if (fs.existsSync(manifestPath)) {
     try {
@@ -267,8 +268,15 @@ async function loadManifest(): Promise<UploadManifestEntry[]> {
 
 async function saveManifest(): Promise<void> {
   const manifestFileName =
-    storageType === 'r2' ? 'r2-upload-manifest.json' : 'upload-manifest.json'
-  const manifestPath = path.join(process.cwd(), 'scripts', manifestFileName)
+    storageType === 'r2' ? 'uploadPhotos.json' : 'uploadPhotos-blob.json'
+  const manifestsDir = path.join(process.cwd(), 'scripts', 'manifests')
+  
+  // Ensure manifests directory exists
+  if (!fs.existsSync(manifestsDir)) {
+    fs.mkdirSync(manifestsDir, { recursive: true })
+  }
+  
+  const manifestPath = path.join(manifestsDir, manifestFileName)
   
   // Load existing manifest and merge
   const existingManifest = await loadManifest()

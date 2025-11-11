@@ -15,7 +15,6 @@
     "process-images": "tsx scripts/processImages.ts",
     "analyze-photos": "tsx scripts/analyzePhotos.ts",
     "upload-photos": "tsx --env-file=.env scripts/uploadPhotos.ts",
-    "upload-to-r2": "tsx --env-file=.env scripts/uploadPhotos.ts -- --storage=r2",
     "update-markdown": "tsx --env-file=.env scripts/updateMarkdown.ts"
   },
   "dependencies": {
