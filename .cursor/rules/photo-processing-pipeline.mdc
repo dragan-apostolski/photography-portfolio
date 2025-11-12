@@ -42,6 +42,22 @@ npm run upload-photos -- --storage=blob
 - `--dry-run` - Preview without uploading
 - `--overwrite` - Replace existing photos
 - `--folder="Project Name"` - Process specific folder only
+- `--files="path1,path2,path3"` - Upload specific file(s) only. Use comma-separated paths relative to project root
+
+**Usage Examples:**
+```bash
+# Upload a single file from Other folder
+npm run upload-photos -- --files=original-photos/Other/Meditating.jpg
+
+# Upload multiple files from a project
+npm run upload-photos -- --files=original-photos/Projects/Kathmandu/photo1.jpg,original-photos/Projects/Kathmandu/photo2.jpg
+
+# Upload with overwrite flag
+npm run upload-photos -- --files=original-photos/Other/photo.jpg --overwrite
+
+# Dry run to preview what would be uploaded
+npm run upload-photos -- --files=original-photos/Other/photo.jpg --dry-run
+```
 
 **What it does:**
 - Compresses images >3MB to ~2.5MB (85% quality)

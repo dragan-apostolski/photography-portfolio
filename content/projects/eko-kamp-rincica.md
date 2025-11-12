@@ -1,11 +1,11 @@
 ---
 title: 'Eko Kamp Rinčica'
-description: 'Commercial photography for an eco-camping resort showcasing natural beauty and sustainable tourism in the pristine wilderness of Rinčica.'
+description: 'Commercial photography for an eco-camping resort showcasing natural beauty and sustainable tourism'
 location: 'Eko Kamp Rinčica, Slovenia'
 date: '2024-04-15'
 tags: ['hospitality', 'client', 'nature']
 coverPhoto: '/photos/Projects/Eco Camp Rincica/DSC02115.jpg'
-coverPhotoMobile: '/photos/Projects/Eco Camp Rincica/DSC02119.jpg'
+coverPhotoMobile: '/photos/Projects/Eco Camp Rincica/DSC02129.jpg'
 projectRoot: 'Eco Camp Rincica'
 photos:
   - fileName: 'DSC02115.jpg'

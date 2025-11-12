@@ -6,6 +6,7 @@ import ScrollIncentive from './ui/ScrollIncentive.vue'
 
 interface CarouselPhoto extends Photo {
   projectSlug?: string
+  coverPhotoMobile?: string
 }
 
 interface Props {
@@ -16,13 +17,44 @@ const props = defineProps<Props>()
 const currentIndex = ref(0)
 const intervalId = ref<NodeJS.Timeout | null>(null)
 
+// Reactive mobile detection
+const isMobile = ref(false)
+
+// Update mobile state on client side
+const updateMobileState = async () => {
+  if (import.meta.client) {
+    const newIsMobile = window.innerWidth < 768
+    if (newIsMobile !== isMobile.value) {
+      isMobile.value = newIsMobile
+      await nextTick()
+    }
+  }
+}
+
+// Get the appropriate photo source based on device
+const getPhotoSrc = (photo: CarouselPhoto): string => {
+  if (isMobile.value && photo.coverPhotoMobile) {
+    return photo.coverPhotoMobile
+  }
+  return photo.src
+}
+
 // Start autoplay and handle cleanup
 onMounted(() => {
+  updateMobileState()
   startAutoplay()
+  
+  if (import.meta.client) {
+    window.addEventListener('resize', updateMobileState)
+  }
 })
 
 onBeforeUnmount(() => {
   stopAutoplay()
+  
+  if (import.meta.client) {
+    window.removeEventListener('resize', updateMobileState)
+  }
 })
 
 // Autoplay functionality
@@ -126,12 +158,12 @@ watch(currentIndex, () => {
       >
         <div
           v-for="(photo, index) in props.photos"
-          :key="photo.src"
+          :key="photo.id || index"
           class="absolute top-0 left-0 h-full w-full"
           :style="{ transform: `translateX(${index * 100}%)` }"
         >
           <NuxtImg
-            :src="photo.src"
+            :src="getPhotoSrc(photo)"
             :alt="photo.alt"
             class="h-full w-full object-cover"
             quality="100"

@@ -1,6 +1,6 @@
 ---
 title: 'Kathmandu'
-description: 'Motifs from the busy streets of Kathmandu, Nepal.'
+description: 'Motifs from the busy streets of Kathmandu, Nepal'
 location: 'Kathmandu, Nepal'
 startDate: '2025-02-25'
 endDate: '2025-03-06'

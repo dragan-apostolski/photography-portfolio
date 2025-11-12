@@ -1,6 +1,6 @@
 ---
 title: 'Istanbul'
-description: 'A visual journey through the vibrant streets and stunning architecture of Istanbul.'
+description: 'A visual journey through the streets and architecture of Istanbul'
 location: 'Istanbul, Turkey'
 startDate: '2025-03-07'
 endDate: '2025-03-11'

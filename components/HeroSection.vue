@@ -1,11 +1,10 @@
 <script setup lang="ts">
-const { getCarouselPhotos } = useCarousel()
-const config = useRuntimeConfig()
+import PhotoCarousel from './PhotoCarousel.vue'
 
-// Fetch carousel data (latest projects)
-const { data: photos } = await useAsyncData('carousel-photos', () => 
-  getCarouselPhotos(config.public.cdnBaseUrl)
-)
+const { getCarouselPhotos } = useCarousel()
+
+// Fetch carousel data
+const { data: photos } = await useAsyncData('carousel-photos', getCarouselPhotos)
 </script>
 
 <template>

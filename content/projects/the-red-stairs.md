@@ -1,6 +1,6 @@
 ---
 title: 'The Red Stairs'
-description: 'Architectural and portrait photography project featuring the iconic red stairs as a striking backdrop, exploring the interplay between human subjects and bold architectural elements.'
+description: 'Moody portraits of Ema in the stairway halls of the Cukrarna museum'
 location: 'Cukrarna, Ljubljana, Slovenia'
 date: '2025-08-01'
 tags: ['portrait', 'art']

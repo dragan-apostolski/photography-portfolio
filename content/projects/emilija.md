@@ -1,11 +1,11 @@
 ---
 title: 'Emilija'
-description: 'Professional portrait photography session capturing authentic personality and natural beauty through refined lighting and artistic composition.'
+description: 'Family portrait photography session under natural light'
 location: 'Ljubljana, Slovenia'
 date: '2025-08-07'
 tags: ['portrait', 'family', 'baby', 'client']
 coverPhoto: '/photos/Projects/Emilija/DSC00234.jpg'
-coverPhotoMobile: '/photos/Projects/Emilija/DSC00200.jpg'
+coverPhotoMobile: '/photos/Projects/Emilija/DSC00244.jpg'
 projectRoot: 'Emilija'
 photos:
   - fileName: 'DSC00200.jpg'

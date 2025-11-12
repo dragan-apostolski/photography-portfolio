@@ -1,6 +1,6 @@
 ---
 title: 'Electronic Brunch'
-description: 'Event photography capturing the vibrant atmosphere and energy of an electronic music brunch event, showcasing the unique fusion of daytime dining and electronic beats.'
+description: "Vibrant atmosphere on one of Sinergia's electronic brunch parties on the rooftop of the Neu hotel in Ljubljana."
 location: 'Neubar, Ljubljana, Slovenia'
 date: '2025-05-10'
 tags: ['event', 'music', 'client']
@@ -20,8 +20,6 @@ photos:
     aspectRatio: 'horizontal'
   - fileName: 'DSC09384.jpg'
     aspectRatio: 'vertical'
-  - fileName: 'DSC09402.jpg'
-    aspectRatio: 'horizontal'
   - fileName: 'DSC09415.jpg'
     aspectRatio: 'horizontal'
   - fileName: 'DSC09431.jpg'

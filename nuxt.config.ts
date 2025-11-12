@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     public: {
       cdnBaseUrl: process.env.NUXT_PUBLIC_CDN_BASE_URL || '',
       sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
+      carouselSource: process.env.CAROUSEL_SOURCE || 'recent', // 'recent' (default) or 'content'
     },
   },
 
