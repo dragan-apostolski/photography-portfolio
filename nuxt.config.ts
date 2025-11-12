@@ -42,7 +42,6 @@ export default defineNuxtConfig({
 
   // Image configuration - Vercel Image Optimization
   image: {
-    provider: 'vercel',
     quality: 80,
     format: ['avif', 'webp', 'jpg'],
     domains: ['pub-0b149fd1ae38450596d80f7a631036cc.r2.dev'],

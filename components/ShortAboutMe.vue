@@ -45,7 +45,6 @@ const aboutPhotoUrl = getPhotoUrl('/photos/Projects/The Red Stairs/DSC00114.jpg'
               :src="aboutPhotoUrl"
               alt="Portrait photo"
               class="h-full w-full object-cover transition-all duration-300 hover:scale-[1.03]"
-              format="jpg"
               sizes="80vw md:400px"
             />
             <div

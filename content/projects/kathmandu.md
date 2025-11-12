@@ -19,8 +19,6 @@ photos:
     aspectRatio: 'vertical'
   - fileName: 'DSC08026.jpg'
     aspectRatio: 'vertical'
-  - fileName: 'DSC08043.jpg'
-    aspectRatio: 'vertical'
   - fileName: 'DSC08047.jpg'
     aspectRatio: 'vertical'
   - fileName: 'DSC08048.jpg'

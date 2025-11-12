@@ -16,8 +16,6 @@ photos:
     aspectRatio: 'horizontal'
   - fileName: 'DSC09356.jpg'
     aspectRatio: 'horizontal'
-  - fileName: 'DSC09364.jpg'
-    aspectRatio: 'horizontal'
   - fileName: 'DSC09365.jpg'
     aspectRatio: 'horizontal'
   - fileName: 'DSC09384.jpg'
