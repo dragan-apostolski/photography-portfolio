@@ -9,7 +9,13 @@ if (isProduction) {
     environment: process.env.NODE_ENV || 'production',
     tracesSampleRate: 0.1, // Sample 10% of transactions in production
     tunnel: '/api/tunnel',
-    
+
+    ignoreErrors: [
+      // Firefox/Brave iOS reader mode injects __firefox__ into pages
+      /Can't find variable: __firefox__/,
+      /undefined is not an object \(evaluating 'window\.__firefox__/,
+    ],
+
     // Filter out any localhost URLs as a safety measure
     beforeSend(event) {
       const url = event.request?.url
