@@ -19,9 +19,16 @@
         <div class="flex-shrink-0">
           <nuxt-link
             to="/"
-            class="text-lg font-bold uppercase transition-colors duration-300 md:text-xl"
+            class="flex items-center gap-2 transition-opacity duration-300 hover:cursor-pointer hover:opacity-80"
           >
-            Apostolski
+            <img
+              src="~/assets/logo/logo_transparent.png"
+              alt="Apostolski"
+              class="h-8 w-auto md:h-10"
+            />
+            <span class="text-lg font-light uppercase tracking-wide md:text-xl">
+              Apostolski
+            </span>
           </nuxt-link>
         </div>
 
