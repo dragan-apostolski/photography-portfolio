@@ -48,24 +48,27 @@ const showLoadingState = ref(false)
 let loadingTimeout: ReturnType<typeof setTimeout> | null = null
 
 // Reset loading state when photo changes with transition
-watch(() => props.photo.id, () => {
-  isTransitioning.value = true
-  isImageLoaded.value = false
-  
-  // Only show loading spinner if image takes longer than 100ms to load
-  // This prevents flash of loading state for cached images
-  if (loadingTimeout) clearTimeout(loadingTimeout)
-  loadingTimeout = setTimeout(() => {
-    if (!isImageLoaded.value) {
-      showLoadingState.value = true
-    }
-  }, 100)
-  
-  // Reset transition after a brief delay
-  setTimeout(() => {
-    isTransitioning.value = false
-  }, 50)
-})
+watch(
+  () => props.photo.id,
+  () => {
+    isTransitioning.value = true
+    isImageLoaded.value = false
+
+    // Only show loading spinner if image takes longer than 100ms to load
+    // This prevents flash of loading state for cached images
+    if (loadingTimeout) clearTimeout(loadingTimeout)
+    loadingTimeout = setTimeout(() => {
+      if (!isImageLoaded.value) {
+        showLoadingState.value = true
+      }
+    }, 100)
+
+    // Reset transition after a brief delay
+    setTimeout(() => {
+      isTransitioning.value = false
+    }, 50)
+  }
+)
 
 // Handle image load
 const handleImageLoad = () => {
@@ -73,7 +76,6 @@ const handleImageLoad = () => {
   showLoadingState.value = false
   isImageLoaded.value = true
 }
-
 
 // Handle key presses for navigation and closing
 onMounted(() => {
@@ -145,17 +147,19 @@ const { data: project } = await useAsyncData(
 <template>
   <div
     ref="photoWrapper"
-    class="fixed left-0 top-0 z-50 flex h-dvh w-full items-center justify-center bg-white/80 backdrop-blur-2xl transition-all duration-500 ease-out dark:bg-black/80"
+    class="fixed top-0 left-0 z-50 flex h-dvh w-full items-center justify-center bg-white/80 backdrop-blur-2xl transition-all duration-500 ease-out dark:bg-black/80"
     @click="handleWrapperClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
     <!-- Enhanced backdrop overlay -->
-    <div class="absolute inset-0 bg-gradient-to-br from-white/60 via-white/40 to-white/60 dark:from-black/60 dark:via-black/40 dark:to-black/60" />
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-white/60 via-white/40 to-white/60 dark:from-black/60 dark:via-black/40 dark:to-black/60"
+    />
 
     <!-- Close button -->
     <button
-      class="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:top-6 md:right-6 md:h-12 md:w-12 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
+      class="absolute top-4 right-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-black/10 text-black backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-black/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:top-6 md:right-6 md:h-12 md:w-12 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
       @click="onClose"
     >
       <Icon name="ph:x-bold" class="h-4 w-4 md:h-5 md:w-5" />
@@ -167,7 +171,7 @@ const { data: project } = await useAsyncData(
     >
       <!-- Image container with enhanced styling -->
       <div
-        class="relative flex w-fit flex-col overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-md border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
+        class="relative flex w-fit flex-col overflow-hidden rounded-2xl border border-black/10 bg-black/5 shadow-2xl backdrop-blur-md dark:border-white/10 dark:bg-white/5"
       >
         <!-- Image wrapper -->
         <div class="relative flex-shrink-0">
@@ -188,13 +192,13 @@ const { data: project } = await useAsyncData(
                 quality="10"
               />
             </div>
-            
+
             <!-- Loading spinner overlay -->
             <div class="relative z-10 flex flex-col items-center gap-4">
               <div
                 class="h-12 w-12 animate-spin rounded-full border-4 border-accent/30 border-t-accent"
               />
-              <p class="text-sm font-medium text-black/80 dark:text-white/80 drop-shadow-lg">
+              <p class="text-sm font-medium text-black/80 drop-shadow-lg dark:text-white/80">
                 Loading image...
               </p>
             </div>
@@ -205,13 +209,13 @@ const { data: project } = await useAsyncData(
             :src="photo.src"
             :alt="photo.title || 'Photo'"
             class="rounded-t-2xl object-contain transition-all duration-500 ease-out"
-            :class="{ 
-              'opacity-0 scale-95': !isImageLoaded || isTransitioning, 
-              'opacity-100 scale-100': isImageLoaded && !isTransitioning 
+            :class="{
+              'scale-95 opacity-0': !isImageLoaded || isTransitioning,
+              'scale-100 opacity-100': isImageLoaded && !isTransitioning,
             }"
             loading="eager"
             sizes="98vw sm:95vw md:85vw lg:80vw"
-            :style="{ 
+            :style="{
               maxHeight: '70vh',
             }"
             @load="handleImageLoad"
@@ -220,29 +224,29 @@ const { data: project } = await useAsyncData(
           <!-- Subtle image overlay for better text readability -->
           <div
             v-if="isImageLoaded && !isTransitioning"
-            class="absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent transition-opacity duration-500 dark:from-black/20 pointer-events-none"
+            class="pointer-events-none absolute inset-0 rounded-t-2xl bg-gradient-to-t from-white/20 via-transparent to-transparent transition-opacity duration-500 dark:from-black/20"
           />
         </div>
 
         <!-- Enhanced caption area -->
         <div
-          class="relative flex-shrink-0 border-t backdrop-blur-sm px-4 py-4 transition-all duration-500 md:px-8 md:py-6 border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5"
-          :class="{ 
-            'opacity-0 translate-y-2': !isImageLoaded || isTransitioning, 
-            'opacity-100 translate-y-0': isImageLoaded && !isTransitioning 
+          class="relative w-0 min-w-full flex-shrink-0 border-t border-black/10 bg-black/5 px-4 py-4 backdrop-blur-sm transition-all duration-500 md:px-8 md:py-6 dark:border-white/10 dark:bg-white/5"
+          :class="{
+            'translate-y-2 opacity-0': !isImageLoaded || isTransitioning,
+            'translate-y-0 opacity-100': isImageLoaded && !isTransitioning,
           }"
         >
           <!-- Title and description -->
           <div class="mb-4 text-center md:mb-6">
             <h3
               v-if="photo.title"
-              class="mb-2 text-xl leading-tight tracking-tight md:mb-3 md:text-2xl lg:text-3xl text-black dark:text-white"
+              class="mb-2 text-xl leading-tight tracking-tight text-black md:mb-3 md:text-2xl lg:text-3xl dark:text-white"
             >
               {{ photo.title }}
             </h3>
             <p
               v-if="photo.description"
-              class="mx-auto px-2 text-xs leading-relaxed md:text-base lg:text-md text-black/80 dark:text-white/80"
+              class="lg:text-md mx-auto px-2 text-xs leading-relaxed break-words text-black/80 md:text-base dark:text-white/80"
             >
               {{ photo.description }}
             </p>
@@ -250,11 +254,11 @@ const { data: project } = await useAsyncData(
 
           <!-- Metadata with enhanced styling -->
           <div
-            class="flex flex-wrap items-center justify-center gap-3 text-xs md:gap-6 md:text-sm text-black/70 dark:text-white/70"
+            class="flex flex-wrap items-center justify-center gap-3 text-xs text-black/70 md:gap-6 md:text-sm dark:text-white/70"
           >
             <div
               v-if="photo.location"
-              class="flex items-center gap-1.5 rounded-full border backdrop-blur-sm px-2.5 py-1.5 md:gap-2 md:px-3 md:py-2 border-black/20 bg-black/10 dark:border-white/20 dark:bg-white/10"
+              class="flex items-center gap-1.5 rounded-full border border-black/20 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2 dark:border-white/20 dark:bg-white/10"
             >
               <Icon
                 name="ph:map-pin-fill"
@@ -265,7 +269,7 @@ const { data: project } = await useAsyncData(
 
             <div
               v-if="photo.timestamp"
-              class="flex items-center gap-1.5 rounded-full border backdrop-blur-sm px-2.5 py-1.5 md:gap-2 md:px-3 md:py-2 border-black/20 bg-black/10 dark:border-white/20 dark:bg-white/10"
+              class="flex items-center gap-1.5 rounded-full border border-black/20 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2 dark:border-white/20 dark:bg-white/10"
             >
               <Icon
                 name="ph:calendar-fill"
@@ -276,27 +280,39 @@ const { data: project } = await useAsyncData(
 
             <div
               v-if="formattedCameraSettings"
-              class="flex items-center gap-1.5 rounded-full border backdrop-blur-sm px-2.5 py-1.5 md:gap-2 md:px-3 md:py-2 border-black/20 bg-black/10 dark:border-white/20 dark:bg-white/10"
+              class="flex items-center gap-1.5 rounded-full border border-black/20 bg-black/10 px-2.5 py-1.5 backdrop-blur-sm md:gap-2 md:px-3 md:py-2 dark:border-white/20 dark:bg-white/10"
             >
               <Icon name="ph:camera-fill" class="h-3 w-3 flex-shrink-0 text-accent md:h-4 md:w-4" />
               <span class="text-xs font-medium md:text-sm">{{ formattedCameraSettings }}</span>
             </div>
           </div>
 
-          <!-- Project reference badge - separate from metadata -->
-          <div
-            v-if="photo.projectSlug && project"
-            class="mt-4 flex items-center justify-center"
-          >
+          <!-- Action badges -->
+          <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <!-- Project reference badge -->
             <NuxtLink
+              v-if="photo.projectSlug && project"
               :to="`/projects/${photo.projectSlug}`"
-              class="group flex items-center gap-2 rounded-full border backdrop-blur-sm px-3 py-2 text-xs transition-all md:gap-2.5 md:px-4 md:py-2.5 md:text-sm border-black/20 bg-black/10 hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:hover:bg-white/20 cursor-pointer text-black/80 dark:text-white/80 hover:text-black dark:hover:text-white"
+              class="group flex cursor-pointer items-center gap-2 rounded-full border border-black/20 bg-black/10 px-3 py-2 text-xs text-black/80 backdrop-blur-sm transition-all hover:bg-black/20 hover:text-black md:gap-2.5 md:px-4 md:py-2.5 md:text-sm dark:border-white/20 dark:bg-white/10 dark:text-white/80 dark:hover:bg-white/20 dark:hover:text-white"
             >
               <Icon
                 name="ph:folder-fill"
                 class="h-3.5 w-3.5 flex-shrink-0 text-accent md:h-4 md:w-4"
               />
               <span class="font-medium">Part of {{ project.title }} project</span>
+              <Icon
+                name="ph:arrow-right-bold"
+                class="h-3 w-3 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1 md:h-3.5 md:w-3.5"
+              />
+            </NuxtLink>
+
+            <!-- Buy Print badge -->
+            <NuxtLink
+              :to="`/prints?photo=${photo.id}`"
+              class="group flex cursor-pointer items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-accent backdrop-blur-sm transition-all hover:bg-accent/20 md:gap-2.5 md:px-4 md:py-2.5 md:text-sm"
+            >
+              <Icon name="ph:frame-corners" class="h-3.5 w-3.5 flex-shrink-0 md:h-4 md:w-4" />
+              <span class="font-medium">Buy Print</span>
               <Icon
                 name="ph:arrow-right-bold"
                 class="h-3 w-3 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1 md:h-3.5 md:w-3.5"
@@ -310,7 +326,7 @@ const { data: project } = await useAsyncData(
     <!-- Enhanced Previous button -->
     <button
       v-if="onPrevious && hasPrevious"
-      class="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:left-4 md:h-14 md:w-14 lg:left-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
+      class="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-black/10 text-black backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-black/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:left-4 md:h-14 md:w-14 lg:left-8 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onPrevious"
     >
@@ -320,7 +336,7 @@ const { data: project } = await useAsyncData(
     <!-- Enhanced Next button -->
     <button
       v-if="onNext && hasNext"
-      class="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 focus:ring-2 focus:ring-accent/50 focus:outline-none md:right-4 md:h-14 md:w-14 lg:right-8 border-black/20 bg-black/10 text-black hover:bg-black/20 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
+      class="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-black/20 bg-black/10 text-black backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-accent/50 hover:bg-black/20 focus:ring-2 focus:ring-accent/50 focus:outline-none md:right-4 md:h-14 md:w-14 lg:right-8 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
       :class="{ 'opacity-60': !isNavigationVisible, 'opacity-100': isNavigationVisible }"
       @click="onNext"
     >

@@ -8,9 +8,9 @@ useSeoMeta({
 
 // Get photo URL helper
 const { getPhotoUrl } = useProjects()
-const aboutPhotoUrl1 = getPhotoUrl('/photos/Other/Meditating.jpg')
+const aboutPhotoUrl3 = getPhotoUrl('/photos/Other/Meditating.jpg')
 const aboutPhotoUrl2 = getPhotoUrl('/photos/Other/SelfPortraitCropped.jpg')
-const aboutPhotoUrl3 = getPhotoUrl('/photos/Projects/The Red Stairs/DSC00114.jpg')
+const aboutPhotoUrl1 = getPhotoUrl('/photos/Projects/The Red Stairs/DSC00114.jpg')
 </script>
 
 <template>
