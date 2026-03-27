@@ -28,5 +28,6 @@ logs
 
 # other
 .windsurfrules
+.playwright-mcp
 original-photos/
 scripts/manifests/

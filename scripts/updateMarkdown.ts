@@ -162,56 +162,80 @@ function generateProjectMarkdown(
   return frontmatter
 }
 
+// Parse --folder argument for single-project mode
+const folderArg = process.argv.find((arg) => arg.startsWith('--folder='))
+const specificFolder = folderArg ? folderArg.split('=')[1] : null
+
 /**
- * Update or create markdown files for all projects
+ * Update or create markdown files for projects
+ * When --folder is specified, only processes that single project and skips existing files
  */
 async function updateMarkdownFiles() {
   const manifestsDir = path.join(process.cwd(), 'scripts', 'manifests')
-  
+
   // Try to find manifest file (prefer R2, fallback to blob)
   let manifestPath = path.join(manifestsDir, 'uploadPhotos.json')
   if (!fs.existsSync(manifestPath)) {
     manifestPath = path.join(manifestsDir, 'uploadPhotos-blob.json')
   }
-  
+
   if (!fs.existsSync(manifestPath)) {
     console.error('❌ Upload manifest not found. Please run upload script first.')
     console.error(`   Expected location: ${manifestsDir}/uploadPhotos.json or uploadPhotos-blob.json`)
     process.exit(1)
   }
-  
+
   const manifest: UploadManifestEntry[] = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
-  
+
   // Group photos by project
   const projectPhotos = new Map<string, UploadManifestEntry[]>()
-  
+
   for (const entry of manifest) {
     if (entry.category === 'Projects') {
+      // Filter to specific folder if provided
+      if (specificFolder && entry.folderName !== specificFolder) continue
       const existing = projectPhotos.get(entry.folderName) || []
       existing.push(entry)
       projectPhotos.set(entry.folderName, existing)
     }
   }
-  
-  console.log(`\n📝 Updating markdown files for ${projectPhotos.size} projects...\n`)
-  
+
+  if (specificFolder) {
+    console.log(`\n📝 Updating markdown for project: ${specificFolder}`)
+    if (projectPhotos.size === 0) {
+      console.error(`\n❌ No photos found in manifest for folder "${specificFolder}".`)
+      console.error('💡 Make sure you have uploaded photos for this project first.')
+      process.exit(1)
+    }
+  } else {
+    console.log(`\n📝 Updating markdown files for ${projectPhotos.size} projects...\n`)
+  }
+
   let createdCount = 0
   let updatedCount = 0
-  
+  let skippedCount = 0
+
   for (const [projectName, photos] of projectPhotos.entries()) {
     const slug = projectNameToSlug(projectName)
     const mdPath = path.join(process.cwd(), 'content', 'projects', `${slug}.md`)
     const exists = fs.existsSync(mdPath)
-    
+
+    // In single-project mode, skip existing files to avoid overwriting manual edits
+    if (specificFolder && exists) {
+      console.log(`⏭️  Skipped: ${slug}.md already exists (use without --folder to regenerate)`)
+      skippedCount++
+      continue
+    }
+
     // Load existing metadata if available
     const existingMetadata = loadExistingMarkdown(slug)
-    
+
     // Generate markdown
     const markdown = generateProjectMarkdown(projectName, photos, existingMetadata)
-    
+
     // Write file
     fs.writeFileSync(mdPath, markdown)
-    
+
     if (exists) {
       console.log(`✅ Updated: ${slug}.md (${photos.length} photos)`)
       updatedCount++
@@ -220,15 +244,16 @@ async function updateMarkdownFiles() {
       createdCount++
     }
   }
-  
+
   console.log(`\n${'='.repeat(80)}`)
   console.log('📊 MARKDOWN UPDATE SUMMARY')
   console.log('='.repeat(80))
   console.log(`Created: ${createdCount} files`)
-  console.log(`Updated: ${updatedCount} files`)
+  if (!specificFolder) console.log(`Updated: ${updatedCount} files`)
+  if (skippedCount > 0) console.log(`Skipped: ${skippedCount} files (already exist)`)
   console.log(`Total: ${projectPhotos.size} projects`)
   console.log('='.repeat(80) + '\n')
-  
+
   console.log('✅ Markdown files updated successfully!')
   console.log('💡 Review the generated files in content/projects/ and update metadata as needed.\n')
 }

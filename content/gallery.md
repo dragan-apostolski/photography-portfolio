@@ -299,6 +299,41 @@ photos:
       location: 'Julian Alps, Slovenia'
       tag: ['landscape', 'mountains']
       rating: 3
+
+    - src: '/photos/Projects/Morocco/DSC02090.jpg'
+      title: 'Morocco'
+      description: 'Golden light over the endless dunes of the Sahara Desert'
+      aspectRatio: 'vertical'
+      location: 'Sahara Desert, Morocco'
+      projectSlug: 'morocco'
+      tag: ['travel']
+      rating: 5
+
+    - src: '/photos/Projects/Morocco/DSC01874.jpg'
+      title: 'Morocco'
+      description: 'Silence and solitude in the vast Sahara'
+      aspectRatio: 'vertical'
+      location: 'Sahara Desert, Morocco'
+      projectSlug: 'morocco'
+      tag: ['travel']
+      rating: 5
+
+    - src: '/photos/Projects/Morocco/DSC02570.jpg'
+      title: 'Morocco'
+      description: 'The colorful tanneries of Fes'
+      aspectRatio: 'horizontal'
+      location: 'Fes, Morocco'
+      projectSlug: 'morocco'
+      tag: ['travel', 'landscape']
+      rating: 5
+
+    - src: '/photos/Projects/Morocco/DSC01698.jpg'
+      title: 'Todra Gorge'
+      aspectRatio: 'vertical'
+      location: 'Todra Gorge, Morocco'
+      projectSlug: 'morocco'
+      tag: ['travel']
+      rating: 5
 ---
 
 # Photo Gallery Collection

@@ -45,11 +45,15 @@ Report the upload summary (uploaded count, compression savings, any failures).
 
 ## Step 4: Generate Markdown
 
-Run the markdown generator to create/update the project content file:
+Run the markdown generator to create/update the project content file using `--folder` to only process this project (avoids overwriting other existing project files):
 
 ```bash
-npm run update-markdown
+npm run update-markdown -- --folder="$ARGUMENTS"
 ```
+
+**Important:** The `--folder` flag is required when publishing a single project. Without it, the script regenerates markdown for ALL projects in the manifest, which overwrites manual metadata edits (cover photos, photo order, descriptions) in existing project files.
+
+If the markdown file already exists and you need to regenerate it, delete it first and re-run the command.
 
 This creates `content/projects/<slug>.md` from the upload manifest. Report which file was created or updated.
 
