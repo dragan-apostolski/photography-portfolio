@@ -44,26 +44,18 @@ const isNavigationVisible = ref(false)
 const photoWrapper = ref<HTMLElement | null>(null)
 const isImageLoaded = ref(false)
 const isTransitioning = ref(false)
-const showLoadingState = ref(false)
-let loadingTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Reset loading state when photo changes with transition
+// Loading state is immediate — no delay, so it works for both cached and uncached images
+const showLoadingState = computed(() => !isImageLoaded.value)
+
+// Reset loading state when photo changes (navigation)
 watch(
   () => props.photo.id,
   () => {
     isTransitioning.value = true
     isImageLoaded.value = false
 
-    // Only show loading spinner if image takes longer than 100ms to load
-    // This prevents flash of loading state for cached images
-    if (loadingTimeout) clearTimeout(loadingTimeout)
-    loadingTimeout = setTimeout(() => {
-      if (!isImageLoaded.value) {
-        showLoadingState.value = true
-      }
-    }, 100)
-
-    // Reset transition after a brief delay
+    // Reset transition after a brief delay to allow re-render
     setTimeout(() => {
       isTransitioning.value = false
     }, 50)
@@ -72,8 +64,6 @@ watch(
 
 // Handle image load
 const handleImageLoad = () => {
-  if (loadingTimeout) clearTimeout(loadingTimeout)
-  showLoadingState.value = false
   isImageLoaded.value = true
 }
 
@@ -129,6 +119,33 @@ const formattedCameraSettings = computed(() => {
   return settings.join(' • ')
 })
 
+// Convert aspect ratio string to numeric ratio for placeholder sizing
+const numericAspectRatio = computed(() => {
+  switch (props.photo.aspectRatio) {
+    case 'vertical':
+      return 2 / 3
+    case 'horizontal':
+      return 3 / 2
+    case 'square':
+      return 1
+    default:
+      return 3 / 2
+  }
+})
+
+// Calculate placeholder dimensions based on aspect ratio and viewport constraints
+const placeholderStyle = computed(() => {
+  const ratio = numericAspectRatio.value
+  const targetHeightVh = 60
+
+  return {
+    aspectRatio: `${ratio}`,
+    maxHeight: 'calc(98vh - 13rem)',
+    width: `min(${targetHeightVh * ratio}vh, 85vw)`,
+    maxWidth: '85vw',
+  }
+})
+
 // Fetch project title if projectSlug exists
 const { getProjectBySlug } = useProjects()
 const { data: project } = await useAsyncData(
@@ -167,7 +184,7 @@ const { data: project } = await useAsyncData(
 
     <!-- Main modal container -->
     <div
-      class="relative z-10 mx-2 flex max-h-[98vh] max-w-[98vw] flex-col md:mx-4 md:max-h-[95vh] md:max-w-[85vw] lg:max-w-[80vw]"
+      class="relative z-10 mx-2 flex max-h-[98vh] max-w-[98vw] flex-col items-center md:mx-4 md:max-h-[95vh] md:max-w-[85vw] lg:max-w-[80vw]"
     >
       <!-- Image container with enhanced styling -->
       <div
@@ -175,18 +192,18 @@ const { data: project } = await useAsyncData(
       >
         <!-- Image wrapper -->
         <div class="relative min-h-0 overflow-hidden">
-          <!-- Loading state with blur placeholder -->
+          <!-- Sizing placeholder — in-flow, provides container dimensions before image loads -->
           <div
             v-if="showLoadingState"
-            class="absolute inset-0 flex items-center justify-center"
-            :style="{ minHeight: '40vh' }"
+            class="flex items-center justify-center overflow-hidden rounded-t-2xl bg-black/5 dark:bg-white/5"
+            :style="placeholderStyle"
           >
-            <!-- Blurred placeholder -->
-            <div class="absolute inset-0 overflow-hidden rounded-t-2xl">
+            <!-- Blurred placeholder image -->
+            <div class="absolute inset-0 overflow-hidden">
               <NuxtImg
                 :src="photo.src"
                 :alt="photo.title || 'Photo'"
-                class="h-full scale-110 object-cover blur-2xl"
+                class="h-full w-full scale-110 object-cover blur-2xl"
                 loading="eager"
                 :width="20"
                 quality="10"
@@ -213,6 +230,11 @@ const { data: project } = await useAsyncData(
               'scale-95 opacity-0': !isImageLoaded || isTransitioning,
               'scale-100 opacity-100': isImageLoaded && !isTransitioning,
             }"
+            :style="
+              !isImageLoaded
+                ? { position: 'absolute', top: '0', left: '0', width: '100%', height: '100%' }
+                : {}
+            "
             loading="eager"
             sizes="98vw sm:95vw md:85vw lg:80vw"
             @load="handleImageLoad"
