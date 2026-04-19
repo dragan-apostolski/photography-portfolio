@@ -49,11 +49,11 @@
           <NuxtLink :to="`/projects/${project.slug}`" class="block">
             <!-- Project Cover Image -->
             <div
-              class="mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-secondary-200 dark:bg-secondary-800"
+              class="relative mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-secondary-200 dark:bg-secondary-800"
             >
               <NuxtImg
-                v-if="project.coverPhoto"
-                :src="getPhotoUrl(project.coverPhoto)"
+                v-if="getCardThumbnail(project)"
+                :src="getCardThumbnail(project)"
                 :alt="project.title"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
@@ -61,10 +61,21 @@
               />
               <div
                 v-else
-                class="dark:text-secondary-600 flex h-full w-full items-center justify-center text-secondary-300"
+                class="flex h-full w-full items-center justify-center text-secondary-300 dark:text-secondary-600"
               >
-                <Icon name="heroicons:photo" class="h-12 w-12" />
+                <Icon
+                  :name="project.type === 'video' ? 'ph:video-camera' : 'heroicons:photo'"
+                  class="h-12 w-12"
+                />
               </div>
+
+              <span
+                v-if="project.type === 'video'"
+                class="absolute top-3 left-3 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs tracking-widest text-white uppercase backdrop-blur-md"
+              >
+                <Icon name="ph:play-fill" class="h-3 w-3" />
+                Video
+              </span>
             </div>
 
             <!-- Project Info -->
@@ -121,6 +132,13 @@ const selectedTag = ref<string | null>((route.query.tag as string) || null)
 // Composables
 const { getAllProjects, getProjectTags, getPhotoUrl } = useProjects()
 
+// Resolve a thumbnail for both photo and video projects
+const getCardThumbnail = (project: Project): string => {
+  if (project.coverPhoto) return getPhotoUrl(project.coverPhoto)
+  if (project.type === 'video' && project.videoUrl) return getYouTubeThumbnail(project.videoUrl)
+  return ''
+}
+
 // Data fetching
 const { data: projects, pending, error } = await useAsyncData('projects', getAllProjects)
 const { data: availableTags } = await useAsyncData('project-tags', getProjectTags, {
@@ -130,23 +148,23 @@ const { data: availableTags } = await useAsyncData('project-tags', getProjectTag
 // Computed
 const filteredProjects = computed((): Project[] => {
   if (!projects.value) return []
-  
+
   let result = projects.value
-  
+
   // Filter by tag if selected
   if (selectedTag.value) {
     result = result.filter((project) => project.tags?.includes(selectedTag.value!))
   }
-  
+
   // Sort by date, newest first
   return result.sort((a, b) => {
     const dateA = a.endDate || a.date
     const dateB = b.endDate || b.date
-    
+
     if (!dateA && !dateB) return 0
     if (!dateA) return 1
     if (!dateB) return -1
-    
+
     return new Date(dateB).getTime() - new Date(dateA).getTime()
   })
 })

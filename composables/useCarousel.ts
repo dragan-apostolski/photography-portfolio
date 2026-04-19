@@ -11,13 +11,13 @@ const CAROUSEL_SOURCE = {
   CONTENT: 'content',
 } as const
 
-type CarouselSource = typeof CAROUSEL_SOURCE[keyof typeof CAROUSEL_SOURCE]
+type CarouselSource = (typeof CAROUSEL_SOURCE)[keyof typeof CAROUSEL_SOURCE]
 
 export const useCarousel = () => {
   const config = useRuntimeConfig()
   const cdnBaseUrl = config.public.cdnBaseUrl || ''
   const { getRecentProjects, getProjectBySlug } = useProjects()
-  
+
   // Helper to convert relative path to CDN URL
   const getPhotoUrl = (relativePath: string): string => {
     if (!relativePath) return ''
@@ -27,19 +27,26 @@ export const useCarousel = () => {
   }
 
   // Helper to map project to carousel photo
-  const mapProjectToCarouselPhoto = (project: Project): CarouselPhoto => ({
-    id: `project-carousel-${project.slug}`,
-    title: project.title,
-    src: getPhotoUrl(project.coverPhoto),
-    alt: `Cover photo for ${project.title}`,
-    description: project.description,
-    buttonTitle: 'View Project',
-    tag: project.tags || [],
-    location: project.location,
-    timestamp: project.date,
-    projectSlug: project.slug,
-    coverPhotoMobile: project.coverPhotoMobile ? getPhotoUrl(project.coverPhotoMobile) : undefined,
-  })
+  const mapProjectToCarouselPhoto = (project: Project): CarouselPhoto => {
+    const fallbackThumbnail =
+      project.type === 'video' && project.videoUrl ? getYouTubeThumbnail(project.videoUrl) : ''
+    const src = project.coverPhoto ? getPhotoUrl(project.coverPhoto) : fallbackThumbnail
+    const mobileSrc = project.coverPhotoMobile ? getPhotoUrl(project.coverPhotoMobile) : undefined
+
+    return {
+      id: `project-carousel-${project.slug}`,
+      title: project.title,
+      src,
+      alt: `Cover photo for ${project.title}`,
+      description: project.description,
+      buttonTitle: project.type === 'video' ? 'Watch Video' : 'View Project',
+      tag: project.tags || [],
+      location: project.location,
+      timestamp: project.date,
+      projectSlug: project.slug,
+      coverPhotoMobile: mobileSrc,
+    }
+  }
 
   /**
    * Get carousel photos from recent projects
@@ -60,11 +67,11 @@ export const useCarousel = () => {
   const getCarouselPhotosFromContent = async (): Promise<CarouselPhoto[]> => {
     try {
       const all = await queryCollection('content').all()
-      const carouselContent = 
+      const carouselContent =
         all.find((item) => item.path === '/carousel') ||
         all.find((item) => item.title === 'Featured Projects') ||
         null
-      
+
       if (!carouselContent) {
         return []
       }
@@ -83,7 +90,8 @@ export const useCarousel = () => {
       for (const slug of projects) {
         try {
           const project = await getProjectBySlug(slug)
-          if (project && project.coverPhoto) {
+          const hasVisual = project && (project.coverPhoto || project.videoUrl)
+          if (hasVisual) {
             carouselPhotos.push(mapProjectToCarouselPhoto(project))
           }
         } catch (projectError) {
@@ -103,11 +111,11 @@ export const useCarousel = () => {
    */
   const getCarouselPhotos = async (): Promise<CarouselPhoto[]> => {
     const source = (config.public.carouselSource || CAROUSEL_SOURCE.RECENT) as CarouselSource
-    
+
     if (source === CAROUSEL_SOURCE.CONTENT) {
       return getCarouselPhotosFromContent()
     }
-    
+
     return getCarouselPhotosFromRecentProjects()
   }
 

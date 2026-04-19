@@ -1,3 +1,5 @@
+export type ProjectType = 'photo' | 'video'
+
 export interface ProjectPhoto {
   id: string
   src: string
@@ -16,6 +18,7 @@ export interface ProjectPhotoConfig {
 
 export interface Project {
   slug: string
+  type: ProjectType
   title: string
   description: string
   location?: string
@@ -23,11 +26,12 @@ export interface Project {
   date?: string // Single date
   startDate?: string // Start of date range
   endDate?: string // End of date range
-  coverPhoto: string
+  coverPhoto?: string
   coverPhotoMobile?: string
-  projectRoot: string
+  projectRoot?: string
   featured?: boolean
   photos: ProjectPhotoConfig[]
+  videoUrl?: string
   body?: object // For markdown content from Nuxt Content
 }
 

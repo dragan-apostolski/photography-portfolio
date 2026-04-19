@@ -1,4 +1,10 @@
-import type { Project, ProjectPhoto, ProjectWithPhotos, ProjectPhotoConfig } from '~/types/project'
+import type {
+  Project,
+  ProjectPhoto,
+  ProjectWithPhotos,
+  ProjectPhotoConfig,
+  ProjectType,
+} from '~/types/project'
 
 export const useProjects = () => {
   // Get runtime config at the top level of the composable (setup context)
@@ -12,7 +18,7 @@ export const useProjects = () => {
     if (!relativePath) return ''
     // If already a full URL, return as-is
     if (relativePath.startsWith('http')) return relativePath
-    
+
     // Remove leading slash if present to avoid double slashes
     const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath
     return cdnBase ? `${cdnBase}/${cleanPath}` : relativePath
@@ -30,6 +36,7 @@ export const useProjects = () => {
       const meta = projectData.meta || {}
       return {
         slug: projectData.path?.replace('/projects/', '') || '',
+        type: (meta.type || projectData.type || 'photo') as ProjectType,
         title: projectData.title || '',
         description: projectData.description || '',
         location: meta.location || projectData.location,
@@ -42,6 +49,7 @@ export const useProjects = () => {
         projectRoot: meta.projectRoot || projectData.projectRoot || '',
         featured: meta.featured || projectData.featured || false,
         photos: meta.photos || projectData.photos || [],
+        videoUrl: meta.videoUrl || projectData.videoUrl,
         body: projectData.body,
       }
     }) as Project[]
@@ -61,6 +69,7 @@ export const useProjects = () => {
 
     return {
       slug: projectData.path?.replace('/projects/', '') || '',
+      type: (meta.type || projectData.type || 'photo') as ProjectType,
       title: projectData.title || '',
       description: projectData.description || '',
       location: meta.location || projectData.location,
@@ -73,6 +82,7 @@ export const useProjects = () => {
       projectRoot: meta.projectRoot || projectData.projectRoot || '',
       featured: meta.featured || projectData.featured || false,
       photos: meta.photos || projectData.photos || [],
+      videoUrl: meta.videoUrl || projectData.videoUrl,
       body: projectData.body,
     } as Project
   }
@@ -98,7 +108,11 @@ export const useProjects = () => {
   const loadProjectPhotos = async (projectSlug: string): Promise<ProjectPhoto[]> => {
     try {
       const project = await getProjectBySlug(projectSlug)
-      
+
+      if (project?.type === 'video') {
+        return []
+      }
+
       if (!project?.projectRoot || !project?.photos) {
         console.warn(`No project or photos found for slug: ${projectSlug}`)
         return []
@@ -166,11 +180,11 @@ export const useProjects = () => {
       // Use endDate if available, otherwise use date
       const dateA = a.endDate || a.date
       const dateB = b.endDate || b.date
-      
+
       if (!dateA && !dateB) return 0
       if (!dateA) return 1
       if (!dateB) return -1
-      
+
       return new Date(dateB).getTime() - new Date(dateA).getTime()
     })
 

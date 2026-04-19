@@ -1,140 +1,194 @@
 <template>
   <div class="relative">
     <!-- Project Content - Always mounted when data is ready -->
-    <div 
+    <div
       v-if="project && !error"
       class="transition-opacity duration-500"
       :class="contentVisible ? 'opacity-100' : 'opacity-0'"
     >
-      <!-- Cover Photo Section -->
-      <section class="relative h-screen w-full overflow-hidden">
-        <div v-if="coverPhoto" class="h-full w-full">
-          <NuxtImg
-            :src="coverPhoto.src"
-            :alt="project.title"
-            class="h-full w-full object-cover"
-            quality="100"
-            loading="lazy"
-            sizes="100vw sm:400px md:800px lg:100vw"
-            placeholder
-            priority
-          />
+      <!-- PHOTO PROJECT: Cover Photo + Galleries -->
+      <template v-if="project.type !== 'video'">
+        <!-- Cover Photo Section -->
+        <section class="relative h-screen w-full overflow-hidden">
+          <div v-if="coverPhoto" class="h-full w-full">
+            <NuxtImg
+              :src="coverPhoto.src"
+              :alt="project.title"
+              class="h-full w-full object-cover"
+              quality="100"
+              loading="lazy"
+              sizes="100vw sm:400px md:800px lg:100vw"
+              placeholder
+              priority
+            />
 
-          <!-- Cover Photo Overlay -->
-          <div
-            class="to-opacity-60 dark:to-opacity-60 absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary dark:to-primary-dark"
-          />
-
-          <!-- Cover Photo Content -->
-          <div class="absolute right-0 bottom-0 left-0 p-6 pb-24 md:p-12">
-            <div class="max-w-2xl">
-              <h1 class="mb-4 text-4xl font-bold text-primary md:text-6xl dark:text-primary-dark">
-                {{ project.title }}
-              </h1>
-              <p class="mb-6 text-lg opacity-90 md:text-xl">
-                {{ project.description }}
-              </p>
-
-              <div class="flex flex-wrap items-center gap-6 text-sm opacity-80">
-                <div v-if="project.location" class="flex items-center">
-                  <Icon name="heroicons:map-pin" class="mr-1 h-4 w-4" />
-                  {{ project.location }}
-                </div>
-                <div class="flex items-center">
-                  <Icon name="heroicons:calendar" class="mr-1 h-4 w-4" />
-                  {{ formatProjectDate(project) }}
-                </div>
-                <div class="hidden md:flex items-center">
-                  <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
-                  {{ project.photos.length }} photos
-                </div>
-              </div>
-
-              <!-- Tags -->
-              <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
-                <span
-                  v-for="tag in project.tags"
-                  :key="tag"
-                  class="rounded-full bg-secondary-200 px-3 py-1 text-sm capitalize opacity-90 dark:bg-secondary-800"
-                >
-                  {{ tag }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Scroll Incentive -->
-          <ScrollIncentive 
-            position="bottom-6" 
-            mobile-position="bottom-4" 
-            :scroll-amount="0.8"
-            label="Explore Photos"
-          />
-        </div>
-      </section>
-
-      <!-- Desktop: Horizontal Photo Gallery -->
-      <div class="hidden xl:block">
-        <HorizontalScroll
-          v-if="horizontalScrollItems.length > 0"
-          :items="horizontalScrollItems"
-          :start-offset="0.1"
-          :end-offset="0.1"
-        >
-          <template #item="{ item, index }">
-            <!-- Photo Item -->
+            <!-- Cover Photo Overlay -->
             <div
-              v-if="item.type === 'photo'"
-              class="relative flex h-full w-full items-center justify-center bg-primary px-4 pt-12 md:px-8 dark:bg-primary-dark"
-            >
-              <NuxtImg
-                :src="(item.photo as any).src"
-                :alt="(item.photo as any).title || `${project.title} - Photo ${index + 1}`"
-                class="max-h-[90vh] max-w-full rounded-2xl object-contain"
-                loading="lazy"
-                quality="80"
-                sizes="100vw xl:90vw"
-              />
-            </div>
-          </template>
-        </HorizontalScroll>
-      </div>
+              class="to-opacity-60 dark:to-opacity-60 absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary dark:to-primary-dark"
+            />
 
-      <!-- Mobile/Tablet: Traditional Vertical Gallery -->
-      <div class="block xl:hidden">
-        <!-- Photo Gallery -->
-        <section v-if="project.photos.length > 0" class="px-4 py-8">
-          <div class="mx-auto max-w-4xl space-y-8">
-            <div v-for="(photo, index) in project.photos" :key="photo.id" class="group">
-              <!-- Photo Container -->
+            <!-- Cover Photo Content -->
+            <div class="absolute right-0 bottom-0 left-0 p-6 pb-24 md:p-12">
+              <div class="max-w-2xl">
+                <h1 class="mb-4 text-4xl font-bold text-primary md:text-6xl dark:text-primary-dark">
+                  {{ project.title }}
+                </h1>
+                <p class="mb-6 text-lg opacity-90 md:text-xl">
+                  {{ project.description }}
+                </p>
+
+                <div class="flex flex-wrap items-center gap-6 text-sm opacity-80">
+                  <div v-if="project.location" class="flex items-center">
+                    <Icon name="heroicons:map-pin" class="mr-1 h-4 w-4" />
+                    {{ project.location }}
+                  </div>
+                  <div class="flex items-center">
+                    <Icon name="heroicons:calendar" class="mr-1 h-4 w-4" />
+                    {{ formatProjectDate(project) }}
+                  </div>
+                  <div class="hidden items-center md:flex">
+                    <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
+                    {{ project.photos.length }} photos
+                  </div>
+                </div>
+
+                <!-- Tags -->
+                <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
+                  <span
+                    v-for="tag in project.tags"
+                    :key="tag"
+                    class="rounded-full bg-secondary-200 px-3 py-1 text-sm capitalize opacity-90 dark:bg-secondary-800"
+                  >
+                    {{ tag }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scroll Incentive -->
+            <ScrollIncentive
+              position="bottom-6"
+              mobile-position="bottom-4"
+              :scroll-amount="0.8"
+              label="Explore Photos"
+            />
+          </div>
+        </section>
+
+        <!-- Desktop: Horizontal Photo Gallery -->
+        <div class="hidden xl:block">
+          <HorizontalScroll
+            v-if="horizontalScrollItems.length > 0"
+            :items="horizontalScrollItems"
+            :start-offset="0.1"
+            :end-offset="0.1"
+          >
+            <template #item="{ item, index }">
+              <!-- Photo Item -->
               <div
-                class="relative overflow-hidden rounded-2xl bg-secondary-100 dark:bg-secondary-800"
+                v-if="item.type === 'photo'"
+                class="relative flex h-full w-full items-center justify-center bg-primary px-4 pt-12 md:px-8 dark:bg-primary-dark"
               >
                 <NuxtImg
-                  :src="photo.src"
-                  :alt="photo.description || `${project.title} - Photo ${index + 1}`"
-                  class="w-full object-contain"
+                  :src="(item.photo as any).src"
+                  :alt="(item.photo as any).title || `${project.title} - Photo ${index + 1}`"
+                  class="max-h-[90vh] max-w-full rounded-2xl object-contain"
                   loading="lazy"
-                  sizes="100vw md:768px"
+                  quality="80"
+                  sizes="100vw xl:90vw"
                 />
+              </div>
+            </template>
+          </HorizontalScroll>
+        </div>
 
-                <!-- Photo Metadata (if available) -->
+        <!-- Mobile/Tablet: Traditional Vertical Gallery -->
+        <div class="block xl:hidden">
+          <!-- Photo Gallery -->
+          <section v-if="project.photos.length > 0" class="px-4 py-8">
+            <div class="mx-auto max-w-4xl space-y-8">
+              <div v-for="(photo, index) in project.photos" :key="photo.id" class="group">
+                <!-- Photo Container -->
                 <div
-                  v-if="photo.description"
-                  class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  class="relative overflow-hidden rounded-2xl bg-secondary-100 dark:bg-secondary-800"
                 >
-                  <h3 v-if="photo.description" class="mb-2 text-lg font-semibold">
-                    {{ photo.fileName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ') }}
-                  </h3>
-                  <p v-if="photo.description" class="text-sm opacity-90">
-                    {{ photo.description }}
-                  </p>
+                  <NuxtImg
+                    :src="photo.src"
+                    :alt="photo.description || `${project.title} - Photo ${index + 1}`"
+                    class="w-full object-contain"
+                    loading="lazy"
+                    sizes="100vw md:768px"
+                  />
+
+                  <!-- Photo Metadata (if available) -->
+                  <div
+                    v-if="photo.description"
+                    class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  >
+                    <h3 v-if="photo.description" class="mb-2 text-lg font-semibold">
+                      {{ photo.fileName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ') }}
+                    </h3>
+                    <p v-if="photo.description" class="text-sm opacity-90">
+                      {{ photo.description }}
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </section>
+        </div>
+      </template>
+
+      <!-- VIDEO PROJECT: Full-viewport Embed + Metadata Bar -->
+      <template v-else>
+        <section
+          class="mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 pt-24 pb-10 md:px-8 md:pt-28 md:pb-12"
+        >
+          <div class="mx-auto w-full" style="max-width: min(100%, calc((100vh - 18rem) * 16 / 9))">
+            <VideoEmbed
+              v-if="project.videoUrl"
+              :video-url="project.videoUrl"
+              :title="project.title"
+            />
+          </div>
+
+          <div
+            class="mt-6 border-t border-secondary-200 pt-6 md:mt-8 md:pt-8 dark:border-secondary-800"
+          >
+            <h1 class="text-3xl font-bold md:text-5xl">{{ project.title }}</h1>
+            <p class="mt-3 max-w-3xl text-base opacity-80 md:mt-4 md:text-xl">
+              {{ project.description }}
+            </p>
+
+            <div
+              class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm opacity-80 md:mt-6"
+            >
+              <div v-if="project.location" class="flex items-center">
+                <Icon name="heroicons:map-pin" class="mr-1 h-4 w-4" />
+                {{ project.location }}
+              </div>
+              <div v-if="formatProjectDate(project)" class="flex items-center">
+                <Icon name="heroicons:calendar" class="mr-1 h-4 w-4" />
+                {{ formatProjectDate(project) }}
+              </div>
+              <div class="flex items-center">
+                <Icon name="ph:video-camera-fill" class="mr-1 h-4 w-4 text-accent" />
+                Video
+              </div>
+            </div>
+
+            <div v-if="project.tags?.length" class="mt-3 flex flex-wrap gap-2 md:mt-4">
+              <span
+                v-for="tag in project.tags"
+                :key="tag"
+                class="rounded-full bg-secondary-200 px-3 py-1 text-sm capitalize opacity-90 dark:bg-secondary-800"
+              >
+                {{ tag }}
+              </span>
             </div>
           </div>
         </section>
-      </div>
+      </template>
 
       <!-- Related Projects Section (Shared for all devices) -->
       <section
@@ -151,16 +205,23 @@
             >
               <NuxtLink :to="`/projects/${relatedProject.slug}`" class="block">
                 <div
-                  class="mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-secondary-200 dark:bg-secondary-800"
+                  class="relative mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-secondary-200 dark:bg-secondary-800"
                 >
                   <NuxtImg
-                    v-if="relatedProject.coverPhoto"
-                    :src="getPhotoUrl(relatedProject.coverPhoto)"
+                    v-if="getRelatedThumbnail(relatedProject)"
+                    :src="getRelatedThumbnail(relatedProject)"
                     :alt="relatedProject.title"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
                     sizes="sm:100vw, md:320px"
                   />
+                  <span
+                    v-if="relatedProject.type === 'video'"
+                    class="absolute top-3 left-3 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs tracking-widest text-white uppercase backdrop-blur-md"
+                  >
+                    <Icon name="ph:play-fill" class="h-3 w-3" />
+                    Video
+                  </span>
                 </div>
                 <h3 class="text-xl font-semibold transition-colors group-hover:text-accent">
                   {{ relatedProject.title }}
@@ -176,8 +237,8 @@
     </div>
 
     <!-- Error State - Layered on top -->
-    <div 
-      v-if="error || !project" 
+    <div
+      v-if="error || !project"
       class="fixed inset-0 z-40 flex items-center justify-center bg-primary dark:bg-primary-dark"
     >
       <div class="text-center">
@@ -194,9 +255,9 @@
 
     <!-- Loading State - Layered on top -->
     <ClientOnly>
-      <ProjectLoader 
-        v-if="shouldDisplayLoader" 
-        :is-loading="pending" 
+      <ProjectLoader
+        v-if="shouldDisplayLoader"
+        :is-loading="pending"
         mode="viewfinder"
         @complete="handleLoaderComplete"
       />
@@ -208,6 +269,7 @@
 import type { Project } from '~/types/project'
 import ScrollIncentive from '~/components/ui/ScrollIncentive.vue'
 import ProjectLoader from '~/components/ui/ProjectLoader.vue'
+import VideoEmbed from '~/components/ui/VideoEmbed.vue'
 
 // Route
 const route = useRoute()
@@ -226,29 +288,31 @@ const {
   lazy: false,
 })
 
-// Get cover photo URL for the loader (early access)
-const coverPhotoForLoader = computed(() => {
-  if (!project.value) return null
-  if (project.value.coverPhoto) {
-    return getPhotoUrl(project.value.coverPhoto)
+// Resolve a thumbnail for related projects (photo cover or YouTube fallback)
+const getRelatedThumbnail = (relatedProject: Project): string => {
+  if (relatedProject.coverPhoto) return getPhotoUrl(relatedProject.coverPhoto)
+  if (relatedProject.type === 'video' && relatedProject.videoUrl) {
+    return getYouTubeThumbnail(relatedProject.videoUrl)
   }
-  if (project.value.photos.length > 0) {
-    return project.value.photos[0].src
-  }
-  return null
-})
+  return ''
+}
 
 // Project loader management
 const { markProjectAsLoaded } = useProjectLoader()
 
-// Initialize loader - don't show if there's an error
-const showLoader = ref(!error.value && project.value !== null)
-const contentVisible = ref(false)
+// Initialize loader - don't show if there's an error or for video projects
+const isVideoProject = computed(() => project.value?.type === 'video')
+const showLoader = ref(!error.value && project.value !== null && !isVideoProject.value)
+const contentVisible = ref(isVideoProject.value)
 
 // Computed property to determine if loader should be displayed
 const shouldDisplayLoader = computed(() => {
   // Never show loader if there's an error or no project
   if (error.value || !project.value) {
+    return false
+  }
+  // Video projects don't have photos to preload — skip the viewfinder loader
+  if (project.value.type === 'video') {
     return false
   }
   return import.meta.client && showLoader.value
@@ -262,11 +326,18 @@ onMounted(() => {
       showLoader.value = false
       return
     }
-    
+
+    // Video projects skip the loader entirely
+    if (project.value.type === 'video') {
+      showLoader.value = false
+      contentVisible.value = true
+      return
+    }
+
     const { shouldShowLoader } = useProjectLoader()
     const shouldShow = shouldShowLoader(slug)
     showLoader.value = shouldShow
-    
+
     // If we should show loader, wait for minimum time before hiding
     if (shouldShow) {
       // The ProjectLoader component handles the animation timing
@@ -283,14 +354,14 @@ onMounted(() => {
 const handleLoaderComplete = async () => {
   // Mark this project as loaded in the session
   markProjectAsLoaded(slug)
-  
+
   // Start content fade-in BEFORE hiding loader
   // This ensures smooth transition with overlap
   contentVisible.value = true
-  
+
   // Wait a moment for content to start fading in
-  await new Promise(resolve => setTimeout(resolve, 100))
-  
+  await new Promise((resolve) => setTimeout(resolve, 100))
+
   // Then hide the loader
   showLoader.value = false
 }
@@ -312,7 +383,7 @@ const updateMobileState = async () => {
 // Initialize and setup event listeners
 onMounted(async () => {
   await updateMobileState()
-  
+
   if (import.meta.client) {
     window.addEventListener('resize', updateMobileState)
   }
