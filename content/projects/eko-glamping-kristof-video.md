@@ -6,4 +6,5 @@ location: 'Cerklje na Gorenjskem, Slovenia'
 date: '2026-05-05'
 tags: ['hospitality', 'client']
 videoUrl: 'https://www.youtube.com/watch?v=DkzEpCGT8Ss'
+coverPhoto: '/photos/Projects/Eko Glamping Krištof Video/DJI_20260417190406_0516_D.jpg'
 ---

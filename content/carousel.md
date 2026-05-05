@@ -1,6 +1,7 @@
 ---
 title: Featured Projects
 projects:
+  - 'eko-glamping-kristof-video'
   - 'morocco'
   - 'bled-sunrise'
   - 'sri-lanka'
