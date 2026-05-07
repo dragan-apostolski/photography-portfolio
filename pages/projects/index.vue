@@ -126,8 +126,21 @@ useSeoMeta({
 const route = useRoute()
 const router = useRouter()
 
-// State - initialize from query parameter if present
-const selectedTag = ref<string | null>((route.query.tag as string) || null)
+// State — initialized to null on both server and client to keep SSR and
+// hydration in sync. The query param is applied after mount so Vue can
+// reactively filter the already-hydrated list without a hydration mismatch.
+const selectedTag = ref<string | null>(null)
+
+onMounted(() => {
+  selectedTag.value = (route.query.tag as string) || null
+})
+
+watch(
+  () => route.query.tag,
+  (tag) => {
+    selectedTag.value = (tag as string) || null
+  },
+)
 
 // Composables
 const { getAllProjects, getProjectTags, getPhotoUrl } = useProjects()
