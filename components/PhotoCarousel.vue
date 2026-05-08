@@ -169,6 +169,7 @@ watch(currentIndex, () => {
             quality="100"
             loading="eager"
             placeholder
+            sizes="100vw md:100vw lg:1920px xl:2048px"
           />
           <!-- Gradient overlay for better text readability -->
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
