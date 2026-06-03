@@ -1,5 +1,15 @@
 <template>
   <div class="relative">
+    <!-- Dev-only: enter the local photo reorder editor -->
+    <NuxtLink
+      v-if="isDev && project && project.type !== 'video'"
+      :to="`/projects/edit/${slug}`"
+      class="fixed top-20 right-4 z-30 flex items-center gap-2 rounded-full border border-white/20 bg-black/50 px-4 py-2 text-sm font-medium text-white backdrop-blur-md transition-colors hover:cursor-pointer hover:bg-black/70 md:right-8"
+    >
+      <Icon name="heroicons:arrows-up-down" class="h-4 w-4" />
+      Edit order
+    </NuxtLink>
+
     <!-- Project Content - Always mounted when data is ready -->
     <div
       v-if="project && !error"
@@ -274,6 +284,9 @@ import VideoEmbed from '~/components/ui/VideoEmbed.vue'
 // Route
 const route = useRoute()
 const slug = route.params.slug as string
+
+// Local-only admin affordance — never rendered in production
+const isDev = import.meta.dev
 
 // Composables
 const { getProjectWithPhotos, getAllProjects, getPhotoUrl } = useProjects()
