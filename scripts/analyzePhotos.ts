@@ -152,6 +152,31 @@ function printSummary(projectsAnalysis: FolderAnalysis[], otherAnalysis: FolderA
 }
 
 async function main() {
+  // --source analyzes any folder on disk (e.g. a Google Drive mount) as a single project,
+  // so you can size-check photos without copying them into original-photos/ first.
+  const sourceArg = process.argv.find((arg) => arg.startsWith('--source='))
+  const sourcePath = sourceArg ? sourceArg.substring('--source='.length) : null
+
+  if (sourcePath) {
+    const absoluteSource = path.isAbsolute(sourcePath)
+      ? sourcePath
+      : path.join(process.cwd(), sourcePath)
+
+    if (!fs.existsSync(absoluteSource) || !fs.statSync(absoluteSource).isDirectory()) {
+      console.error(`❌ Source folder not found or not a directory: ${absoluteSource}`)
+      process.exit(1)
+    }
+
+    console.log(`🔍 Analyzing photos in: ${absoluteSource}\n`)
+    const analysis = analyzeFolder(absoluteSource, path.basename(absoluteSource))
+    printSummary([analysis], null)
+    console.log('✅ Analysis complete!')
+    console.log(
+      '💡 Run `npm run upload-photos -- --source="<path>" --project="<Name>" --dry-run` to preview the upload.\n',
+    )
+    return
+  }
+
   const originalPhotosPath = path.join(process.cwd(), 'original-photos')
   const projectsPath = path.join(originalPhotosPath, 'Projects')
   const otherPath = path.join(originalPhotosPath, 'Other')

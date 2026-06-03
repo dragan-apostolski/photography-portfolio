@@ -49,6 +49,18 @@ const specificFiles = filesArg
   : null
 const storageArg = process.argv.find((arg) => arg.startsWith('--storage='))
 const storageType = (storageArg ? storageArg.split('=')[1] : 'r2') as 'blob' | 'r2'
+// --source lets you upload directly from any folder on disk (e.g. a Google Drive
+// mount) without first copying the photos into original-photos/.
+const sourceArg = process.argv.find((arg) => arg.startsWith('--source='))
+const sourcePath = sourceArg ? sourceArg.substring('--source='.length) : null
+// --project sets the R2 project folder name when uploading from --source.
+const projectArg = process.argv.find((arg) => arg.startsWith('--project='))
+const sourceProjectName = projectArg ? projectArg.substring('--project='.length) : null
+// --category controls whether a --source folder lands under Projects/ or Other/.
+const categoryArg = process.argv.find((arg) => arg.startsWith('--category='))
+const sourceCategory = (categoryArg ? categoryArg.substring('--category='.length) : 'Projects') as
+  | 'Projects'
+  | 'Other'
 
 // R2 specific vars
 let r2Client: S3Client | null = null
@@ -224,6 +236,37 @@ function determineCategoryAndFolder(filePath: string): {
   return { category: 'Other', folderName: '' }
 }
 
+async function uploadFromSource(
+  source: string,
+  category: 'Projects' | 'Other',
+  projectName: string | null,
+): Promise<void> {
+  const absoluteSource = path.isAbsolute(source) ? source : path.join(process.cwd(), source)
+
+  if (!fs.existsSync(absoluteSource) || !fs.statSync(absoluteSource).isDirectory()) {
+    console.error(`\n❌ Source folder not found or not a directory: ${absoluteSource}`)
+    process.exit(1)
+  }
+
+  console.log(`\n📂 Uploading directly from source: ${absoluteSource}`)
+
+  if (category === 'Other') {
+    console.log(`📁 Target: Other`)
+    await uploadOtherFolder(absoluteSource)
+    return
+  }
+
+  if (!projectName) {
+    console.error(
+      '\n❌ --project="Project Name" is required when uploading a Projects folder from --source.',
+    )
+    process.exit(1)
+  }
+
+  console.log(`📁 Target project: Projects/${projectName}`)
+  await uploadProjectFolder(absoluteSource, projectName)
+}
+
 async function uploadSpecificFiles(filePaths: string[]): Promise<void> {
   console.log(`\n${'='.repeat(80)}`)
   console.log(`📸 Processing ${filePaths.length} specific file(s)`)
@@ -321,6 +364,9 @@ async function main() {
   console.log(
     `\n🚀 Starting photo upload pipeline to ${storageType.toUpperCase()} ${isDryRun ? '[DRY RUN MODE]' : ''}`,
   )
+  if (sourcePath) {
+    console.log(`📂 Processing source folder: ${sourcePath}`)
+  }
   if (specificFolder) {
     console.log(`📂 Processing specific folder: ${specificFolder}`)
   }
@@ -351,8 +397,11 @@ async function main() {
     }
   }
   
-  // If specific files are provided, upload only those
-  if (specificFiles && specificFiles.length > 0) {
+  // If a source folder is provided, upload directly from it (no local copy needed)
+  if (sourcePath) {
+    await uploadFromSource(sourcePath, sourceCategory, sourceProjectName)
+  } else if (specificFiles && specificFiles.length > 0) {
+    // If specific files are provided, upload only those
     await uploadSpecificFiles(specificFiles)
   } else {
     // Otherwise, process folders as before

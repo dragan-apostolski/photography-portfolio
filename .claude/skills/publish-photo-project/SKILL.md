@@ -11,32 +11,36 @@ You are running the full photo processing pipeline to publish a photography proj
 
 Follow these steps in order. Stop and report to the user if any step fails.
 
-## Step 1: Verify Photos Exist
+## Step 1: Get the Photos Path
 
-Check that photos exist in `original-photos/Projects/$ARGUMENTS/`. List the files found (only `.jpg`/`.jpeg` files count). If the folder doesn't exist or has no photos, stop and tell the user.
+**Always ask the user for the absolute path to the folder containing the photos** — even if some photos happen to be in `original-photos/`. Photos are always uploaded directly from the path the user gives you (e.g. a Google Drive / iCloud mount or an external drive); they are never copied into the repo. Processing (compression of >3MB files) happens in memory, so no local copy is ever needed.
+
+Once you have the path, list the `.jpg`/`.jpeg` files found there (only those count). If the folder doesn't exist or has no photos, stop and tell the user.
+
+Note the project name (`$ARGUMENTS`) — it sets the R2 folder and URL slug and does **not** have to match the source folder's name.
 
 ## Step 2: Analyze Photos
 
-Run the analysis to check photo sizes:
+Run the analysis to check photo sizes (how many need compression at >3MB, total size):
 
 ```bash
-npm run analyze-photos
+npm run analyze-photos -- --source="/absolute/path/to/photos"
 ```
 
 Report the results — how many photos, how many need compression (>3MB), total size.
 
 ## Step 3: Upload Photos to Cloudflare R2
 
-First do a dry run and show the user what will be uploaded:
+First do a dry run and show the user what will be uploaded (`--project` sets the R2 folder name and is required):
 
 ```bash
-npm run upload-photos -- --folder="$ARGUMENTS" --dry-run
+npm run upload-photos -- --source="/absolute/path/to/photos" --project="$ARGUMENTS" --dry-run
 ```
 
-Then ask the user for confirmation before running the real upload:
+Then ask the user for confirmation before running the real upload (drop `--dry-run`):
 
 ```bash
-npm run upload-photos -- --folder="$ARGUMENTS"
+npm run upload-photos -- --source="/absolute/path/to/photos" --project="$ARGUMENTS"
 ```
 
 If photos already exist and the user wants to re-upload, add `--overwrite`.
@@ -99,7 +103,8 @@ Ask if they'd like you to prepare a commit.
 ## Important Notes
 
 - Photos are served from Cloudflare R2 CDN via `NUXT_PUBLIC_CDN_BASE_URL`
-- The `original-photos/` directory and `scripts/manifests/` are gitignored — never commit these
+- Photos are always uploaded **directly from the path the user provides** with `--source="<path>" --project="<Name>"` — they are never copied into the repo. `--source` works for both `analyze-photos` and `upload-photos`.
+- `scripts/manifests/` is gitignored — never commit it
 - Photo paths in markdown are relative to CDN: `/photos/Projects/<Project Name>/<filename>`
 - Aspect ratio is auto-detected (vertical, horizontal, square) with ±0.1 threshold around 1:1
 - Only `.jpg`/`.jpeg` files are supported
