@@ -4,7 +4,7 @@ description: 'A-frame cabins, starlit campfires and the emerald Soča — a few 
 location: 'Soča, Slovenia'
 startDate: '2026-05-21'
 endDate: '2026-05-22'
-tags: ['project', 'hospitality', 'nature', 'outdoor', 'travel']
+tags: ['hospitality', 'nature']
 coverPhoto: '/photos/Projects/Kamp Korita/DSC05064.jpg'
 coverPhotoMobile: '/photos/Projects/Kamp Korita/DSC05069.jpg'
 projectRoot: 'Kamp Korita'

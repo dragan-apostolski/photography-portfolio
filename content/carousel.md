@@ -1,11 +1,9 @@
 ---
 title: Featured Projects
 projects:
-  - 'eko-glamping-kristof-video'
   - 'morocco'
+  - 'kamp-korita'
   - 'bled-sunrise'
   - 'sri-lanka'
-  - 'the-red-stairs'
   - 'emilija'
-  - 'kathmandu'
 ---
