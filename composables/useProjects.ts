@@ -132,6 +132,7 @@ export const useProjects = () => {
           aspectRatio: photoConfig.aspectRatio,
           location: project.location,
           timestamp: project.endDate || project.date,
+          hidden: photoConfig.hidden === true,
         } as ProjectPhoto
       })
 

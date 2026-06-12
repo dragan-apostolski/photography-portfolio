@@ -26,7 +26,10 @@
             </h1>
           </div>
           <p class="truncate text-xs text-secondary-500 dark:text-secondary-400">
-            Drag photos on the timeline to reorder · {{ photos.length }} photos
+            Drag photos on the timeline to reorder · {{ photos.length }} photos<span
+              v-if="hiddenCount"
+              >, {{ hiddenCount }} hidden</span
+            >
           </p>
         </div>
       </div>
@@ -90,7 +93,8 @@
             <NuxtImg
               :src="activePhoto.src"
               :alt="activePhoto.fileName"
-              class="max-h-[calc(100%-2rem)] max-w-full rounded-2xl object-contain shadow-2xl"
+              class="max-h-[calc(100%-2rem)] max-w-full rounded-2xl object-contain shadow-2xl transition-all"
+              :class="activePhoto.hidden ? 'opacity-40 grayscale' : ''"
               loading="eager"
               quality="80"
               sizes="100vw md:80vw"
@@ -101,6 +105,15 @@
               <span class="font-mono">{{ activePhoto.fileName }}</span>
               <span class="text-secondary-300 dark:text-secondary-700">·</span>
               <span class="capitalize">{{ activePhoto.aspectRatio }}</span>
+              <template v-if="activePhoto.hidden">
+                <span class="text-secondary-300 dark:text-secondary-700">·</span>
+                <span
+                  class="flex items-center gap-1 rounded-full bg-accent/15 px-2 py-0.5 font-semibold text-accent uppercase"
+                >
+                  <Icon name="heroicons:eye-slash" class="h-3 w-3" />
+                  Hidden
+                </span>
+              </template>
             </figcaption>
           </figure>
         </Transition>
@@ -121,12 +134,14 @@
         <div
           ref="stripRef"
           class="flex items-stretch gap-2 overflow-x-auto px-4 py-4 md:px-6"
-          @dragover.prevent
+          @dragover="onStripDragOver"
+          @drop.prevent="onDragEnd"
         >
           <div
             v-for="(photo, index) in photos"
             :key="photo.fileName"
             :data-active="photo.fileName === activeFileName ? 'true' : undefined"
+            :data-fname="photo.fileName"
             draggable="true"
             tabindex="0"
             class="group/item relative flex h-28 shrink-0 cursor-grab flex-col overflow-hidden rounded-lg ring-2 transition-all duration-150 select-none focus:outline-none active:cursor-grabbing md:h-32"
@@ -134,13 +149,12 @@
               photo.fileName === activeFileName
                 ? 'ring-accent'
                 : 'ring-transparent hover:ring-secondary-300 dark:hover:ring-secondary-700',
-              dragIndex === index ? 'scale-95 opacity-40' : 'opacity-100',
+              photo.fileName === draggingFile ? 'scale-95 opacity-40' : 'opacity-100',
             ]"
             @click="activeFileName = photo.fileName"
             @focus="activeFileName = photo.fileName"
             @keydown="onKeydown($event, index)"
             @dragstart="onDragStart(index, $event)"
-            @dragenter.prevent="onDragEnter(index)"
             @dragend="onDragEnd"
           >
             <!-- Thumbnail -->
@@ -151,7 +165,8 @@
               <NuxtImg
                 :src="photo.src"
                 :alt="photo.fileName"
-                class="pointer-events-none h-full w-full object-cover"
+                class="pointer-events-none h-full w-full object-cover transition-all"
+                :class="photo.hidden ? 'opacity-30 grayscale' : ''"
                 loading="lazy"
                 quality="40"
                 sizes="200px"
@@ -163,6 +178,33 @@
               >
                 {{ index + 1 }}
               </span>
+
+              <!-- Hidden indicator overlay -->
+              <div
+                v-if="photo.hidden"
+                class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25"
+              >
+                <Icon name="heroicons:eye-slash" class="h-6 w-6 text-white/90 drop-shadow" />
+              </div>
+
+              <!-- Hide / show toggle -->
+              <button
+                class="absolute top-1 right-1 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur transition hover:cursor-pointer hover:bg-black/70"
+                :class="
+                  photo.hidden
+                    ? 'opacity-100'
+                    : 'opacity-0 group-hover/item:opacity-100 group-focus/item:opacity-100'
+                "
+                :aria-label="photo.hidden ? 'Show photo in gallery' : 'Hide photo from gallery'"
+                :title="photo.hidden ? 'Show in gallery' : 'Hide from gallery'"
+                @click.stop="toggleHidden(photo.fileName)"
+                @mousedown.stop
+              >
+                <Icon
+                  :name="photo.hidden ? 'heroicons:eye-slash' : 'heroicons:eye'"
+                  class="h-3.5 w-3.5"
+                />
+              </button>
 
               <!-- Nudge controls -->
               <div
@@ -191,7 +233,7 @@
         <p
           class="px-4 pb-3 text-center text-[11px] text-secondary-400 md:px-6 dark:text-secondary-500"
         >
-          Drag to reorder · click to preview · use ← → to nudge a focused photo
+          Drag to reorder · click to preview · use ← → to nudge · eye icon to hide from gallery
         </p>
       </section>
     </template>
@@ -217,29 +259,47 @@ const { data: project, pending } = await useAsyncData(`edit-project-${slug}`, ()
   getProjectWithPhotos(slug)
 )
 
-// Local working copy of the order. Source of truth is the .md file.
+// Local working copy of the order + hidden state. Source of truth is the .md file.
 type StripPhoto = ProjectWithPhotos['photos'][number]
+type PhotoState = { fileName: string; hidden: boolean }
 const photos = ref<StripPhoto[]>([])
-const savedOrder = ref<string[]>([])
+// Last saved (or initial) order + hidden state, used for dirty-tracking and reset.
+const baseline = ref<PhotoState[]>([])
 const activeFileName = ref<string>('')
 
-watchEffect(() => {
-  if (project.value?.photos?.length) {
-    photos.value = [...project.value.photos]
-    savedOrder.value = project.value.photos.map((p) => p.fileName)
-    if (!activeFileName.value) activeFileName.value = project.value.photos[0].fileName
-  }
-})
+// Seed the working copy from the loaded project. This watches `project` only —
+// not `activeFileName` — so selecting or dragging a photo never re-seeds and
+// wipes out in-progress edits. It re-runs solely when the source data loads or
+// changes; edits accumulate in `photos` until the user clicks Save. Each photo
+// is cloned so toggling `hidden` never mutates the cached project data.
+watch(
+  project,
+  (proj) => {
+    if (!proj?.photos?.length) return
+    photos.value = proj.photos.map((p) => ({ ...p, hidden: !!p.hidden }))
+    baseline.value = proj.photos.map((p) => ({ fileName: p.fileName, hidden: !!p.hidden }))
+    if (!activeFileName.value) activeFileName.value = proj.photos[0].fileName
+  },
+  { immediate: true }
+)
 
 const activeIndex = computed(() =>
   photos.value.findIndex((p) => p.fileName === activeFileName.value)
 )
 const activePhoto = computed(() => photos.value[activeIndex.value] ?? null)
 
-const currentOrder = computed(() => photos.value.map((p) => p.fileName))
-const isDirty = computed(
-  () => JSON.stringify(currentOrder.value) !== JSON.stringify(savedOrder.value)
+const currentState = computed<PhotoState[]>(() =>
+  photos.value.map((p) => ({ fileName: p.fileName, hidden: !!p.hidden }))
 )
+const isDirty = computed(
+  () => JSON.stringify(currentState.value) !== JSON.stringify(baseline.value)
+)
+const hiddenCount = computed(() => photos.value.filter((p) => p.hidden).length)
+
+function toggleHidden(fileName: string) {
+  const photo = photos.value.find((p) => p.fileName === fileName)
+  if (photo) photo.hidden = !photo.hidden
+}
 
 const thumbAspect = (ratio: string) =>
   ratio === 'vertical' ? 'aspect-[2/3]' : ratio === 'square' ? 'aspect-square' : 'aspect-[3/2]'
@@ -253,22 +313,86 @@ function move(from: number, to: number) {
   photos.value = arr
 }
 
-const dragIndex = ref<number | null>(null)
+// The fileName of the photo currently being dragged (null when not dragging).
+// Tracked by fileName rather than index because the list reorders mid-drag.
+const draggingFile = ref<string | null>(null)
+const lastPointerX = ref(0)
+let autoScrollRaf: number | null = null
 
 function onDragStart(index: number, event: DragEvent) {
-  dragIndex.value = index
+  draggingFile.value = photos.value[index].fileName
   activeFileName.value = photos.value[index].fileName
   if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
 }
 
-function onDragEnter(index: number) {
-  if (dragIndex.value === null || dragIndex.value === index) return
-  move(dragIndex.value, index)
-  dragIndex.value = index
+// Drop position is derived from the pointer's geometry over the strip, not from
+// `dragenter` on individual items. This reliably reaches the very end (and any
+// off-screen slot, once auto-scroll brings it into view) regardless of which
+// thumbnails the pointer happens to cross.
+function reorderToPointer() {
+  const strip = stripRef.value
+  const file = draggingFile.value
+  if (!strip || !file) return
+
+  // Count how many *other* thumbnails sit left of the pointer — that count is
+  // the insertion index for the dragged photo in the list minus itself.
+  let target = 0
+  for (const el of strip.querySelectorAll<HTMLElement>('[data-fname]')) {
+    if (el.dataset.fname === file) continue
+    const box = el.getBoundingClientRect()
+    if (lastPointerX.value > box.left + box.width / 2) target++
+  }
+
+  const current = photos.value.findIndex((p) => p.fileName === file)
+  if (current === -1) return
+  const rest = photos.value.filter((p) => p.fileName !== file)
+  const dragged = photos.value[current]
+  rest.splice(target, 0, dragged)
+  // Only reassign when the order actually changes, to avoid redundant renders.
+  if (rest.some((p, i) => p.fileName !== photos.value[i]?.fileName)) photos.value = rest
+}
+
+// Scroll the strip when the pointer hovers near its left/right edge, so photos
+// can be dragged into positions that are currently scrolled out of view.
+function autoScrollTick() {
+  const strip = stripRef.value
+  if (!strip || draggingFile.value === null) {
+    autoScrollRaf = null
+    return
+  }
+  const rect = strip.getBoundingClientRect()
+  const EDGE = 72 // px from each edge that triggers scrolling
+  const MAX_SPEED = 18 // px per frame at the very edge
+  let delta = 0
+  if (lastPointerX.value < rect.left + EDGE) {
+    delta = -MAX_SPEED * Math.min(1, (rect.left + EDGE - lastPointerX.value) / EDGE)
+  } else if (lastPointerX.value > rect.right - EDGE) {
+    delta = MAX_SPEED * Math.min(1, (lastPointerX.value - (rect.right - EDGE)) / EDGE)
+  }
+  if (delta !== 0) {
+    strip.scrollLeft += delta
+    reorderToPointer() // keep advancing the dragged photo as new slots scroll in
+    autoScrollRaf = requestAnimationFrame(autoScrollTick)
+  } else {
+    autoScrollRaf = null
+  }
+}
+
+function onStripDragOver(event: DragEvent) {
+  if (draggingFile.value === null) return
+  event.preventDefault() // mark the strip as a valid drop target
+  if (event.dataTransfer) event.dataTransfer.dropEffect = 'move'
+  lastPointerX.value = event.clientX
+  reorderToPointer()
+  if (autoScrollRaf === null) autoScrollRaf = requestAnimationFrame(autoScrollTick)
 }
 
 function onDragEnd() {
-  dragIndex.value = null
+  draggingFile.value = null
+  if (autoScrollRaf !== null) {
+    cancelAnimationFrame(autoScrollRaf)
+    autoScrollRaf = null
+  }
 }
 
 function onKeydown(event: KeyboardEvent, index: number) {
@@ -304,9 +428,13 @@ async function save() {
   try {
     await $fetch('/api/reorder-photos', {
       method: 'POST',
-      body: { slug, order: currentOrder.value },
+      body: {
+        slug,
+        order: photos.value.map((p) => p.fileName),
+        hidden: photos.value.filter((p) => p.hidden).map((p) => p.fileName),
+      },
     })
-    savedOrder.value = [...currentOrder.value]
+    baseline.value = currentState.value.map((s) => ({ ...s }))
     justSaved.value = true
     if (savedTimer) clearTimeout(savedTimer)
     savedTimer = setTimeout(() => (justSaved.value = false), 2500)
@@ -320,7 +448,14 @@ async function save() {
 
 function reset() {
   const map = new Map(photos.value.map((p) => [p.fileName, p]))
-  photos.value = savedOrder.value.map((fileName) => map.get(fileName)!).filter(Boolean)
+  photos.value = baseline.value
+    .map(({ fileName, hidden }) => {
+      const photo = map.get(fileName)
+      if (!photo) return null
+      photo.hidden = hidden
+      return photo
+    })
+    .filter(Boolean) as StripPhoto[]
 }
 
 // Warn before leaving with unsaved changes.
@@ -334,6 +469,7 @@ onMounted(() => window.addEventListener('beforeunload', beforeUnload))
 onUnmounted(() => {
   window.removeEventListener('beforeunload', beforeUnload)
   if (savedTimer) clearTimeout(savedTimer)
+  if (autoScrollRaf !== null) cancelAnimationFrame(autoScrollRaf)
 })
 
 onBeforeRouteLeave(() => {

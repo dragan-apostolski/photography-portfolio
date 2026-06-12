@@ -3,12 +3,15 @@ import { resolve } from 'node:path'
 
 /**
  * Dev-only endpoint that rewrites the order of the `photos:` list in a
- * project's markdown frontmatter. The markdown file is the source of truth for
- * photo order, so this is what the local reorder editor persists to.
+ * project's markdown frontmatter, and optionally toggles a `hidden: true` flag
+ * per photo. The markdown file is the source of truth, so this is what the local
+ * reorder editor persists to.
  *
  * It reorders the existing YAML list items in place (matching by `fileName`)
  * without reserializing the rest of the frontmatter — every other field keeps
- * its exact original formatting, comments and quoting.
+ * its exact original formatting, comments and quoting. When a `hidden` list is
+ * provided it is authoritative: matching photos get a `hidden: true` line and
+ * all others have any existing one removed.
  */
 export default defineEventHandler(async (event) => {
   // Never expose this outside local development — there is no admin auth.
@@ -19,15 +22,24 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const body = await readBody<{ slug?: string; order?: string[] }>(event)
+  const body = await readBody<{ slug?: string; order?: string[]; hidden?: string[] }>(event)
   const slug = body?.slug
   const order = body?.order
+  const hidden = body?.hidden
 
   if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid project slug' })
   }
   if (!Array.isArray(order) || order.length === 0 || order.some((f) => typeof f !== 'string')) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid photo order' })
+  }
+  // `hidden` is optional: when omitted the existing hidden flags are left
+  // untouched; when provided it is the authoritative set of hidden fileNames.
+  if (
+    hidden !== undefined &&
+    (!Array.isArray(hidden) || hidden.some((f) => typeof f !== 'string'))
+  ) {
+    throw createError({ statusCode: 400, statusMessage: 'Invalid hidden list' })
   }
 
   const filePath = resolve(process.cwd(), 'content/projects', `${slug}.md`)
@@ -85,8 +97,34 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Photo order does not match the photos in this project',
     })
   }
+  if (hidden && !hidden.every((f) => byFileName.has(f))) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Hidden list references photos not in this project',
+    })
+  }
 
-  const reordered = order.flatMap((fileName) => byFileName.get(fileName)!)
+  // Set or clear a `hidden: true` line on a photo block without disturbing its
+  // other lines (aspectRatio, description, comments) or their formatting.
+  const setBlockHidden = (block: string[], shouldHide: boolean): string[] => {
+    const withoutHidden = block.filter((l) => !/^\s*hidden:\s*/.test(l))
+    if (!shouldHide) return withoutHidden
+    // Reuse the indentation of an existing child line; otherwise derive it from
+    // the `- ` marker (its indent plus two spaces).
+    const childLine = withoutHidden.slice(1).find((l) => /^\s+\S/.test(l))
+    const indent = childLine
+      ? (childLine.match(/^(\s*)/)?.[1] ?? '')
+      : (withoutHidden[0].match(/^(\s*)-/)?.[1] ?? '') + '  '
+    return [withoutHidden[0], `${indent}hidden: true`, ...withoutHidden.slice(1)]
+  }
+
+  const applyHidden = Array.isArray(hidden)
+  const hiddenSet = new Set(hidden ?? [])
+  const reordered = order.flatMap((fileName) => {
+    const block = byFileName.get(fileName)!
+    // Leave hidden flags untouched when the client didn't send a hidden list.
+    return applyHidden ? setBlockHidden(block, hiddenSet.has(fileName)) : block
+  })
 
   const newLines = [...lines.slice(0, photosKey + 1), ...reordered, ...lines.slice(blockEnd)]
   await writeFile(filePath, newLines.join('\n'), 'utf-8')

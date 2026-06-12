@@ -58,7 +58,7 @@
                   </div>
                   <div class="hidden items-center md:flex">
                     <Icon name="heroicons:photo" class="mr-1 h-4 w-4" />
-                    {{ project.photos.length }} photos
+                    {{ visiblePhotos.length }} photos
                   </div>
                 </div>
 
@@ -115,9 +115,9 @@
         <!-- Mobile/Tablet: Traditional Vertical Gallery -->
         <div class="block xl:hidden">
           <!-- Photo Gallery -->
-          <section v-if="project.photos.length > 0" class="px-4 py-8">
+          <section v-if="visiblePhotos.length > 0" class="px-4 py-8">
             <div class="mx-auto max-w-4xl space-y-8">
-              <div v-for="(photo, index) in project.photos" :key="photo.id" class="group">
+              <div v-for="(photo, index) in visiblePhotos" :key="photo.id" class="group">
                 <!-- Photo Container -->
                 <div
                   class="relative overflow-hidden rounded-2xl bg-secondary-100 dark:bg-secondary-800"
@@ -301,6 +301,10 @@ const {
   lazy: false,
 })
 
+// Photos shown publicly. Hidden photos remain in the project file (and in the
+// reorder editor) but are excluded from the live gallery, count and cover fallback.
+const visiblePhotos = computed(() => (project.value?.photos ?? []).filter((p) => !p.hidden))
+
 // Resolve a thumbnail for related projects (photo cover or YouTube fallback)
 const getRelatedThumbnail = (relatedProject: Project): string => {
   if (relatedProject.coverPhoto) return getPhotoUrl(relatedProject.coverPhoto)
@@ -431,9 +435,9 @@ const coverPhoto = computed(() => {
     }
   }
 
-  // Fallback to first photo
-  if (project.value.photos.length === 0) return null
-  return project.value.photos[0]
+  // Fallback to first visible photo
+  if (visiblePhotos.value.length === 0) return null
+  return visiblePhotos.value[0]
 })
 
 // Related projects
@@ -450,7 +454,7 @@ const relatedProjects = computed((): Project[] => {
 const horizontalScrollItems = computed(() => {
   if (!project.value) return []
 
-  return project.value.photos.map((photo) => {
+  return visiblePhotos.value.map((photo) => {
     return {
       id: photo.id,
       type: 'photo',

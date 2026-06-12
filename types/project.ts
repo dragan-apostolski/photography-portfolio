@@ -8,12 +8,16 @@ export interface ProjectPhoto {
   aspectRatio: 'square' | 'vertical' | 'horizontal'
   location?: string
   timestamp?: string
+  // When true, the photo stays in the project but is excluded from the public gallery.
+  hidden?: boolean
 }
 
 export interface ProjectPhotoConfig {
   fileName: string
   description?: string
   aspectRatio: 'square' | 'vertical' | 'horizontal'
+  // When true, the photo stays in the project but is excluded from the public gallery.
+  hidden?: boolean
 }
 
 export interface Project {
